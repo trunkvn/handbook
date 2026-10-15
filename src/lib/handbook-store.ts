@@ -7,11 +7,18 @@ import { STORAGE_KEY } from "./storage-key";
 export type Theme = "dark" | "light";
 export type Lang = "en" | "both" | "vi";
 
+/** Speech speeds offered in the sidebar. */
+export const SPEECH_RATES = [0.8, 1, 1.25, 1.5] as const;
+
 interface Persisted {
   lang: Lang;
   practice: boolean;
   theme: Theme;
   done: Readonly<Record<string, true>>;
+  speechRate: number;
+  /** `voiceURI` of the voice chosen for each language; empty means automatic. */
+  voiceEn: string;
+  voiceVi: string;
 }
 
 export interface HandbookState extends Persisted {
@@ -29,6 +36,9 @@ const DEFAULT_STATE: HandbookState = {
   practice: false,
   theme: "dark",
   done: {},
+  speechRate: 1,
+  voiceEn: "",
+  voiceVi: "",
   query: "",
   results: [],
   searchReady: false,
@@ -52,6 +62,9 @@ function readStorage(): Partial<Persisted> {
       practice: saved.practice === true,
       theme: saved.theme === "light" ? "light" : "dark",
       done,
+      speechRate: SPEECH_RATES.some((r) => r === saved.speechRate) ? (saved.speechRate as number) : 1,
+      voiceEn: typeof saved.voiceEn === "string" ? saved.voiceEn : "",
+      voiceVi: typeof saved.voiceVi === "string" ? saved.voiceVi : "",
     };
   } catch {
     return {};
@@ -91,8 +104,11 @@ function update(patch: Partial<HandbookState>, persist = true) {
   state = { ...getState(), ...patch };
   if (persist) {
     try {
-      const { lang, practice, theme, done } = state;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ lang, practice, theme, done }));
+      const { lang, practice, theme, done, speechRate, voiceEn, voiceVi } = state;
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ lang, practice, theme, done, speechRate, voiceEn, voiceVi }),
+      );
     } catch {}
     syncDocument(state);
   }
@@ -125,6 +141,10 @@ export function toggleDone(id: string) {
   else done[id] = true;
   update({ done });
 }
+
+export const setSpeechRate = (speechRate: number) => update({ speechRate });
+export const setVoice = (lang: "en" | "vi", uri: string) =>
+  update(lang === "en" ? { voiceEn: uri } : { voiceVi: uri });
 
 export function resetProgress() {
   update({ done: {} });
