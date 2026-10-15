@@ -22,7 +22,7 @@ const layout = [
   {
     id: "framework",
     title: "React, Vue & hiệu năng",
-    slugs: ["react-next-js", "react-nang-cao", "vue-nuxt", "vue-nang-cao", "hieu-nang-web"],
+    slugs: ["react-next-js", "react-nang-cao", "nextjs-nang-cao", "vue-nuxt", "vue-nang-cao", "nuxt-nang-cao", "hieu-nang-web"],
   },
   {
     id: "chat-luong",

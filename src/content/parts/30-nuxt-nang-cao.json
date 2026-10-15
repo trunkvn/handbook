@@ -1,0 +1,189 @@
+{
+  "id": "part-30",
+  "slug": "nuxt-nang-cao",
+  "roman": "XXX",
+  "title": "Nuxt · Nâng cao",
+  "description": "Cấu trúc thư mục và auto-import, server route với Nitro, middleware, plugin và module, runtimeConfig, SEO và xử lý lỗi trong Nuxt.",
+  "questions": [
+    {
+      "id": "q197",
+      "number": 197,
+      "tag": "Nuxt · Cấu trúc dự án",
+      "title": "How is a Nuxt project structured, and how do auto-imports work? What are the trade-offs?",
+      "titleVi": "Một dự án Nuxt được tổ chức thế nào, và auto-import hoạt động ra sao? Đánh đổi là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Convention over configuration: thư mục quyết định vai trò của file",
+          "Auto-import: Vue API, composable, utils và components",
+          "Quy tắc đặt tên component và phạm vi quét thư mục",
+          "Đánh đổi: ít boilerplate nhưng ngầm định, khó truy vết",
+          "Nuxt 3 và Nuxt 4 khác nhau ở thư mục <code>app/</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p>Nuxt is <strong class=\"k\">convention over configuration</strong>: where a file lives decides what it is. Pages become routes, files in <code>components/</code> become components, <code>composables/</code> and <code>utils/</code> become auto-imported functions, and <code>server/</code> becomes API endpoints.</p> <pre><code>app/                        # Nuxt 4 source dir (in Nuxt 3 these sit at the root)\n  pages/blog/[slug].vue     # route /blog/:slug\n  layouts/default.vue\n  components/form/Input.vue # used as &lt;FormInput /&gt;\n  composables/useCart.ts    # useCart() auto-imported\n  utils/format.ts           # helpers auto-imported\n  middleware/auth.ts        # route middleware\n  plugins/                  # run at app start\nserver/                     # Nitro: api/, routes/, middleware/, utils/\npublic/\nnuxt.config.ts</code></pre> <h5>How auto-import works</h5> <ul><li>Vue APIs (<code>ref</code>, <code>computed</code>) and Nuxt composables (<code>useFetch</code>, <code>useState</code>, <code>useRoute</code>) need no import.</li><li>Component names come from the <strong class=\"k\">path</strong>, so <code>form/Input.vue</code> becomes <code>&lt;FormInput /&gt;</code>. A <code>Lazy</code> prefix (<code>&lt;LazyHeavyChart /&gt;</code>) lazy-loads a component, and <code>.client.vue</code> or <code>.server.vue</code> suffixes limit where it renders.</li><li><code>composables/</code> and <code>utils/</code> scan <strong class=\"k\">top-level files only</strong>. Nested files need a re-export from an <code>index.ts</code> or an extra entry in <code>imports.dirs</code>.</li><li>It is build-time and <strong class=\"k\">tree-shaken</strong>: only what you use is bundled. Types are generated into <code>.nuxt/</code>.</li></ul> <h5>Trade-offs</h5> <ul><li><strong class=\"k\">Pros:</strong> little boilerplate, consistent conventions, faster onboarding.</li><li><strong class=\"k\">Cons:</strong> it is <strong class=\"k\">implicit</strong>. A reader cannot always tell where a symbol comes from, names can collide, and tools outside Nuxt (unit tests, Storybook) need the Nuxt environment.</li><li>Mitigate with clear naming (<code>useXxx</code> for composables), the generated types, and explicit imports from <code>#imports</code> where clarity matters. You can turn auto-imports off with <code>imports.autoImport: false</code>.</li></ul> <p>For how this compares with React/Next.js, see Câu 85.</p>",
+        "vi": "<p>Nuxt theo nguyên tắc <strong class=\"k\">convention over configuration</strong>: file nằm ở đâu thì quyết định nó là gì. Page trở thành route, file trong <code>components/</code> trở thành component, <code>composables/</code> và <code>utils/</code> trở thành các hàm được auto-import, còn <code>server/</code> trở thành API endpoint.</p> <pre><code>app/                        # Nuxt 4 source dir (in Nuxt 3 these sit at the root)\n  pages/blog/[slug].vue     # route /blog/:slug\n  layouts/default.vue\n  components/form/Input.vue # used as &lt;FormInput /&gt;\n  composables/useCart.ts    # useCart() auto-imported\n  utils/format.ts           # helpers auto-imported\n  middleware/auth.ts        # route middleware\n  plugins/                  # run at app start\nserver/                     # Nitro: api/, routes/, middleware/, utils/\npublic/\nnuxt.config.ts</code></pre> <h5>Auto-import hoạt động thế nào</h5> <ul><li>Vue API (<code>ref</code>, <code>computed</code>) và composable của Nuxt (<code>useFetch</code>, <code>useState</code>, <code>useRoute</code>) không cần import.</li><li>Tên component lấy từ <strong class=\"k\">đường dẫn</strong>, nên <code>form/Input.vue</code> thành <code>&lt;FormInput /&gt;</code>. Tiền tố <code>Lazy</code> (<code>&lt;LazyHeavyChart /&gt;</code>) giúp lazy-load component, còn hậu tố <code>.client.vue</code> hoặc <code>.server.vue</code> giới hạn nơi nó render.</li><li><code>composables/</code> và <code>utils/</code> chỉ quét <strong class=\"k\">file ở cấp trên cùng</strong>. File lồng sâu hơn cần re-export từ <code>index.ts</code> hoặc thêm một mục vào <code>imports.dirs</code>.</li><li>Việc này diễn ra lúc build và có <strong class=\"k\">tree-shaking</strong>: chỉ phần bạn dùng mới vào bundle. Type được sinh vào <code>.nuxt/</code>.</li></ul> <h5>Đánh đổi</h5> <ul><li><strong class=\"k\">Ưu điểm:</strong> ít boilerplate, quy ước nhất quán, onboard nhanh hơn.</li><li><strong class=\"k\">Nhược điểm:</strong> nó <strong class=\"k\">ngầm định</strong>. Người đọc không phải lúc nào cũng biết một symbol đến từ đâu, tên có thể trùng nhau, và các công cụ ngoài Nuxt (unit test, Storybook) cần môi trường Nuxt.</li><li>Giảm nhẹ bằng cách đặt tên rõ ràng (<code>useXxx</code> cho composable), dùng type được sinh ra, và import tường minh từ <code>#imports</code> ở chỗ cần rõ ràng. Có thể tắt auto-import bằng <code>imports.autoImport: false</code>.</li></ul> <p>So sánh với React/Next.js xem Câu 85.</p>"
+      },
+      "terms": [
+        "auto-imports",
+        "composables",
+        "components naming",
+        "Lazy prefix",
+        "imports.dirs",
+        ".nuxt types",
+        "convention over configuration"
+      ]
+    },
+    {
+      "id": "q198",
+      "number": 198,
+      "tag": "Nuxt · Server",
+      "title": "How do server routes work in Nuxt with Nitro? When is Nuxt a good BFF?",
+      "titleVi": "Server route trong Nuxt với Nitro hoạt động thế nào? Khi nào Nuxt là một BFF tốt?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>server/api</code>, <code>server/routes</code>, <code>server/middleware</code> và quy ước tên file",
+          "<code>defineEventHandler</code> và các helper của h3",
+          "Trong SSR, <code>$fetch</code> gọi thẳng handler không qua HTTP",
+          "Dùng làm BFF: giấu secret, gộp API, gắn auth",
+          "Giới hạn: không phải backend nặng, validate input"
+        ]
+      },
+      "answer": {
+        "en": "<p>Nuxt ships a server engine called <strong class=\"k\">Nitro</strong>. Files in <code>server/</code> become HTTP endpoints, written with <code>defineEventHandler</code> and the <strong class=\"k\">h3</strong> helpers. They are separate from the Vue app and can use private config.</p> <pre><code>// server/api/orders/[id].get.ts   -&gt;  GET /api/orders/:id\nexport default defineEventHandler(async (event) =&gt; {\n  const id = getRouterParam(event, 'id')\n  const config = useRuntimeConfig(event)\n  const order = await $fetch(`${config.apiBase}/orders/${id}`, {\n    headers: { Authorization: `Bearer ${getCookie(event, 'token')}` },\n  })\n  if (!order) {\n    throw createError({ statusCode: 404, statusMessage: 'Order not found' })\n  }\n  return order            // objects are serialized to JSON\n})</code></pre> <ul><li><strong class=\"k\"><code>server/api/</code></strong> is mounted under <code>/api</code>, <strong class=\"k\"><code>server/routes/</code></strong> has no prefix (for <code>/sitemap.xml</code> or webhooks), <strong class=\"k\"><code>server/middleware/</code></strong> runs on every request before the handlers, <strong class=\"k\"><code>server/utils/</code></strong> is auto-imported, and <strong class=\"k\"><code>server/plugins/</code></strong> run at server start.</li><li>A file suffix selects the method: <code>.get.ts</code>, <code>.post.ts</code>. Without a suffix it handles all methods.</li><li>Useful helpers: <code>getQuery</code>, <code>readBody</code>, <code>getRouterParam</code>, <code>getCookie</code>, <code>setCookie</code>, <code>createError</code>. Prefer the validated variants (<code>readValidatedBody</code>, <code>getValidatedQuery</code>) with a schema.</li><li>During SSR, <code>$fetch('/api/...')</code> and <code>useFetch</code> call the handler <strong class=\"k\">in-process</strong>, with no HTTP round trip.</li></ul> <h5>Nuxt as a BFF</h5> <p>Good for <strong class=\"k\">hiding secrets and upstream URLs</strong>, attaching the auth cookie or token, <strong class=\"k\">aggregating several upstream calls</strong> into one response shaped for the UI, and avoiding CORS. This is the same idea as Câu 03 and Câu 02.</p> <h5>Limits</h5> <ul><li>It is not a replacement for a full backend: avoid long-running jobs or heavy business logic, especially on serverless.</li><li>Server routes are <strong class=\"k\">public endpoints</strong>: authenticate, authorize and validate every input.</li><li>Each extra hop adds latency, so keep the BFF thin and cache where it is safe (Câu 04).</li></ul>",
+        "vi": "<p>Nuxt đi kèm một server engine tên <strong class=\"k\">Nitro</strong>. File trong <code>server/</code> trở thành HTTP endpoint, viết bằng <code>defineEventHandler</code> và các helper của <strong class=\"k\">h3</strong>. Chúng tách biệt với ứng dụng Vue và có thể dùng config riêng tư.</p> <pre><code>// server/api/orders/[id].get.ts   -&gt;  GET /api/orders/:id\nexport default defineEventHandler(async (event) =&gt; {\n  const id = getRouterParam(event, 'id')\n  const config = useRuntimeConfig(event)\n  const order = await $fetch(`${config.apiBase}/orders/${id}`, {\n    headers: { Authorization: `Bearer ${getCookie(event, 'token')}` },\n  })\n  if (!order) {\n    throw createError({ statusCode: 404, statusMessage: 'Order not found' })\n  }\n  return order            // objects are serialized to JSON\n})</code></pre> <ul><li><strong class=\"k\"><code>server/api/</code></strong> được mount dưới <code>/api</code>, <strong class=\"k\"><code>server/routes/</code></strong> không có tiền tố (cho <code>/sitemap.xml</code> hoặc webhook), <strong class=\"k\"><code>server/middleware/</code></strong> chạy trên mọi request trước các handler, <strong class=\"k\"><code>server/utils/</code></strong> được auto-import, và <strong class=\"k\"><code>server/plugins/</code></strong> chạy khi server khởi động.</li><li>Hậu tố của file chọn method: <code>.get.ts</code>, <code>.post.ts</code>. Không có hậu tố thì xử lý mọi method.</li><li>Helper hữu ích: <code>getQuery</code>, <code>readBody</code>, <code>getRouterParam</code>, <code>getCookie</code>, <code>setCookie</code>, <code>createError</code>. Nên dùng các biến thể có validate (<code>readValidatedBody</code>, <code>getValidatedQuery</code>) cùng schema.</li><li>Khi SSR, <code>$fetch('/api/...')</code> và <code>useFetch</code> gọi handler <strong class=\"k\">ngay trong process</strong>, không tốn một round trip HTTP.</li></ul> <h5>Nuxt làm BFF</h5> <p>Phù hợp để <strong class=\"k\">giấu secret và URL của upstream</strong>, gắn auth cookie hoặc token, <strong class=\"k\">gộp nhiều lời gọi upstream</strong> thành một response đúng hình dạng UI cần, và tránh CORS. Đây là cùng ý tưởng với Câu 03 và Câu 02.</p> <h5>Giới hạn</h5> <ul><li>Nó không thay thế một backend đầy đủ: tránh job chạy lâu hoặc logic nghiệp vụ nặng, nhất là trên serverless.</li><li>Server route là <strong class=\"k\">endpoint công khai</strong>: hãy authenticate, authorize và validate mọi input.</li><li>Mỗi hop thêm vào làm tăng độ trễ, nên giữ BFF mỏng và cache ở nơi an toàn (Câu 04).</li></ul>"
+      },
+      "terms": [
+        "Nitro",
+        "defineEventHandler",
+        "server/api",
+        "h3",
+        "BFF",
+        "createError",
+        "server middleware"
+      ]
+    },
+    {
+      "id": "q199",
+      "number": 199,
+      "tag": "Nuxt · Middleware và plugin",
+      "title": "What is the difference between route middleware, server middleware and plugins in Nuxt?",
+      "titleVi": "Route middleware, server middleware và plugin trong Nuxt khác nhau thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba lớp chạy ở ba thời điểm khác nhau",
+          "Route middleware: trước khi điều hướng, trả <code>navigateTo</code> hoặc <code>abortNavigation</code>",
+          "Server middleware: mỗi request HTTP tới Nitro",
+          "Plugin: một lần khi khởi tạo app, <code>provide</code> helper",
+          "Route middleware chỉ là UX, bảo vệ dữ liệu phải ở server"
+        ]
+      },
+      "answer": {
+        "en": "<p>They run at <strong class=\"k\">three different moments</strong>, so the choice depends on what you need to intercept.</p> <h5>Route middleware (<code>middleware/</code>)</h5> <p>Runs inside the Vue app <strong class=\"k\">before a navigation completes</strong>, on the server during SSR and in the browser for client navigations. You return <code>navigateTo()</code> to redirect or <code>abortNavigation()</code> to cancel. It can be inline, <strong class=\"k\">named</strong> (<code>middleware/auth.ts</code>, attached with <code>definePageMeta({ middleware: 'auth' })</code>) or <strong class=\"k\">global</strong> (a <code>.global</code> suffix).</p> <pre><code>// middleware/auth.ts\nexport default defineNuxtRouteMiddleware((to) =&gt; {\n  const token = useCookie('token')\n  if (!token.value &amp;&amp; to.path !== '/login') {\n    return navigateTo('/login')\n  }\n})</code></pre> <h5>Server middleware (<code>server/middleware/</code>)</h5> <p>A Nitro (h3) handler that runs on <strong class=\"k\">every request</strong> that reaches the server, before API routes and page rendering. Use it for logging, CORS or security headers, or putting data on <code>event.context</code>. It should not return a response body, because that would end the request.</p> <h5>Plugins (<code>plugins/</code>)</h5> <p>Run <strong class=\"k\">once when the Nuxt app is created</strong> (per request on the server, once in the browser). Use <code>defineNuxtPlugin</code> to register Vue plugins or directives, create an API client and expose it with <code>provide</code>, or hook global error handling. Files can be limited with <code>.client.ts</code> or <code>.server.ts</code>. A <strong class=\"k\">module</strong> (listed in <code>modules</code> in <code>nuxt.config</code>, written with <code>defineNuxtModule</code>) is different: it runs at <strong class=\"k\">build time</strong> and can add plugins, components, composables or server handlers, so it is the right way to package a reusable feature.</p> <h5>Choosing</h5> <ul><li>Redirect based on app state or route: <strong class=\"k\">route middleware</strong>.</li><li>Cross-cutting HTTP concerns, including <code>/api</code>: <strong class=\"k\">server middleware</strong>.</li><li>Setup and shared helpers at startup: <strong class=\"k\">plugin</strong>; a reusable, packaged feature: <strong class=\"k\">module</strong>.</li></ul> <h5>Pitfall</h5> <p>Route middleware is <strong class=\"k\">UX, not security</strong>: on client navigations it runs in the browser and can be bypassed. Always enforce authentication and authorization again in server routes that return data (Câu 59 and Câu 72).</p>",
+        "vi": "<p>Chúng chạy ở <strong class=\"k\">ba thời điểm khác nhau</strong>, nên việc chọn cái nào phụ thuộc vào thứ bạn cần chặn.</p> <h5>Route middleware (<code>middleware/</code>)</h5> <p>Chạy bên trong ứng dụng Vue <strong class=\"k\">trước khi điều hướng hoàn tất</strong>, trên server khi SSR và trong trình duyệt khi điều hướng phía client. Bạn trả về <code>navigateTo()</code> để redirect hoặc <code>abortNavigation()</code> để hủy. Nó có thể là inline, <strong class=\"k\">có tên</strong> (<code>middleware/auth.ts</code>, gắn bằng <code>definePageMeta({ middleware: 'auth' })</code>) hoặc <strong class=\"k\">global</strong> (hậu tố <code>.global</code>).</p> <pre><code>// middleware/auth.ts\nexport default defineNuxtRouteMiddleware((to) =&gt; {\n  const token = useCookie('token')\n  if (!token.value &amp;&amp; to.path !== '/login') {\n    return navigateTo('/login')\n  }\n})</code></pre> <h5>Server middleware (<code>server/middleware/</code>)</h5> <p>Một handler của Nitro (h3) chạy trên <strong class=\"k\">mọi request</strong> tới server, trước API route và trước khi render trang. Dùng cho logging, CORS hoặc security header, hoặc gắn dữ liệu vào <code>event.context</code>. Nó không nên trả body của response, vì như vậy sẽ kết thúc request.</p> <h5>Plugin (<code>plugins/</code>)</h5> <p>Chạy <strong class=\"k\">một lần khi app Nuxt được tạo</strong> (mỗi request trên server, một lần trong trình duyệt). Dùng <code>defineNuxtPlugin</code> để đăng ký Vue plugin hoặc directive, tạo API client rồi chia sẻ bằng <code>provide</code>, hoặc gắn xử lý lỗi toàn cục. Có thể giới hạn bằng <code>.client.ts</code> hoặc <code>.server.ts</code>. <strong class=\"k\">Module</strong> (khai báo trong <code>modules</code> ở <code>nuxt.config</code>, viết bằng <code>defineNuxtModule</code>) thì khác: nó chạy lúc <strong class=\"k\">build</strong> và có thể thêm plugin, component, composable hoặc server handler, nên là cách đúng để đóng gói một tính năng dùng lại.</p> <h5>Chọn cái nào</h5> <ul><li>Redirect dựa trên state của app hoặc route: <strong class=\"k\">route middleware</strong>.</li><li>Mối quan tâm HTTP xuyên suốt, gồm cả <code>/api</code>: <strong class=\"k\">server middleware</strong>.</li><li>Thiết lập và helper dùng chung lúc khởi động: <strong class=\"k\">plugin</strong>; tính năng đóng gói để dùng lại: <strong class=\"k\">module</strong>.</li></ul> <h5>Pitfall</h5> <p>Route middleware là <strong class=\"k\">UX, không phải bảo mật</strong>: khi điều hướng phía client nó chạy trong trình duyệt và có thể bị vượt qua. Luôn kiểm tra lại authentication và authorization trong server route trả dữ liệu (Câu 59 và Câu 72).</p>"
+      },
+      "terms": [
+        "defineNuxtRouteMiddleware",
+        "navigateTo",
+        "definePageMeta",
+        "server/middleware",
+        "defineNuxtPlugin",
+        "provide",
+        "global middleware"
+      ]
+    },
+    {
+      "id": "q200",
+      "number": 200,
+      "tag": "Nuxt · Cấu hình",
+      "title": "What is the difference between <code>runtimeConfig</code>, <code>app.config</code> and plain environment variables in Nuxt? How do you keep secrets safe?",
+      "titleVi": "<code>runtimeConfig</code>, <code>app.config</code> và biến môi trường thuần khác nhau thế nào trong Nuxt? Làm sao giữ secret an toàn?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>runtimeConfig</code>: có giá trị mặc định, ghi đè bằng env lúc runtime",
+          "Top-level là private, <code>public</code> lộ ra client",
+          "Quy ước <code>NUXT_</code> và <code>NUXT_PUBLIC_</code>, phải khai báo key trước",
+          "<code>app.config</code>: cấu hình công khai, lúc build, không phải secret",
+          "<code>.env</code> chỉ dùng khi dev/build, không so sánh sai với Next.js"
+        ]
+      },
+      "answer": {
+        "en": "<p>Use <strong class=\"k\"><code>runtimeConfig</code> for values that change per environment, including secrets</strong>, and <strong class=\"k\"><code>app.config</code> for public, non-secret app settings</strong> such as theme or feature flags that are part of the build.</p> <pre><code>// nuxt.config.ts\nexport default defineNuxtConfig({\n  runtimeConfig: {\n    apiSecret: '',                // private, server only\n    public: { apiBase: '/api' },  // sent to the browser\n  },\n})\n\n// override at runtime, no rebuild:\n// NUXT_API_SECRET=...  NUXT_PUBLIC_API_BASE=https://api.example.com\n\n// usage\nconst config = useRuntimeConfig()   // config.public.apiBase works on the client</code></pre> <h5><code>runtimeConfig</code></h5> <ul><li>Keys at the top level are <strong class=\"k\">private</strong> and only exist on the server. Keys under <strong class=\"k\"><code>public</code></strong> are serialized to the client, so never put secrets there.</li><li>The values in <code>nuxt.config</code> are defaults. A matching environment variable overrides them <strong class=\"k\">at runtime</strong> using the <strong class=\"k\"><code>NUXT_</code></strong> prefix (<code>NUXT_PUBLIC_</code> for public keys), but <strong class=\"k\">only if the key is declared</strong> in <code>runtimeConfig</code>.</li><li>In server routes, call <code>useRuntimeConfig(event)</code>.</li></ul> <h5><code>app.config.ts</code></h5> <p>Public and bundled <strong class=\"k\">at build time</strong>, accessed with <code>useAppConfig()</code>. It cannot be overridden by environment variables, so it is not for secrets or per-environment URLs.</p> <h5>Plain environment variables</h5> <p>Do not read <code>process.env</code> all over your code. Declare what you need in <code>runtimeConfig</code> and read it from there. <code>.env</code> files are for development and build; in production, set real environment variables on the host.</p> <h5>Compare with Next.js</h5> <p>In Next.js (Câu 188) a <code>NEXT_PUBLIC_</code> variable is <strong class=\"k\">inlined at build time</strong>, so changing it needs a rebuild. Nuxt public <code>runtimeConfig</code> can change at runtime on the same build, which suits one image deployed to many environments.</p>",
+        "vi": "<p>Dùng <strong class=\"k\"><code>runtimeConfig</code> cho giá trị thay đổi theo môi trường, kể cả secret</strong>, và <strong class=\"k\"><code>app.config</code> cho cấu hình công khai, không phải secret</strong> như theme hay feature flag nằm trong bản build.</p> <pre><code>// nuxt.config.ts\nexport default defineNuxtConfig({\n  runtimeConfig: {\n    apiSecret: '',                // private, server only\n    public: { apiBase: '/api' },  // sent to the browser\n  },\n})\n\n// override at runtime, no rebuild:\n// NUXT_API_SECRET=...  NUXT_PUBLIC_API_BASE=https://api.example.com\n\n// usage\nconst config = useRuntimeConfig()   // config.public.apiBase works on the client</code></pre> <h5><code>runtimeConfig</code></h5> <ul><li>Key ở cấp trên cùng là <strong class=\"k\">private</strong> và chỉ tồn tại trên server. Key dưới <strong class=\"k\"><code>public</code></strong> được serialize xuống client, nên không bao giờ đặt secret ở đó.</li><li>Giá trị trong <code>nuxt.config</code> là mặc định. Biến môi trường tương ứng sẽ ghi đè chúng <strong class=\"k\">lúc runtime</strong> nhờ tiền tố <strong class=\"k\"><code>NUXT_</code></strong> (<code>NUXT_PUBLIC_</code> cho key public), nhưng <strong class=\"k\">chỉ khi key đã được khai báo</strong> trong <code>runtimeConfig</code>.</li><li>Trong server route, gọi <code>useRuntimeConfig(event)</code>.</li></ul> <h5><code>app.config.ts</code></h5> <p>Công khai và được đóng gói <strong class=\"k\">lúc build</strong>, truy cập bằng <code>useAppConfig()</code>. Nó không thể bị ghi đè bằng biến môi trường, nên không dùng cho secret hay URL theo từng môi trường.</p> <h5>Biến môi trường thuần</h5> <p>Đừng đọc <code>process.env</code> rải rác khắp code. Hãy khai báo thứ bạn cần trong <code>runtimeConfig</code> và đọc từ đó. File <code>.env</code> dùng cho dev và build; ở production hãy đặt biến môi trường thật trên host.</p> <h5>So sánh với Next.js</h5> <p>Trong Next.js (Câu 188) biến <code>NEXT_PUBLIC_</code> được <strong class=\"k\">inline lúc build</strong>, nên đổi giá trị cần build lại. <code>runtimeConfig.public</code> của Nuxt có thể đổi lúc runtime trên cùng một bản build, phù hợp khi một image được deploy cho nhiều môi trường.</p>"
+      },
+      "terms": [
+        "runtimeConfig",
+        "runtimeConfig.public",
+        "NUXT_PUBLIC_",
+        "app.config.ts",
+        "useAppConfig",
+        "secrets",
+        ".env"
+      ]
+    },
+    {
+      "id": "q201",
+      "number": 201,
+      "tag": "Nuxt · SEO",
+      "title": "How do you handle SEO in Nuxt? Explain <code>useHead</code>, <code>useSeoMeta</code> and what else you set up for a production site.",
+      "titleVi": "Bạn xử lý SEO trong Nuxt thế nào? Giải thích <code>useHead</code>, <code>useSeoMeta</code> và những thứ khác cần thiết lập cho site production.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "SSR hoặc prerender để tag có sẵn trong HTML",
+          "<code>useHead</code> tổng quát, <code>useSeoMeta</code> gọn và có type cho tag SEO",
+          "Giá trị reactive, đặt sau khi có dữ liệu",
+          "Mặc định trong <code>app.head</code>, <code>titleTemplate</code>, canonical",
+          "sitemap, robots, i18n, structured data, ảnh và font"
+        ]
+      },
+      "answer": {
+        "en": "<p>Nuxt renders on the server, so tags set with <code>useHead</code> or <code>useSeoMeta</code> are <strong class=\"k\">already in the HTML crawlers and social bots fetch</strong>. Make sure the page is rendered with SSR or prerendered, not SPA-only (see Câu 83).</p> <pre><code>const { data: post } = await useFetch(`/api/posts/${route.params.slug}`)\n\nuseSeoMeta({\n  title: () =&gt; post.value?.title,           // getters stay reactive\n  description: () =&gt; post.value?.summary,\n  ogTitle: () =&gt; post.value?.title,\n  ogImage: () =&gt; post.value?.cover,\n  twitterCard: 'summary_large_image',\n})\n\nuseHead({\n  link: [{ rel: 'canonical', href: `https://example.com/blog/${route.params.slug}` }],\n})</code></pre> <ul><li><strong class=\"k\"><code>useHead</code></strong> is the general API: <code>title</code>, <code>meta</code>, <code>link</code>, <code>script</code>, <code>htmlAttrs</code> such as <code>lang</code>.</li><li><strong class=\"k\"><code>useSeoMeta</code></strong> is a flat, <strong class=\"k\">type-checked</strong> shortcut for SEO and social tags (<code>title</code>, <code>description</code>, <code>ogTitle</code>, <code>ogImage</code>...), which avoids typos in raw <code>meta</code> entries.</li><li>Both accept <strong class=\"k\">refs and getters</strong>, so tags update with data. Call them <strong class=\"k\">after the data is available</strong> (after <code>await useFetch</code>) so the server-rendered HTML contains the real values.</li><li>Set <strong class=\"k\">site-wide defaults</strong> with <code>app.head</code> in <code>nuxt.config</code>, and use <code>titleTemplate</code> for a consistent title suffix.</li></ul> <h5>Production checklist</h5> <ul><li><strong class=\"k\">Canonical URLs</strong> and <code>lang</code>; <strong class=\"k\">hreflang</strong> for multi-language sites (<code>@nuxtjs/i18n</code>).</li><li><strong class=\"k\">sitemap and robots</strong> through modules such as <code>@nuxtjs/sitemap</code> and <code>@nuxtjs/robots</code> (or server routes), and <strong class=\"k\">structured data</strong> (JSON-LD).</li><li>Real links with <code>&lt;NuxtLink&gt;</code>, one <code>&lt;h1&gt;</code>, meaningful <code>alt</code>, optimized images and fonts, good Core Web Vitals.</li><li>Proper <strong class=\"k\">HTTP status codes</strong> for missing pages (Câu 202); a page that says \"not found\" with a 200 is a soft 404.</li></ul> <p>The same fundamentals behind a high Lighthouse SEO score apply here too (Câu 53).</p>",
+        "vi": "<p>Nuxt render trên server, nên các tag đặt bằng <code>useHead</code> hoặc <code>useSeoMeta</code> <strong class=\"k\">đã nằm sẵn trong HTML mà crawler và bot mạng xã hội tải về</strong>. Hãy bảo đảm trang được render bằng SSR hoặc prerender, không phải chỉ SPA (xem Câu 83).</p> <pre><code>const { data: post } = await useFetch(`/api/posts/${route.params.slug}`)\n\nuseSeoMeta({\n  title: () =&gt; post.value?.title,           // getters stay reactive\n  description: () =&gt; post.value?.summary,\n  ogTitle: () =&gt; post.value?.title,\n  ogImage: () =&gt; post.value?.cover,\n  twitterCard: 'summary_large_image',\n})\n\nuseHead({\n  link: [{ rel: 'canonical', href: `https://example.com/blog/${route.params.slug}` }],\n})</code></pre> <ul><li><strong class=\"k\"><code>useHead</code></strong> là API tổng quát: <code>title</code>, <code>meta</code>, <code>link</code>, <code>script</code>, <code>htmlAttrs</code> như <code>lang</code>.</li><li><strong class=\"k\"><code>useSeoMeta</code></strong> là cách viết phẳng, <strong class=\"k\">có kiểm tra type</strong> cho tag SEO và mạng xã hội (<code>title</code>, <code>description</code>, <code>ogTitle</code>, <code>ogImage</code>...), tránh gõ sai trong các mục <code>meta</code> thô.</li><li>Cả hai nhận <strong class=\"k\">ref và getter</strong>, nên tag cập nhật theo dữ liệu. Hãy gọi chúng <strong class=\"k\">sau khi đã có dữ liệu</strong> (sau <code>await useFetch</code>) để HTML render từ server chứa giá trị thật.</li><li>Đặt <strong class=\"k\">mặc định toàn site</strong> bằng <code>app.head</code> trong <code>nuxt.config</code>, và dùng <code>titleTemplate</code> để có hậu tố tiêu đề nhất quán.</li></ul> <h5>Checklist cho production</h5> <ul><li><strong class=\"k\">Canonical URL</strong> và <code>lang</code>; <strong class=\"k\">hreflang</strong> cho site đa ngôn ngữ (<code>@nuxtjs/i18n</code>).</li><li><strong class=\"k\">sitemap và robots</strong> qua các module như <code>@nuxtjs/sitemap</code> và <code>@nuxtjs/robots</code> (hoặc server route), cùng <strong class=\"k\">structured data</strong> (JSON-LD).</li><li>Link thật bằng <code>&lt;NuxtLink&gt;</code>, một <code>&lt;h1&gt;</code>, <code>alt</code> có ý nghĩa, ảnh và font được tối ưu, Core Web Vitals tốt.</li><li><strong class=\"k\">HTTP status code</strong> đúng cho trang không tồn tại (Câu 202); trang ghi \"not found\" nhưng trả 200 là soft 404.</li></ul> <p>Các nguyên tắc nền tảng giúp đạt điểm Lighthouse SEO cao cũng áp dụng ở đây (Câu 53).</p>"
+      },
+      "terms": [
+        "useHead",
+        "useSeoMeta",
+        "app.head",
+        "titleTemplate",
+        "canonical",
+        "@nuxtjs/sitemap",
+        "hreflang"
+      ]
+    },
+    {
+      "id": "q202",
+      "number": 202,
+      "tag": "Nuxt · Xử lý lỗi",
+      "title": "How does error handling work in Nuxt? Explain <code>error.vue</code>, <code>createError</code>, <code>showError</code>, <code>clearError</code> and <code>NuxtErrorBoundary</code>.",
+      "titleVi": "Xử lý lỗi trong Nuxt hoạt động thế nào? Giải thích <code>error.vue</code>, <code>createError</code>, <code>showError</code>, <code>clearError</code> và <code>NuxtErrorBoundary</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Phân biệt lỗi dự kiến và lỗi bất ngờ",
+          "<code>createError</code> để tạo lỗi, <code>fatal</code> để hiện trang lỗi toàn màn hình",
+          "<code>error.vue</code>, <code>showError</code>, <code>clearError({ redirect })</code>",
+          "<code>NuxtErrorBoundary</code> cho lỗi cục bộ",
+          "Logging bằng hook, status code đúng cho SEO"
+        ]
+      },
+      "answer": {
+        "en": "<p>Separate <strong class=\"k\">expected errors</strong> (a 404 for a missing post, a failed request) from <strong class=\"k\">unexpected ones</strong> (bugs). Expected ones you handle close to the code, unexpected ones fall back to a global error page.</p> <pre><code>// pages/blog/[slug].vue\nconst { data: post, error } = await useFetch(`/api/posts/${route.params.slug}`)\nif (!post.value) {\n  throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true })\n}</code></pre> <pre><code>&lt;!-- error.vue (next to app.vue) --&gt;\n&lt;script setup lang=\"ts\"&gt;\ndefineProps&lt;{ error: { statusCode: number; statusMessage?: string } }&gt;()\nconst goHome = () =&gt; clearError({ redirect: '/' })\n&lt;/script&gt;\n&lt;template&gt;\n  &lt;div&gt;\n    &lt;h1&gt;{{ error.statusCode === 404 ? 'Page not found' : 'Something went wrong' }}&lt;/h1&gt;\n    &lt;button @click=\"goHome\"&gt;Back to home&lt;/button&gt;\n  &lt;/div&gt;\n&lt;/template&gt;</code></pre> <ul><li><strong class=\"k\"><code>createError</code></strong> builds an error object. In a page or middleware, throwing it during SSR renders the error page with the <strong class=\"k\">right HTTP status</strong>. On a client-side navigation, add <strong class=\"k\"><code>fatal: true</code></strong> to get the full-screen error page. In Nitro handlers, the same function sets the response status.</li><li><strong class=\"k\"><code>error.vue</code></strong> is the full-page error UI. It receives an <code>error</code> prop and replaces the whole app, layouts included.</li><li><strong class=\"k\"><code>showError()</code></strong> triggers it programmatically, <strong class=\"k\"><code>clearError({ redirect })</code></strong> resets the state and optionally navigates, and <strong class=\"k\"><code>useError()</code></strong> reads the current error.</li><li><strong class=\"k\"><code>&lt;NuxtErrorBoundary&gt;</code></strong> wraps a part of the page. Its <code>#error</code> slot shows a local fallback with a <code>clearError</code> function, so a broken widget does not take down the page.</li></ul> <h5>Practical notes</h5> <ul><li>For expected failures, use the <code>error</code> ref from <code>useFetch</code> and show an inline message instead of throwing.</li><li>To report errors, hook into <code>vue:error</code> or <code>app:error</code> in a plugin and forward to your monitoring tool.</li><li>Return real 404 and 5xx codes, not a 200 with an error message, or search engines see soft 404s.</li><li>In Nuxt 3/4 the fields are <code>statusCode</code> and <code>statusMessage</code>.</li></ul> <p>Compare with Next.js <code>error.tsx</code> and <code>not-found</code> in Câu 179.</p>",
+        "vi": "<p>Hãy tách <strong class=\"k\">lỗi dự kiến</strong> (404 cho bài viết không tồn tại, request thất bại) khỏi <strong class=\"k\">lỗi bất ngờ</strong> (bug). Lỗi dự kiến bạn xử lý ngay gần code, còn lỗi bất ngờ rơi về một trang lỗi toàn cục.</p> <pre><code>// pages/blog/[slug].vue\nconst { data: post, error } = await useFetch(`/api/posts/${route.params.slug}`)\nif (!post.value) {\n  throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true })\n}</code></pre> <pre><code>&lt;!-- error.vue (next to app.vue) --&gt;\n&lt;script setup lang=\"ts\"&gt;\ndefineProps&lt;{ error: { statusCode: number; statusMessage?: string } }&gt;()\nconst goHome = () =&gt; clearError({ redirect: '/' })\n&lt;/script&gt;\n&lt;template&gt;\n  &lt;div&gt;\n    &lt;h1&gt;{{ error.statusCode === 404 ? 'Page not found' : 'Something went wrong' }}&lt;/h1&gt;\n    &lt;button @click=\"goHome\"&gt;Back to home&lt;/button&gt;\n  &lt;/div&gt;\n&lt;/template&gt;</code></pre> <ul><li><strong class=\"k\"><code>createError</code></strong> tạo một object lỗi. Trong page hoặc middleware, ném nó khi SSR sẽ render trang lỗi với <strong class=\"k\">HTTP status đúng</strong>. Khi điều hướng phía client, hãy thêm <strong class=\"k\"><code>fatal: true</code></strong> để hiện trang lỗi toàn màn hình. Trong handler Nitro, cùng hàm này đặt status của response.</li><li><strong class=\"k\"><code>error.vue</code></strong> là UI lỗi toàn trang. Nó nhận prop <code>error</code> và thay thế toàn bộ app, kể cả layout.</li><li><strong class=\"k\"><code>showError()</code></strong> kích hoạt nó bằng code, <strong class=\"k\"><code>clearError({ redirect })</code></strong> reset state và có thể điều hướng, còn <strong class=\"k\"><code>useError()</code></strong> đọc lỗi hiện tại.</li><li><strong class=\"k\"><code>&lt;NuxtErrorBoundary&gt;</code></strong> bọc một phần của trang. Slot <code>#error</code> của nó hiển thị fallback cục bộ cùng hàm <code>clearError</code>, nên một widget hỏng không kéo sập cả trang.</li></ul> <h5>Lưu ý thực tế</h5> <ul><li>Với lỗi dự kiến, dùng ref <code>error</code> của <code>useFetch</code> và hiển thị thông báo ngay tại chỗ thay vì ném lỗi.</li><li>Để báo cáo lỗi, gắn vào <code>vue:error</code> hoặc <code>app:error</code> trong một plugin rồi chuyển cho công cụ giám sát.</li><li>Trả về mã 404 và 5xx thật, đừng trả 200 kèm thông báo lỗi, nếu không công cụ tìm kiếm sẽ thấy soft 404.</li><li>Trong Nuxt 3/4 các field là <code>statusCode</code> và <code>statusMessage</code>.</li></ul> <p>So sánh với <code>error.tsx</code> và <code>not-found</code> của Next.js ở Câu 179.</p>"
+      },
+      "terms": [
+        "error.vue",
+        "createError",
+        "showError",
+        "clearError",
+        "NuxtErrorBoundary",
+        "fatal",
+        "vue:error hook"
+      ]
+    }
+  ]
+}
