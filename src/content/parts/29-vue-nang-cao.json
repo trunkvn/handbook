@@ -1,0 +1,242 @@
+{
+  "id": "part-29",
+  "slug": "vue-nang-cao",
+  "roman": "XXIX",
+  "title": "Vue · Nâng cao",
+  "description": "Lifecycle, v-if và v-show, props và v-model, slot, composable, Vue Router, KeepAlive/Teleport và tối ưu hiệu năng trong Vue 3.",
+  "questions": [
+    {
+      "id": "q189",
+      "number": 189,
+      "tag": "Vue · Lifecycle",
+      "title": "What are the Vue 3 lifecycle hooks, what is each one for, and which run during SSR?",
+      "titleVi": "Các lifecycle hook của Vue 3 là gì, mỗi hook dùng để làm gì, và hook nào chạy khi SSR?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Các giai đoạn: create, mount, update, unmount",
+          "Dùng hook nào cho việc gì",
+          "Trong script setup thay cho beforeCreate/created",
+          "SSR: chỉ setup chạy trên server",
+          "Cleanup ở onUnmounted"
+        ]
+      },
+      "answer": {
+        "en": "<p>A Vue component goes through <strong class=\"k\">creation, mounting, updating and unmounting</strong>. In the Composition API you register callbacks with <code>onXxx</code> functions, <strong class=\"k\">synchronously inside <code>setup</code></strong> (or <code>&lt;script setup&gt;</code>).</p> <ul><li><strong class=\"k\"><code>setup</code> / <code>&lt;script setup&gt;</code>:</strong> replaces <code>beforeCreate</code> and <code>created</code>. Initialize state, composables and watchers here.</li><li><strong class=\"k\"><code>onBeforeMount</code> / <code>onMounted</code>:</strong> after <code>onMounted</code> the component's DOM exists. Use it for <strong class=\"k\">DOM access, measuring, and browser-only libraries</strong> (charts, maps, <code>window</code> listeners).</li><li><strong class=\"k\"><code>onBeforeUpdate</code> / <code>onUpdated</code>:</strong> around a DOM re-render caused by reactive changes. Avoid changing state in <code>onUpdated</code> (it can loop). For \"after DOM update\" use <code>await nextTick()</code>.</li><li><strong class=\"k\"><code>onBeforeUnmount</code> / <code>onUnmounted</code>:</strong> <strong class=\"k\">cleanup</strong>: remove event listeners, clear timers, cancel requests, destroy third-party instances.</li><li><strong class=\"k\"><code>onActivated</code> / <code>onDeactivated</code>:</strong> for components inside <code>&lt;KeepAlive&gt;</code> (Câu 195).</li><li><strong class=\"k\"><code>onErrorCaptured</code>:</strong> catch errors from descendants, similar to an error boundary.</li></ul> <pre><code>&lt;script setup&gt;\nconst el = ref(null);\nlet observer;\nonMounted(() =&gt; {\n  observer = new ResizeObserver(() =&gt; { /* measure el.value */ });\n  observer.observe(el.value);\n});\nonUnmounted(() =&gt; observer.disconnect());\n&lt;/script&gt;</code></pre> <h5>SSR</h5> <p>On the server only <strong class=\"k\"><code>setup</code></strong> (and <code>onServerPrefetch</code>) runs. <strong class=\"k\"><code>onMounted</code> and the other DOM hooks do not run</strong>, because there is no DOM and no mounting. So browser APIs (<code>window</code>, <code>localStorage</code>) belong in <code>onMounted</code>, not at the top of <code>setup</code> (Câu 84). Fetch initial data with the framework's data composables rather than in <code>onMounted</code>, which would run only in the browser and cause a loading flash.</p> <p>Since Vue 3.5, <code>onWatcherCleanup</code> also helps with cleaning up inside watchers, but the rule stays: whatever you start, you stop.</p>",
+        "vi": "<p>Một component Vue đi qua <strong class=\"k\">tạo, mount, cập nhật và unmount</strong>. Trong Composition API bạn đăng ký callback bằng các hàm <code>onXxx</code>, <strong class=\"k\">đồng bộ bên trong <code>setup</code></strong> (hoặc <code>&lt;script setup&gt;</code>).</p> <ul><li><strong class=\"k\"><code>setup</code> / <code>&lt;script setup&gt;</code>:</strong> thay cho <code>beforeCreate</code> và <code>created</code>. Khởi tạo state, composable và watcher ở đây.</li><li><strong class=\"k\"><code>onBeforeMount</code> / <code>onMounted</code>:</strong> sau <code>onMounted</code> thì DOM của component đã tồn tại. Dùng cho <strong class=\"k\">truy cập DOM, đo kích thước và thư viện chỉ chạy trên browser</strong> (biểu đồ, bản đồ, listener của <code>window</code>).</li><li><strong class=\"k\"><code>onBeforeUpdate</code> / <code>onUpdated</code>:</strong> quanh lần re-render DOM do thay đổi reactive. Tránh đổi state trong <code>onUpdated</code> (có thể gây vòng lặp). Muốn \"sau khi DOM cập nhật\" dùng <code>await nextTick()</code>.</li><li><strong class=\"k\"><code>onBeforeUnmount</code> / <code>onUnmounted</code>:</strong> <strong class=\"k\">dọn dẹp</strong>: gỡ event listener, xóa timer, hủy request, hủy instance thư viện bên thứ ba.</li><li><strong class=\"k\"><code>onActivated</code> / <code>onDeactivated</code>:</strong> cho component nằm trong <code>&lt;KeepAlive&gt;</code> (Câu 195).</li><li><strong class=\"k\"><code>onErrorCaptured</code>:</strong> bắt lỗi từ các component con cháu, tương tự error boundary.</li></ul> <pre><code>&lt;script setup&gt;\nconst el = ref(null);\nlet observer;\nonMounted(() =&gt; {\n  observer = new ResizeObserver(() =&gt; { /* đo el.value */ });\n  observer.observe(el.value);\n});\nonUnmounted(() =&gt; observer.disconnect());\n&lt;/script&gt;</code></pre> <h5>SSR</h5> <p>Trên server chỉ <strong class=\"k\"><code>setup</code></strong> (và <code>onServerPrefetch</code>) chạy. <strong class=\"k\"><code>onMounted</code> và các hook DOM khác không chạy</strong>, vì không có DOM và không có mount. Nên API của browser (<code>window</code>, <code>localStorage</code>) thuộc về <code>onMounted</code>, không đặt ở đầu <code>setup</code> (Câu 84). Hãy lấy dữ liệu ban đầu bằng data composable của framework thay vì trong <code>onMounted</code>, vốn chỉ chạy trên browser và gây nháy loading.</p> <p>Từ Vue 3.5, <code>onWatcherCleanup</code> cũng hỗ trợ dọn dẹp bên trong watcher, nhưng quy tắc vẫn vậy: thứ gì bạn bật lên thì bạn phải tắt đi.</p>"
+      },
+      "terms": [
+        "lifecycle hooks",
+        "onMounted",
+        "onUnmounted",
+        "nextTick",
+        "onServerPrefetch",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "q190",
+      "number": 190,
+      "tag": "Vue · Template",
+      "title": "What is the difference between <code>v-if</code> and <code>v-show</code>? Why should you not combine <code>v-if</code> with <code>v-for</code>, and how do keys work in <code>v-for</code>?",
+      "titleVi": "<code>v-if</code> và <code>v-show</code> khác nhau thế nào? Vì sao không nên dùng <code>v-if</code> cùng <code>v-for</code>, và <code>key</code> trong <code>v-for</code> hoạt động ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "v-if: render có điều kiện thật; v-show: đổi CSS display",
+          "Chi phí: toggle vs khởi tạo",
+          "v-if + v-for: độ ưu tiên đổi ở Vue 3",
+          "Cách sửa: computed hoặc template bọc ngoài",
+          "key ổn định, không dùng index"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\"><code>v-if</code></strong> really adds or removes the element (and its component, with all state and listeners) from the tree. <strong class=\"k\"><code>v-show</code></strong> always renders the element and just toggles <strong class=\"k\"><code>display: none</code></strong>.</p> <ul><li><code>v-if</code> is <strong class=\"k\">lazy</strong>: if the condition starts false, nothing renders. It has higher toggle cost (create and destroy), supports <code>v-else</code> and <code>&lt;template&gt;</code>. Use it when the condition rarely changes, when the content is heavy, or when it must not exist (permissions).</li><li><code>v-show</code> has higher initial cost but a <strong class=\"k\">cheap toggle</strong>, keeps component state, and works only on elements, not <code>&lt;template&gt;</code>. Use it for things toggled often (a dropdown, a tab panel).</li></ul> <h5><code>v-if</code> with <code>v-for</code></h5> <p>In Vue 3, <strong class=\"k\"><code>v-if</code> has higher priority than <code>v-for</code></strong> (the opposite of Vue 2). So <code>v-if</code> on the same element cannot see the loop variable and fails. Even when it works, you re-evaluate the condition for every item. Instead:</p> <pre><code>&lt;!-- bad --&gt;\n&lt;li v-for=\"user in users\" v-if=\"user.active\" :key=\"user.id\"&gt;\n\n&lt;!-- good: filter once in a computed --&gt;\n&lt;li v-for=\"user in activeUsers\" :key=\"user.id\"&gt;\n\n&lt;!-- or put v-if on an inner element / wrapper template --&gt;\n&lt;template v-for=\"user in users\" :key=\"user.id\"&gt;\n  &lt;li v-if=\"user.active\"&gt;{{ user.name }}&lt;/li&gt;\n&lt;/template&gt;</code></pre> <h5>Keys in <code>v-for</code></h5> <p><code>:key</code> lets Vue's diff algorithm <strong class=\"k\">track node identity</strong> when the list changes (Câu 54 explains the same idea for React). Use a <strong class=\"k\">stable, unique id</strong> such as <code>user.id</code>. Using the array <strong class=\"k\">index</strong> breaks when items are inserted, removed or reordered: DOM nodes and component state (an input's text) get reused by the wrong item. <code>v-for</code> on a component should always have a <code>key</code>.</p> <p>Same trick as React: changing the <code>key</code> on a component forces it to be recreated, which resets its state.</p>",
+        "vi": "<p><strong class=\"k\"><code>v-if</code></strong> thật sự thêm hoặc xóa phần tử (cùng component, state và listener của nó) khỏi cây. <strong class=\"k\"><code>v-show</code></strong> luôn render phần tử và chỉ bật tắt <strong class=\"k\"><code>display: none</code></strong>.</p> <ul><li><code>v-if</code> là <strong class=\"k\">lazy</strong>: nếu điều kiện ban đầu là false thì không render gì. Chi phí toggle cao hơn (tạo và hủy), hỗ trợ <code>v-else</code> và <code>&lt;template&gt;</code>. Dùng khi điều kiện ít đổi, nội dung nặng, hoặc nội dung không được phép tồn tại (phân quyền).</li><li><code>v-show</code> chi phí khởi tạo cao hơn nhưng <strong class=\"k\">toggle rẻ</strong>, giữ state của component, và chỉ dùng trên phần tử, không dùng được trên <code>&lt;template&gt;</code>. Dùng cho thứ bật tắt thường xuyên (dropdown, tab panel).</li></ul> <h5><code>v-if</code> cùng <code>v-for</code></h5> <p>Ở Vue 3, <strong class=\"k\"><code>v-if</code> có độ ưu tiên cao hơn <code>v-for</code></strong> (ngược với Vue 2). Nên <code>v-if</code> trên cùng phần tử không thấy được biến vòng lặp và bị lỗi. Kể cả khi chạy được, bạn vẫn đánh giá điều kiện cho từng phần tử. Thay vào đó:</p> <pre><code>&lt;!-- tệ --&gt;\n&lt;li v-for=\"user in users\" v-if=\"user.active\" :key=\"user.id\"&gt;\n\n&lt;!-- tốt: lọc một lần trong computed --&gt;\n&lt;li v-for=\"user in activeUsers\" :key=\"user.id\"&gt;\n\n&lt;!-- hoặc đặt v-if lên phần tử bên trong / template bọc ngoài --&gt;\n&lt;template v-for=\"user in users\" :key=\"user.id\"&gt;\n  &lt;li v-if=\"user.active\"&gt;{{ user.name }}&lt;/li&gt;\n&lt;/template&gt;</code></pre> <h5>Key trong <code>v-for</code></h5> <p><code>:key</code> cho thuật toán diff của Vue <strong class=\"k\">theo dõi định danh node</strong> khi danh sách đổi (Câu 54 giải thích cùng ý tưởng cho React). Hãy dùng <strong class=\"k\">id ổn định và duy nhất</strong> như <code>user.id</code>. Dùng <strong class=\"k\">index</strong> của mảng sẽ hỏng khi phần tử được chèn, xóa hoặc đổi thứ tự: DOM node và state của component (chữ trong input) bị tái dùng nhầm cho phần tử khác. <code>v-for</code> trên component luôn nên có <code>key</code>.</p> <p>Cùng mẹo như React: đổi <code>key</code> của một component sẽ buộc nó được tạo lại, và state được reset.</p>"
+      },
+      "terms": [
+        "v-if",
+        "v-show",
+        "v-for",
+        "key",
+        "computed filter",
+        "template"
+      ]
+    },
+    {
+      "id": "q191",
+      "number": 191,
+      "tag": "Vue · Component",
+      "title": "How do Vue components communicate: props, emits, <code>v-model</code> (<code>defineModel</code>) and <code>provide</code>/<code>inject</code>?",
+      "titleVi": "Các component Vue giao tiếp với nhau như thế nào: props, emits, <code>v-model</code> (<code>defineModel</code>) và <code>provide</code>/<code>inject</code>?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Luồng một chiều: props xuống, events lên",
+          "defineProps và defineEmits có kiểu",
+          "v-model và defineModel",
+          "provide/inject cho cây sâu",
+          "Khi nào dùng Pinia thay vì provide/inject"
+        ]
+      },
+      "answer": {
+        "en": "<p>Vue enforces <strong class=\"k\">one-way data flow</strong>: <strong class=\"k\">props go down, events go up</strong>. A child must not mutate a prop (Vue warns); it asks the parent to change it by emitting an event.</p> <h5><code>defineProps</code> and <code>defineEmits</code></h5> <p>In <code>&lt;script setup&gt;</code> they are compiler macros with TypeScript types and no import:</p> <pre><code>&lt;script setup lang=\"ts\"&gt;\nconst props = defineProps&lt;{ modelValue: string; disabled?: boolean }&gt;();\nconst emit = defineEmits&lt;{ (e: 'update:modelValue', v: string): void }&gt;();\n&lt;/script&gt;</code></pre> <p>Since Vue 3.5, props can be destructured reactively in <code>&lt;script setup&gt;</code> (the compiler keeps them reactive, unlike the pitfall in Câu 79).</p> <h5><code>v-model</code></h5> <p><code>v-model</code> on a component is sugar for a <strong class=\"k\"><code>modelValue</code> prop plus an <code>update:modelValue</code> event</strong>. <strong class=\"k\"><code>defineModel()</code></strong> (stable since Vue 3.4) removes the boilerplate: it returns a ref that reads the prop and, when assigned, emits the update.</p> <pre><code>&lt;script setup&gt;\nconst model = defineModel();          // parent: &lt;MyInput v-model=\"name\" /&gt;\nconst title = defineModel('title');   // parent: v-model:title=\"x\"\n&lt;/script&gt;\n&lt;template&gt;&lt;input v-model=\"model\" /&gt;&lt;/template&gt;</code></pre> <h5><code>provide</code> / <code>inject</code></h5> <p>For <strong class=\"k\">deep trees</strong> or <strong class=\"k\">library-style components</strong> (a <code>Tabs</code> that shares state with its <code>Tab</code> children), a parent <code>provide</code>s a value and any descendant <code>inject</code>s it, skipping the layers in between. Provide <strong class=\"k\">refs</strong> so values stay reactive, expose <strong class=\"k\">functions</strong> to change them rather than letting children mutate state, and use an <code>InjectionKey</code> for types.</p> <h5>Choosing</h5> <ul><li>Parent and child: <strong class=\"k\">props and emits</strong>.</li><li>A subtree with its own scoped state: <strong class=\"k\">provide/inject</strong> (each instance of the tree gets its own state).</li><li>App-wide state, shared across unrelated pages, with devtools and SSR support: <strong class=\"k\">Pinia</strong> (Câu 81).</li></ul> <p>Avoid reaching into children with template refs and calling their methods unless it is truly imperative (focus, scroll).</p>",
+        "vi": "<p>Vue áp dụng <strong class=\"k\">luồng dữ liệu một chiều</strong>: <strong class=\"k\">props đi xuống, event đi lên</strong>. Component con không được sửa prop (Vue sẽ cảnh báo); nó yêu cầu cha thay đổi bằng cách emit một event.</p> <h5><code>defineProps</code> và <code>defineEmits</code></h5> <p>Trong <code>&lt;script setup&gt;</code> chúng là compiler macro có kiểu TypeScript và không cần import:</p> <pre><code>&lt;script setup lang=\"ts\"&gt;\nconst props = defineProps&lt;{ modelValue: string; disabled?: boolean }&gt;();\nconst emit = defineEmits&lt;{ (e: 'update:modelValue', v: string): void }&gt;();\n&lt;/script&gt;</code></pre> <p>Từ Vue 3.5, props có thể được destructure mà vẫn reactive trong <code>&lt;script setup&gt;</code> (compiler giữ chúng reactive, khác với bẫy ở Câu 79).</p> <h5><code>v-model</code></h5> <p><code>v-model</code> trên component là cú pháp rút gọn của <strong class=\"k\">prop <code>modelValue</code> cộng với event <code>update:modelValue</code></strong>. <strong class=\"k\"><code>defineModel()</code></strong> (ổn định từ Vue 3.4) loại bỏ phần boilerplate: nó trả về một ref đọc từ prop và khi được gán thì emit update.</p> <pre><code>&lt;script setup&gt;\nconst model = defineModel();          // cha: &lt;MyInput v-model=\"name\" /&gt;\nconst title = defineModel('title');   // cha: v-model:title=\"x\"\n&lt;/script&gt;\n&lt;template&gt;&lt;input v-model=\"model\" /&gt;&lt;/template&gt;</code></pre> <h5><code>provide</code> / <code>inject</code></h5> <p>Với <strong class=\"k\">cây sâu</strong> hoặc <strong class=\"k\">component kiểu thư viện</strong> (một <code>Tabs</code> chia sẻ state cho các <code>Tab</code> con), component cha <code>provide</code> một giá trị và bất kỳ con cháu nào cũng <code>inject</code> được, bỏ qua các tầng ở giữa. Hãy provide <strong class=\"k\">ref</strong> để giá trị vẫn reactive, expose <strong class=\"k\">hàm</strong> để thay đổi thay vì để con tự sửa state, và dùng <code>InjectionKey</code> để có kiểu.</p> <h5>Chọn cách nào</h5> <ul><li>Cha và con trực tiếp: <strong class=\"k\">props và emits</strong>.</li><li>Một cây con có state riêng: <strong class=\"k\">provide/inject</strong> (mỗi instance của cây có state riêng).</li><li>State toàn app, dùng chung giữa các trang không liên quan, có devtools và hỗ trợ SSR: <strong class=\"k\">Pinia</strong> (Câu 81).</li></ul> <p>Tránh chọc vào con bằng template ref rồi gọi method của chúng, trừ khi thực sự là hành động mệnh lệnh (focus, scroll).</p>"
+      },
+      "terms": [
+        "props",
+        "emits",
+        "defineModel",
+        "v-model",
+        "provide/inject",
+        "one-way data flow"
+      ]
+    },
+    {
+      "id": "q192",
+      "number": 192,
+      "tag": "Vue · Slot",
+      "title": "What are slots and scoped slots? What is a renderless component and when is it useful?",
+      "titleVi": "Slot và scoped slot là gì? Renderless component là gì và khi nào hữu ích?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Slot: truyền markup vào component",
+          "Named slot và fallback content",
+          "Scoped slot: con truyền dữ liệu ngược lại cho slot",
+          "Renderless component, và composable thay thế",
+          "So với React children / render props"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Slots</strong> let a parent pass <strong class=\"k\">template content</strong> into a child, so the child controls layout and the parent controls content. Besides <code>props</code> (data), slots make components composable (cards, modals, layouts).</p> <ul><li><strong class=\"k\">Default and named slots:</strong> <code>&lt;slot /&gt;</code> and <code>&lt;slot name=\"header\" /&gt;</code>; the parent fills them with <code>&lt;template #header&gt;</code>. Content between the tags of <code>&lt;slot&gt;</code> is <strong class=\"k\">fallback</strong> shown when nothing is passed.</li><li><strong class=\"k\">Compilation scope:</strong> slot content is compiled in the <strong class=\"k\">parent's scope</strong>, so it can read the parent's data but not the child's.</li></ul> <h5>Scoped slots</h5> <p>When the child owns the data but the parent wants to decide <strong class=\"k\">how to render it</strong>, the child passes data through slot props:</p> <pre><code>&lt;!-- DataList.vue --&gt;\n&lt;li v-for=\"item in items\" :key=\"item.id\"&gt;\n  &lt;slot name=\"item\" :item=\"item\" :index=\"index\"&gt;{{ item.name }}&lt;/slot&gt;\n&lt;/li&gt;\n\n&lt;!-- usage --&gt;\n&lt;DataList :items=\"orders\"&gt;\n  &lt;template #item=\"{ item }\"&gt;&lt;OrderRow :order=\"item\" /&gt;&lt;/template&gt;\n&lt;/DataList&gt;</code></pre> <p>This is how table columns, virtual lists, dropdown options and autocomplete results get <strong class=\"k\">custom rendering without the child knowing the shape of the row</strong>.</p> <h5>Renderless components</h5> <p>A component that renders <strong class=\"k\">no markup of its own</strong>, only manages logic and calls <code>&lt;slot v-bind=\"state\" /&gt;</code>. Examples: a fetcher, a toggle, a mouse tracker, a headless dropdown. It separates <strong class=\"k\">behavior from presentation</strong>.</p> <p>Today, plain logic is usually better as a <strong class=\"k\">composable</strong> (Câu 193), which avoids an extra component instance. Renderless components still make sense when the logic is tied to <strong class=\"k\">component lifecycle and its own template parts</strong>, as in headless UI libraries.</p> <p>In React terms: slots are like <code>children</code>, scoped slots are like <strong class=\"k\">render props</strong> (Câu 172).</p>",
+        "vi": "<p><strong class=\"k\">Slot</strong> cho phép cha truyền <strong class=\"k\">nội dung template</strong> vào con, để con quyết định bố cục còn cha quyết định nội dung. Bên cạnh <code>props</code> (dữ liệu), slot làm cho component dễ ghép (card, modal, layout).</p> <ul><li><strong class=\"k\">Slot mặc định và slot có tên:</strong> <code>&lt;slot /&gt;</code> và <code>&lt;slot name=\"header\" /&gt;</code>; cha điền bằng <code>&lt;template #header&gt;</code>. Nội dung nằm giữa thẻ <code>&lt;slot&gt;</code> là <strong class=\"k\">fallback</strong>, hiện ra khi không truyền gì.</li><li><strong class=\"k\">Phạm vi biên dịch:</strong> nội dung slot được biên dịch trong <strong class=\"k\">scope của cha</strong>, nên đọc được dữ liệu của cha nhưng không đọc được của con.</li></ul> <h5>Scoped slot</h5> <p>Khi con sở hữu dữ liệu nhưng cha muốn quyết định <strong class=\"k\">render nó thế nào</strong>, con truyền dữ liệu qua slot props:</p> <pre><code>&lt;!-- DataList.vue --&gt;\n&lt;li v-for=\"item in items\" :key=\"item.id\"&gt;\n  &lt;slot name=\"item\" :item=\"item\" :index=\"index\"&gt;{{ item.name }}&lt;/slot&gt;\n&lt;/li&gt;\n\n&lt;!-- cách dùng --&gt;\n&lt;DataList :items=\"orders\"&gt;\n  &lt;template #item=\"{ item }\"&gt;&lt;OrderRow :order=\"item\" /&gt;&lt;/template&gt;\n&lt;/DataList&gt;</code></pre> <p>Đây là cách cột của bảng, virtual list, option của dropdown và kết quả autocomplete có <strong class=\"k\">render tùy biến mà con không cần biết hình dạng của dòng</strong>.</p> <h5>Renderless component</h5> <p>Component <strong class=\"k\">không render markup của riêng nó</strong>, chỉ quản lý logic và gọi <code>&lt;slot v-bind=\"state\" /&gt;</code>. Ví dụ: fetcher, toggle, theo dõi chuột, headless dropdown. Nó tách <strong class=\"k\">hành vi khỏi giao diện</strong>.</p> <p>Ngày nay, logic thuần thường tốt hơn khi làm <strong class=\"k\">composable</strong> (Câu 193), tránh thêm một instance component. Renderless component vẫn hợp lý khi logic gắn với <strong class=\"k\">lifecycle của component và các phần template của nó</strong>, như trong thư viện headless UI.</p> <p>Theo thuật ngữ React: slot giống <code>children</code>, scoped slot giống <strong class=\"k\">render props</strong> (Câu 172).</p>"
+      },
+      "terms": [
+        "slots",
+        "named slots",
+        "scoped slots",
+        "renderless component",
+        "fallback content",
+        "headless"
+      ]
+    },
+    {
+      "id": "q193",
+      "number": 193,
+      "tag": "Vue · Composition",
+      "title": "Composables vs mixins: why did mixins fall out of favour? When would you still use the Options API?",
+      "titleVi": "Composable và mixin: vì sao mixin không còn được ưa chuộng? Khi nào vẫn dùng Options API?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Composable là gì",
+          "Ba vấn đề của mixin",
+          "Composable giải quyết thế nào",
+          "Quy tắc viết composable",
+          "Composition vs Options: chọn theo tình huống"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\">composable</strong> is a function that uses the Composition API (<code>ref</code>, <code>computed</code>, <code>watch</code>, lifecycle hooks) to <strong class=\"k\">encapsulate and reuse stateful logic</strong>, named <code>useXxx</code>: <code>useFetch</code>, <code>useDebounce</code>, <code>useMouse</code>.</p> <h5>Why mixins lost</h5> <ol><li><strong class=\"k\">Unclear origin:</strong> in a component using three mixins, you cannot tell where <code>this.items</code> comes from.</li><li><strong class=\"k\">Name collisions:</strong> two mixins defining the same data or method silently overwrite each other.</li><li><strong class=\"k\">Implicit coupling:</strong> a mixin depends on properties the component must define, and cannot take parameters or be composed cleanly. Typing with TypeScript is poor.</li></ol> <h5>What composables fix</h5> <pre><code>// explicit inputs, explicit outputs, renamable, typed\nconst { data, error, pending } = useFetch(() =&gt; `/api/orders/${id.value}`);\nconst { x, y } = useMouse();</code></pre> <p>Every value comes from a visible call, you can <strong class=\"k\">rename on destructure</strong>, pass arguments (even refs, with <code>toValue</code>), and build composables out of other composables.</p> <h5>Rules for good composables</h5> <ul><li>Call them <strong class=\"k\">synchronously in <code>setup</code></strong>, so lifecycle hooks and watchers bind to the right component.</li><li><strong class=\"k\">Clean up</strong> what you start (<code>onUnmounted</code>, <code>onScopeDispose</code>).</li><li><strong class=\"k\">Return refs</strong>, not plain values, so reactivity survives destructuring (Câu 79).</li><li>Avoid module-level state in SSR: it is shared between requests (Câu 84).</li></ul> <h5>Composition API vs Options API</h5> <p>Both are supported in Vue 3. <strong class=\"k\"><code>&lt;script setup&gt;</code> with the Composition API</strong> is the recommended default: better TypeScript, logic grouped by feature, reusable. The <strong class=\"k\">Options API</strong> is fine for small components, simple pages, and codebases migrating from Vue 2. A team should pick one style per project and be consistent, not mix them within one component.</p>",
+        "vi": "<p><strong class=\"k\">Composable</strong> là hàm dùng Composition API (<code>ref</code>, <code>computed</code>, <code>watch</code>, lifecycle hook) để <strong class=\"k\">đóng gói và tái sử dụng logic có state</strong>, đặt tên <code>useXxx</code>: <code>useFetch</code>, <code>useDebounce</code>, <code>useMouse</code>.</p> <h5>Vì sao mixin thua</h5> <ol><li><strong class=\"k\">Nguồn gốc không rõ:</strong> trong component dùng ba mixin, bạn không biết <code>this.items</code> đến từ đâu.</li><li><strong class=\"k\">Trùng tên:</strong> hai mixin cùng định nghĩa một data hoặc method sẽ ghi đè nhau mà không báo.</li><li><strong class=\"k\">Phụ thuộc ngầm:</strong> mixin phụ thuộc vào các thuộc tính mà component phải tự định nghĩa, không nhận tham số được và khó ghép gọn. Gõ kiểu bằng TypeScript rất kém.</li></ol> <h5>Composable khắc phục điều gì</h5> <pre><code>// đầu vào tường minh, đầu ra tường minh, đổi tên được, có kiểu\nconst { data, error, pending } = useFetch(() =&gt; `/api/orders/${id.value}`);\nconst { x, y } = useMouse();</code></pre> <p>Mọi giá trị đến từ một lời gọi nhìn thấy được, bạn có thể <strong class=\"k\">đổi tên khi destructure</strong>, truyền tham số (kể cả ref, với <code>toValue</code>), và xây composable từ các composable khác.</p> <h5>Quy tắc viết composable tốt</h5> <ul><li>Gọi chúng <strong class=\"k\">đồng bộ trong <code>setup</code></strong>, để lifecycle hook và watcher gắn đúng component.</li><li><strong class=\"k\">Dọn dẹp</strong> thứ bạn bật lên (<code>onUnmounted</code>, <code>onScopeDispose</code>).</li><li><strong class=\"k\">Trả về ref</strong>, không trả giá trị thuần, để reactivity sống sót qua destructure (Câu 79).</li><li>Tránh state cấp module khi SSR: nó bị dùng chung giữa các request (Câu 84).</li></ul> <h5>Composition API vs Options API</h5> <p>Vue 3 hỗ trợ cả hai. <strong class=\"k\"><code>&lt;script setup&gt;</code> với Composition API</strong> là mặc định được khuyến nghị: TypeScript tốt hơn, logic gom theo tính năng, tái sử dụng được. <strong class=\"k\">Options API</strong> vẫn ổn cho component nhỏ, trang đơn giản, và codebase đang migrate từ Vue 2. Team nên chọn một phong cách cho mỗi dự án và nhất quán, không trộn lẫn trong cùng một component.</p>"
+      },
+      "terms": [
+        "composable",
+        "mixin",
+        "Composition API",
+        "Options API",
+        "script setup",
+        "name collision"
+      ]
+    },
+    {
+      "id": "q194",
+      "number": 194,
+      "tag": "Vue · Router",
+      "title": "How does Vue Router handle navigation guards, lazy-loaded routes and dynamic routes?",
+      "titleVi": "Vue Router xử lý navigation guard, route lazy-load và route động như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Route record: path, component, meta",
+          "Navigation guards: global, per-route, in-component",
+          "Lazy-load route bằng dynamic import",
+          "Route động và bẫy tái dùng component",
+          "Guard phía client không phải bảo mật"
+        ]
+      },
+      "answer": {
+        "en": "<p>Vue Router (v4) maps URLs to components through <strong class=\"k\">route records</strong>: <code>path</code>, <code>component</code>, <code>name</code>, <code>meta</code>, <code>children</code>, and <code>props</code>.</p> <h5>Navigation guards</h5> <p>Guards run during navigation and can <strong class=\"k\">allow, cancel or redirect</strong> it.</p> <ul><li><strong class=\"k\">Global:</strong> <code>router.beforeEach((to, from) =&gt; ...)</code> runs before every navigation. Return <code>false</code> to cancel, a route location to redirect, or nothing to continue. <code>beforeResolve</code> and <code>afterEach</code> (analytics, no control over navigation) also exist.</li><li><strong class=\"k\">Per-route:</strong> <code>beforeEnter</code> on a route record.</li><li><strong class=\"k\">In-component:</strong> <code>onBeforeRouteLeave</code> (unsaved changes warning) and <code>onBeforeRouteUpdate</code> (same component, new params).</li></ul> <pre><code>router.beforeEach(async (to) =&gt; {\n  const auth = useAuthStore();\n  if (to.meta.requiresAuth &amp;&amp; !auth.user) {\n    return { name: 'login', query: { redirect: to.fullPath } };\n  }\n});</code></pre> <p>Guards are for UX: <strong class=\"k\">a client-side guard is not security</strong>, the API must enforce permissions (RBAC) itself. In Nuxt the same role is played by route middleware.</p> <h5>Lazy-loaded routes</h5> <p>Use a dynamic import so each page becomes its own chunk, loaded when first visited:</p> <pre><code>{ path: '/admin', component: () =&gt; import('./pages/Admin.vue'), meta: { requiresAuth: true } }</code></pre> <h5>Dynamic routes</h5> <p><code>/users/:id</code> exposes <code>route.params.id</code> through <code>useRoute()</code>. The pitfall: navigating from <code>/users/1</code> to <code>/users/2</code> <strong class=\"k\">reuses the same component instance</strong>, so <code>onMounted</code> does not run again. React to the param with <code>watch(() =&gt; route.params.id, load)</code>, or <code>onBeforeRouteUpdate</code>, or set a <code>:key=\"route.fullPath\"</code> on <code>&lt;RouterView&gt;</code> to recreate it. Setting <code>props: true</code> on the route passes params as props, decoupling the component from the router (easier to test).</p>",
+        "vi": "<p>Vue Router (v4) ánh xạ URL tới component thông qua <strong class=\"k\">route record</strong>: <code>path</code>, <code>component</code>, <code>name</code>, <code>meta</code>, <code>children</code> và <code>props</code>.</p> <h5>Navigation guard</h5> <p>Guard chạy trong lúc điều hướng và có thể <strong class=\"k\">cho phép, hủy hoặc chuyển hướng</strong> nó.</p> <ul><li><strong class=\"k\">Toàn cục:</strong> <code>router.beforeEach((to, from) =&gt; ...)</code> chạy trước mọi điều hướng. Trả <code>false</code> để hủy, một route location để chuyển hướng, hoặc không trả gì để tiếp tục. Còn có <code>beforeResolve</code> và <code>afterEach</code> (analytics, không kiểm soát được điều hướng).</li><li><strong class=\"k\">Theo route:</strong> <code>beforeEnter</code> trên route record.</li><li><strong class=\"k\">Trong component:</strong> <code>onBeforeRouteLeave</code> (cảnh báo thay đổi chưa lưu) và <code>onBeforeRouteUpdate</code> (cùng component, params mới).</li></ul> <pre><code>router.beforeEach(async (to) =&gt; {\n  const auth = useAuthStore();\n  if (to.meta.requiresAuth &amp;&amp; !auth.user) {\n    return { name: 'login', query: { redirect: to.fullPath } };\n  }\n});</code></pre> <p>Guard phục vụ UX: <strong class=\"k\">guard phía client không phải bảo mật</strong>, API phải tự ép quyền (RBAC). Trong Nuxt, vai trò tương tự do route middleware đảm nhận.</p> <h5>Route lazy-load</h5> <p>Dùng dynamic import để mỗi trang thành một chunk riêng, tải khi truy cập lần đầu:</p> <pre><code>{ path: '/admin', component: () =&gt; import('./pages/Admin.vue'), meta: { requiresAuth: true } }</code></pre> <h5>Route động</h5> <p><code>/users/:id</code> cho <code>route.params.id</code> qua <code>useRoute()</code>. Cái bẫy: điều hướng từ <code>/users/1</code> sang <code>/users/2</code> <strong class=\"k\">tái dùng cùng instance component</strong>, nên <code>onMounted</code> không chạy lại. Hãy phản ứng với param bằng <code>watch(() =&gt; route.params.id, load)</code>, hoặc <code>onBeforeRouteUpdate</code>, hoặc đặt <code>:key=\"route.fullPath\"</code> trên <code>&lt;RouterView&gt;</code> để tạo lại. Đặt <code>props: true</code> trên route sẽ truyền params thành props, tách component khỏi router (dễ test hơn).</p>"
+      },
+      "terms": [
+        "Vue Router",
+        "navigation guards",
+        "beforeEach",
+        "lazy routes",
+        "dynamic routes",
+        "meta",
+        "onBeforeRouteUpdate"
+      ]
+    },
+    {
+      "id": "q195",
+      "number": 195,
+      "tag": "Vue · Built-in",
+      "title": "What do <code>KeepAlive</code>, <code>Teleport</code> and <code>Suspense</code> do, and when would you use each?",
+      "titleVi": "<code>KeepAlive</code>, <code>Teleport</code> và <code>Suspense</code> làm gì, và khi nào dùng từng cái?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "KeepAlive: giữ instance component khi chuyển qua lại",
+          "Teleport: render ra chỗ khác trong DOM",
+          "Suspense: chờ async dependency, còn experimental",
+          "Mỗi cái: khi dùng, lưu ý, SSR"
+        ]
+      },
+      "answer": {
+        "en": "<p>These are three built-in components that solve different problems.</p> <h5><code>&lt;KeepAlive&gt;</code></h5> <p>It <strong class=\"k\">caches component instances</strong> instead of destroying them when they are toggled (tabs, a list page you return to). State, scroll position and input text survive. Control it with <code>include</code>, <code>exclude</code> and <code>max</code> (LRU eviction), and use <code>onActivated</code> and <code>onDeactivated</code> to refresh data or pause work.</p> <pre><code>&lt;RouterView v-slot=\"{ Component }\"&gt;\n  &lt;KeepAlive include=\"OrderList\" :max=\"5\"&gt;\n    &lt;component :is=\"Component\" /&gt;\n  &lt;/KeepAlive&gt;\n&lt;/RouterView&gt;</code></pre> <p>Trade-off: cached components <strong class=\"k\">stay in memory</strong>, so do not cache everything, and stale data needs a refresh in <code>onActivated</code>.</p> <h5><code>&lt;Teleport&gt;</code></h5> <p>It renders part of a component's template <strong class=\"k\">somewhere else in the DOM</strong>, for example <code>&lt;Teleport to=\"body\"&gt;</code>, while it stays in the <strong class=\"k\">same logical component tree</strong> (props, events, provide/inject still work). Use it for <strong class=\"k\">modals, tooltips, dropdown menus and toasts</strong>, so they escape parent <code>overflow: hidden</code>, <code>transform</code> and <code>z-index</code> stacking contexts. There is a <code>disabled</code> prop to render in place. With SSR, the target must exist at render time: Nuxt provides a <code>#teleports</code> container for <code>to=\"#teleports\"</code>, and <code>&lt;ClientOnly&gt;</code> is the safe fallback.</p> <h5><code>&lt;Suspense&gt;</code></h5> <p>It shows a <code>#fallback</code> while <strong class=\"k\">async dependencies</strong> inside its <code>#default</code> slot resolve: components with <code>async setup()</code> or top-level <code>await</code> in <code>&lt;script setup&gt;</code>, and async components. It is useful for loading states at one place instead of per component. The Vue docs still mark it <strong class=\"k\">experimental</strong> (API may change), so be conservative in a library. Nuxt uses it internally for page transitions and data loading.</p> <p>Compare with React: <code>KeepAlive</code> has no direct equivalent, <code>Teleport</code> is like <code>createPortal</code>, and <code>Suspense</code> is similar in idea but less mature.</p>",
+        "vi": "<p>Đây là ba component có sẵn, giải quyết ba vấn đề khác nhau.</p> <h5><code>&lt;KeepAlive&gt;</code></h5> <p>Nó <strong class=\"k\">cache instance component</strong> thay vì hủy khi chúng được bật tắt (tab, trang danh sách mà bạn quay lại). State, vị trí scroll và chữ trong input được giữ lại. Điều khiển bằng <code>include</code>, <code>exclude</code> và <code>max</code> (loại theo LRU), và dùng <code>onActivated</code> và <code>onDeactivated</code> để làm mới dữ liệu hoặc tạm dừng công việc.</p> <pre><code>&lt;RouterView v-slot=\"{ Component }\"&gt;\n  &lt;KeepAlive include=\"OrderList\" :max=\"5\"&gt;\n    &lt;component :is=\"Component\" /&gt;\n  &lt;/KeepAlive&gt;\n&lt;/RouterView&gt;</code></pre> <p>Đánh đổi: component được cache <strong class=\"k\">nằm lại trong bộ nhớ</strong>, nên đừng cache mọi thứ, và dữ liệu cũ cần được làm mới trong <code>onActivated</code>.</p> <h5><code>&lt;Teleport&gt;</code></h5> <p>Nó render một phần template của component <strong class=\"k\">ở chỗ khác trong DOM</strong>, ví dụ <code>&lt;Teleport to=\"body\"&gt;</code>, trong khi vẫn thuộc <strong class=\"k\">cùng cây component logic</strong> (props, event, provide/inject vẫn hoạt động). Dùng cho <strong class=\"k\">modal, tooltip, dropdown menu và toast</strong>, để thoát khỏi <code>overflow: hidden</code>, <code>transform</code> và stacking context của <code>z-index</code> ở cha. Có prop <code>disabled</code> để render tại chỗ. Với SSR, target phải tồn tại lúc render: Nuxt cung cấp container <code>#teleports</code> cho <code>to=\"#teleports\"</code>, và <code>&lt;ClientOnly&gt;</code> là phương án dự phòng an toàn.</p> <h5><code>&lt;Suspense&gt;</code></h5> <p>Nó hiện <code>#fallback</code> trong lúc <strong class=\"k\">các async dependency</strong> bên trong slot <code>#default</code> chưa xong: component có <code>async setup()</code> hoặc <code>await</code> ở top-level của <code>&lt;script setup&gt;</code>, và async component. Hữu ích để gom trạng thái loading về một chỗ thay vì ở từng component. Tài liệu Vue vẫn đánh dấu nó là <strong class=\"k\">experimental</strong> (API có thể đổi), nên hãy thận trọng trong thư viện. Nuxt dùng nó nội bộ cho page transition và tải dữ liệu.</p> <p>So với React: <code>KeepAlive</code> không có tương đương trực tiếp, <code>Teleport</code> giống <code>createPortal</code>, và <code>Suspense</code> tương tự về ý tưởng nhưng chưa trưởng thành bằng.</p>"
+      },
+      "terms": [
+        "KeepAlive",
+        "Teleport",
+        "Suspense",
+        "onActivated",
+        "modal",
+        "async setup"
+      ]
+    },
+    {
+      "id": "q196",
+      "number": 196,
+      "tag": "Vue · Hiệu năng",
+      "title": "How do you optimize Vue 3 performance? What does the template compiler already do, and when do you use <code>shallowRef</code>, <code>v-memo</code> and <code>v-once</code>?",
+      "titleVi": "Bạn tối ưu hiệu năng Vue 3 như thế nào? Template compiler đã tối ưu gì sẵn, và khi nào dùng <code>shallowRef</code>, <code>v-memo</code>, <code>v-once</code>?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Compiler đã làm: static hoisting, patch flags",
+          "Đo trước khi tối ưu",
+          "Giảm công việc reactive: shallowRef, markRaw",
+          "v-memo, v-once cho danh sách lớn",
+          "Danh sách rất dài: virtualization, lazy component"
+        ]
+      },
+      "answer": {
+        "en": "<p>Vue 3 is fast by default because its <strong class=\"k\">template compiler optimizes at build time</strong>, so most apps need little manual tuning. Measure first (Vue devtools profiler, Lighthouse), then fix the real bottleneck.</p> <h5>What the compiler already does</h5> <ul><li><strong class=\"k\">Static hoisting:</strong> parts of the template that never change are created once and reused.</li><li><strong class=\"k\">Patch flags:</strong> each dynamic node is marked with what can change (text, class, props), so the diff <strong class=\"k\">checks only those bindings</strong>, not the whole node.</li><li><strong class=\"k\">Block tree:</strong> the diff walks only dynamic nodes, skipping static subtrees.</li><li><strong class=\"k\">Cached event handlers</strong>, and a child component re-renders only if its <strong class=\"k\">props actually changed</strong>.</li></ul> <h5>What you control</h5> <ul><li><strong class=\"k\"><code>shallowRef</code> / <code>shallowReactive</code>:</strong> only the <code>.value</code> replacement (or top-level keys) is tracked. Use for <strong class=\"k\">large arrays or objects</strong> from an API, or class instances (a map, a chart) that you replace rather than mutate deeply. Assign a new value, or call <code>triggerRef</code>. <code>markRaw</code> excludes an object from reactivity entirely.</li><li><strong class=\"k\"><code>v-once</code>:</strong> render once, never update (static content with dynamic data inside).</li><li><strong class=\"k\"><code>v-memo=\"[a, b]\"</code>:</strong> skip updating a subtree unless the listed values change. Mainly for <strong class=\"k\">large <code>v-for</code> lists</strong>, for example <code>v-memo=\"[item.id === selectedId]\"</code>. Use it only after profiling.</li><li><strong class=\"k\"><code>computed</code></strong> for derived values (cached), instead of methods in templates (Câu 80).</li><li><strong class=\"k\">Stable props:</strong> pass <code>isActive</code> (a boolean) rather than a whole object that changes often, so children do not re-render.</li></ul> <h5>Big lists and bundle</h5> <ul><li><strong class=\"k\">Virtual scrolling</strong> for thousands of rows (<code>vue-virtual-scroller</code>, TanStack Virtual): render only the visible rows.</li><li><code>defineAsyncComponent</code> and lazy routes for heavy components (Câu 194), <code>&lt;KeepAlive&gt;</code> to avoid recreating expensive pages (Câu 195).</li><li>Use stable <code>key</code> values (Câu 190) and avoid deep reactive proxies on data you only display (Câu 79).</li></ul>",
+        "vi": "<p>Vue 3 nhanh sẵn vì <strong class=\"k\">template compiler tối ưu ngay lúc build</strong>, nên đa số app ít cần tinh chỉnh thủ công. Hãy đo trước (profiler của Vue devtools, Lighthouse), rồi sửa đúng nút thắt thật.</p> <h5>Compiler đã làm sẵn</h5> <ul><li><strong class=\"k\">Static hoisting:</strong> các phần template không bao giờ đổi được tạo một lần và tái sử dụng.</li><li><strong class=\"k\">Patch flags:</strong> mỗi node động được đánh dấu thứ có thể đổi (text, class, props), nên diff <strong class=\"k\">chỉ kiểm tra các binding đó</strong>, không kiểm tra cả node.</li><li><strong class=\"k\">Block tree:</strong> diff chỉ đi qua các node động, bỏ qua các cây con tĩnh.</li><li><strong class=\"k\">Cache event handler</strong>, và component con chỉ re-render khi <strong class=\"k\">props của nó thực sự đổi</strong>.</li></ul> <h5>Phần bạn kiểm soát</h5> <ul><li><strong class=\"k\"><code>shallowRef</code> / <code>shallowReactive</code>:</strong> chỉ theo dõi việc thay <code>.value</code> (hoặc các key ở cấp đầu). Dùng cho <strong class=\"k\">mảng hoặc object lớn</strong> lấy từ API, hoặc instance của class (bản đồ, biểu đồ) mà bạn thay thế chứ không sửa sâu. Gán giá trị mới, hoặc gọi <code>triggerRef</code>. <code>markRaw</code> loại hẳn một object khỏi reactivity.</li><li><strong class=\"k\"><code>v-once</code>:</strong> render một lần, không bao giờ cập nhật (nội dung tĩnh có chứa dữ liệu động).</li><li><strong class=\"k\"><code>v-memo=\"[a, b]\"</code>:</strong> bỏ qua việc cập nhật một cây con trừ khi các giá trị liệt kê đổi. Chủ yếu cho <strong class=\"k\">danh sách <code>v-for</code> lớn</strong>, ví dụ <code>v-memo=\"[item.id === selectedId]\"</code>. Chỉ dùng sau khi đã profile.</li><li><strong class=\"k\"><code>computed</code></strong> cho giá trị dẫn xuất (có cache), thay vì method trong template (Câu 80).</li><li><strong class=\"k\">Props ổn định:</strong> truyền <code>isActive</code> (boolean) thay vì cả object hay đổi, để component con không re-render.</li></ul> <h5>Danh sách lớn và bundle</h5> <ul><li><strong class=\"k\">Virtual scrolling</strong> cho hàng nghìn dòng (<code>vue-virtual-scroller</code>, TanStack Virtual): chỉ render các dòng đang nhìn thấy.</li><li><code>defineAsyncComponent</code> và route lazy cho component nặng (Câu 194), <code>&lt;KeepAlive&gt;</code> để tránh tạo lại các trang tốn kém (Câu 195).</li><li>Dùng <code>key</code> ổn định (Câu 190) và tránh proxy reactive sâu cho dữ liệu chỉ để hiển thị (Câu 79).</li></ul>"
+      },
+      "terms": [
+        "compiler optimizations",
+        "patch flags",
+        "static hoisting",
+        "shallowRef",
+        "v-memo",
+        "v-once",
+        "virtual scrolling"
+      ]
+    }
+  ]
+}

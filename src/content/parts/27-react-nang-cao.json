@@ -1,0 +1,352 @@
+{
+  "id": "part-27",
+  "slug": "react-nang-cao",
+  "roman": "XXVII",
+  "title": "React · Nâng cao",
+  "description": "Rules of Hooks, state design, context, ref, error boundary, tính năng concurrent và React 19, pattern component và các câu React hay bị hỏi sâu.",
+  "questions": [
+    {
+      "id": "q167",
+      "number": 167,
+      "tag": "React · Hook",
+      "title": "What are the Rules of Hooks, and why do they exist?",
+      "titleVi": "Rules of Hooks là gì và vì sao chúng tồn tại?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hai luật: top level, và chỉ trong component hoặc custom hook",
+          "Cơ chế: hook được nhận diện bằng thứ tự gọi",
+          "Điều gì hỏng khi gọi có điều kiện",
+          "ESLint plugin và cách sửa thực tế"
+        ]
+      },
+      "answer": {
+        "en": "<p>There are two rules: <strong class=\"k\">call hooks only at the top level</strong> (never inside <code>if</code>, loops, nested functions or after an early <code>return</code>), and <strong class=\"k\">call hooks only from React function components or from other custom hooks</strong>.</p> <h5>Why</h5> <p>React does not give hooks names. Each component's fiber keeps its hooks as a <strong class=\"k\">linked list in call order</strong>, and on every render React walks that list: the first <code>useState</code> call gets the first slot, the second call gets the second slot, and so on. This only works if the <strong class=\"k\">same hooks run in the same order on every render</strong>.</p> <pre><code>function Profile({ user }) {\n  if (!user) return null;               // early return BEFORE a hook: bug\n  const [tab, setTab] = useState('info');\n  // render 1: no hooks. render 2: one hook. React throws or mixes state up.\n}</code></pre> <p>If a hook is skipped on one render, every later hook reads the wrong slot, so state and effect dependencies get mixed up (React usually warns \"rendered more hooks than during the previous render\").</p> <h5>How to fix it in practice</h5> <ul><li>Move the condition <strong class=\"k\">inside</strong> the hook (<code>useEffect(() =&gt; { if (open) ... })</code>) instead of around it.</li><li>Do early returns <strong class=\"k\">after</strong> all hooks, or split the component so the conditional part is its own child.</li><li>Hooks in loops: extract the item into its own component that calls the hook once.</li><li>Enforce it with <code>eslint-plugin-react-hooks</code> (<code>rules-of-hooks</code> and <code>exhaustive-deps</code>) and treat both as errors.</li></ul> <p>One careful exception: React 19's <code>use</code> API can be called conditionally, because it does not rely on the same slot list.</p>",
+        "vi": "<p>Có hai luật: <strong class=\"k\">chỉ gọi hook ở top level</strong> (không gọi trong <code>if</code>, vòng lặp, hàm lồng nhau hay sau một <code>return</code> sớm), và <strong class=\"k\">chỉ gọi hook trong function component của React hoặc trong custom hook khác</strong>.</p> <h5>Vì sao</h5> <p>React không đặt tên cho hook. Fiber của mỗi component giữ các hook như một <strong class=\"k\">linked list theo thứ tự gọi</strong>, và mỗi lần render React đi dọc danh sách đó: lần gọi <code>useState</code> đầu tiên nhận slot đầu tiên, lần gọi thứ hai nhận slot thứ hai, và cứ thế. Cách này chỉ đúng nếu <strong class=\"k\">các hook chạy cùng thứ tự ở mọi lần render</strong>.</p> <pre><code>function Profile({ user }) {\n  if (!user) return null;               // return sớm TRƯỚC một hook: bug\n  const [tab, setTab] = useState('info');\n  // render 1: không có hook. render 2: một hook. React báo lỗi hoặc lẫn state.\n}</code></pre> <p>Nếu một hook bị bỏ qua ở một lần render, mọi hook sau đó đọc nhầm slot, nên state và dependency của effect bị lẫn (React thường cảnh báo \"rendered more hooks than during the previous render\").</p> <h5>Cách sửa trong thực tế</h5> <ul><li>Đưa điều kiện <strong class=\"k\">vào bên trong</strong> hook (<code>useEffect(() =&gt; { if (open) ... })</code>) thay vì bọc bên ngoài.</li><li>Đặt early return <strong class=\"k\">sau</strong> tất cả hook, hoặc tách phần có điều kiện thành component con riêng.</li><li>Hook trong vòng lặp: tách mỗi phần tử thành component riêng và gọi hook một lần ở đó.</li><li>Ép bằng <code>eslint-plugin-react-hooks</code> (<code>rules-of-hooks</code> và <code>exhaustive-deps</code>) và coi cả hai là error.</li></ul> <p>Một ngoại lệ cần nói cẩn thận: API <code>use</code> của React 19 có thể gọi có điều kiện, vì nó không dựa vào danh sách slot đó.</p>"
+      },
+      "terms": [
+        "Rules of Hooks",
+        "call order",
+        "fiber",
+        "linked list",
+        "eslint-plugin-react-hooks"
+      ]
+    },
+    {
+      "id": "q168",
+      "number": 168,
+      "tag": "React · State",
+      "title": "How do you design state in React? When do you choose <code>useReducer</code> over <code>useState</code>, and what is derived state?",
+      "titleVi": "Bạn thiết kế state trong React như thế nào? Khi nào chọn <code>useReducer</code> thay vì <code>useState</code>, và derived state là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nguyên tắc: state tối thiểu, không trùng lặp",
+          "Derived state: tính khi render, đừng lưu",
+          "Vị trí state: colocate rồi mới lift up",
+          "useState vs useReducer: khi nào đổi",
+          "Reset state bằng key"
+        ]
+      },
+      "answer": {
+        "en": "<p>Good state design means <strong class=\"k\">the smallest possible state, with a single source of truth</strong>. Anything you can compute from existing state or props is not state.</p> <h5>Derived state</h5> <p>Do not store what you can calculate. If you keep <code>items</code> and also <code>count</code> or <code>filteredItems</code> in state, you must update them together, and sooner or later they disagree. Compute them during render (wrap in <code>useMemo</code> only if it is measurably expensive). A classic bug is copying a prop into state (<code>useState(props.user)</code>): later prop changes are ignored.</p> <h5>Where state lives</h5> <p><strong class=\"k\">Colocate first</strong>: keep state in the component that uses it. <strong class=\"k\">Lift up</strong> only to the closest common parent of the components that need it. Past two or three levels, consider context or a store (Câu 57) rather than prop drilling everything.</p> <h5><code>useState</code> vs <code>useReducer</code></h5> <p>Use <code>useState</code> for independent values. Use <code>useReducer</code> when <strong class=\"k\">several values change together</strong>, or when <strong class=\"k\">the next state depends on named transitions</strong> (<code>ADD_ITEM</code>, <code>SET_STATUS</code>). The reducer is a pure function, easy to unit test, and the handlers just <code>dispatch</code> an intent. It also avoids stale closures because <code>dispatch</code> is stable.</p> <pre><code>const [state, dispatch] = useReducer(reducer, { status: 'idle', error: null });\n// instead of: loading, error, data as three separate useState calls\n// that can end up in impossible combinations (loading + error)</code></pre> <p>Prefer <strong class=\"k\">a status field over several booleans</strong>, so impossible states cannot exist.</p> <h5>Resetting state</h5> <p>To reset a subtree when an identity changes, pass a different <code>key</code> (<code>&lt;Form key={userId} /&gt;</code>) instead of an effect that copies props into state (Câu 54).</p>",
+        "vi": "<p>Thiết kế state tốt nghĩa là <strong class=\"k\">state nhỏ nhất có thể, với một nguồn sự thật duy nhất</strong>. Thứ gì tính được từ state hoặc props hiện có thì không phải state.</p> <h5>Derived state</h5> <p>Đừng lưu thứ có thể tính ra. Nếu bạn giữ <code>items</code> và cả <code>count</code> hay <code>filteredItems</code> trong state, bạn phải cập nhật chúng cùng nhau, và sớm muộn chúng sẽ lệch nhau. Hãy tính ngay khi render (chỉ bọc <code>useMemo</code> khi thực sự đo thấy đắt). Một bug kinh điển là copy prop vào state (<code>useState(props.user)</code>): các thay đổi prop về sau bị bỏ qua.</p> <h5>State nên nằm ở đâu</h5> <p><strong class=\"k\">Colocate trước</strong>: giữ state trong component dùng nó. Chỉ <strong class=\"k\">lift up</strong> lên component cha chung gần nhất của các component cần nó. Quá hai ba tầng thì cân nhắc context hoặc store (Câu 57) thay vì prop drilling mọi thứ.</p> <h5><code>useState</code> vs <code>useReducer</code></h5> <p>Dùng <code>useState</code> cho các giá trị độc lập. Dùng <code>useReducer</code> khi <strong class=\"k\">nhiều giá trị thay đổi cùng nhau</strong>, hoặc <strong class=\"k\">state tiếp theo phụ thuộc vào các chuyển trạng thái có tên</strong> (<code>ADD_ITEM</code>, <code>SET_STATUS</code>). Reducer là hàm thuần, dễ unit test, và handler chỉ <code>dispatch</code> một ý định. Nó cũng tránh stale closure vì <code>dispatch</code> ổn định.</p> <pre><code>const [state, dispatch] = useReducer(reducer, { status: 'idle', error: null });\n// thay vì: loading, error, data là ba useState riêng\n// có thể rơi vào tổ hợp bất khả thi (loading + error)</code></pre> <p>Ưu tiên <strong class=\"k\">một trường status thay vì nhiều boolean</strong>, để các trạng thái bất khả thi không thể tồn tại.</p> <h5>Reset state</h5> <p>Muốn reset một cây con khi định danh đổi, hãy truyền <code>key</code> khác (<code>&lt;Form key={userId} /&gt;</code>) thay vì effect copy props vào state (Câu 54).</p>"
+      },
+      "terms": [
+        "derived state",
+        "single source of truth",
+        "lifting state up",
+        "colocation",
+        "useReducer",
+        "key reset"
+      ]
+    },
+    {
+      "id": "q169",
+      "number": 169,
+      "tag": "React · Form",
+      "title": "Controlled vs uncontrolled components: what is the difference, and how do you build forms (React Hook Form, Zod)?",
+      "titleVi": "Controlled và uncontrolled component khác nhau thế nào, và bạn xây form ra sao (React Hook Form, Zod)?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa: ai giữ giá trị, React hay DOM",
+          "Đánh đổi: kiểm soát vs số lần render",
+          "React Hook Form: uncontrolled, ít re-render",
+          "Zod làm schema validation dùng chung client và server",
+          "Luôn validate lại ở server"
+        ]
+      },
+      "answer": {
+        "en": "<p>In a <strong class=\"k\">controlled</strong> component, React state is the source of truth: the input gets <code>value</code> and <code>onChange</code>, and every keystroke updates state and re-renders. In an <strong class=\"k\">uncontrolled</strong> component, the <strong class=\"k\">DOM keeps the value</strong>, and you read it when needed (via a <code>ref</code>, <code>FormData</code>, or <code>defaultValue</code> for the initial value).</p> <h5>Trade-offs</h5> <ul><li>Controlled: easy to validate on the fly, format input (phone numbers, money), disable the submit button, or show live previews. Cost: a re-render per keystroke, and more code for big forms.</li><li>Uncontrolled: less code and fewer re-renders, good for simple forms and file inputs (<code>&lt;input type=\"file\"&gt;</code> is always uncontrolled). Cost: less control while typing.</li></ul> <p>Never switch an input between the two (<code>value={undefined}</code> first, then a string): React warns.</p> <h5>Forms in real projects</h5> <p><strong class=\"k\">React Hook Form</strong> registers inputs as uncontrolled (via refs), so typing does not re-render the whole form, and it tracks errors, dirty and touched state for you. Pair it with <strong class=\"k\">Zod</strong> through <code>zodResolver</code>: one schema gives you runtime validation and the TypeScript type (<code>z.infer</code>).</p> <pre><code>const schema = z.object({ email: z.string().email(), otp: z.string().length(6) });\ntype Values = z.infer&lt;typeof schema&gt;;\nconst { register, handleSubmit, formState: { errors } } =\n  useForm&lt;Values&gt;({ resolver: zodResolver(schema) });</code></pre> <p>Use <code>Controller</code> only for components that are controlled by nature (custom selects, date pickers). In React 19 you can also use <code>&lt;form action={fn}&gt;</code> with <code>FormData</code> (Câu 178).</p> <p>Client validation is for UX only. <strong class=\"k\">Validate again on the server</strong> with the same schema, because anyone can bypass the browser.</p>",
+        "vi": "<p>Ở component <strong class=\"k\">controlled</strong>, state của React là nguồn sự thật: input nhận <code>value</code> và <code>onChange</code>, và mỗi lần gõ phím đều cập nhật state rồi re-render. Ở component <strong class=\"k\">uncontrolled</strong>, <strong class=\"k\">DOM giữ giá trị</strong>, và bạn đọc nó khi cần (qua <code>ref</code>, <code>FormData</code>, hoặc <code>defaultValue</code> cho giá trị ban đầu).</p> <h5>Đánh đổi</h5> <ul><li>Controlled: dễ validate ngay khi gõ, format input (số điện thoại, tiền), disable nút submit, hoặc xem trước trực tiếp. Giá phải trả: re-render mỗi lần gõ, và nhiều code hơn với form lớn.</li><li>Uncontrolled: ít code và ít re-render hơn, hợp với form đơn giản và input file (<code>&lt;input type=\"file\"&gt;</code> luôn là uncontrolled). Giá phải trả: ít kiểm soát khi đang gõ.</li></ul> <p>Đừng chuyển một input qua lại giữa hai kiểu (<code>value={undefined}</code> lúc đầu rồi sau đó là string): React sẽ cảnh báo.</p> <h5>Form trong dự án thật</h5> <p><strong class=\"k\">React Hook Form</strong> đăng ký input theo kiểu uncontrolled (qua ref), nên gõ phím không re-render cả form, và nó tự theo dõi lỗi, trạng thái dirty và touched. Kết hợp với <strong class=\"k\">Zod</strong> qua <code>zodResolver</code>: một schema cho cả validation lúc chạy và kiểu TypeScript (<code>z.infer</code>).</p> <pre><code>const schema = z.object({ email: z.string().email(), otp: z.string().length(6) });\ntype Values = z.infer&lt;typeof schema&gt;;\nconst { register, handleSubmit, formState: { errors } } =\n  useForm&lt;Values&gt;({ resolver: zodResolver(schema) });</code></pre> <p>Chỉ dùng <code>Controller</code> cho component vốn là controlled (custom select, date picker). Ở React 19 bạn cũng có thể dùng <code>&lt;form action={fn}&gt;</code> với <code>FormData</code> (Câu 178).</p> <p>Validate ở client chỉ để cải thiện UX. <strong class=\"k\">Hãy validate lại ở server</strong> bằng cùng schema, vì ai cũng có thể bỏ qua trình duyệt.</p>"
+      },
+      "terms": [
+        "controlled component",
+        "uncontrolled component",
+        "React Hook Form",
+        "Zod",
+        "zodResolver",
+        "FormData"
+      ]
+    },
+    {
+      "id": "q170",
+      "number": 170,
+      "tag": "React · Ref",
+      "title": "What is <code>useRef</code> for, and when should you not use it?",
+      "titleVi": "<code>useRef</code> dùng để làm gì, và khi nào không nên dùng?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa: object { current } ổn định, đổi không re-render",
+          "Hai công dụng: DOM node và giá trị mutable",
+          "Quy tắc: không đọc/ghi ref khi render",
+          "Khi không dùng: dữ liệu hiển thị trên UI"
+        ]
+      },
+      "answer": {
+        "en": "<p><code>useRef</code> returns a <strong class=\"k\">stable object <code>{ current }</code> that survives re-renders, and changing <code>ref.current</code> does not trigger a re-render</strong>. That is the whole difference from state.</p> <h5>Two main uses</h5> <ol><li><strong class=\"k\">Reaching DOM nodes</strong>: focus an input, scroll into view, measure size, integrate a non-React library (a chart, a video player).</li><li><strong class=\"k\">Holding a mutable value that is not part of the UI</strong>: a timer or interval id, an <code>AbortController</code>, a WebSocket instance, the previous value of a prop, or the latest callback so an effect does not need to resubscribe.</li></ol> <pre><code>const inputRef = useRef(null);\nconst timerRef = useRef(null);\n\nuseEffect(() =&gt; {\n  timerRef.current = setInterval(tick, 1000);\n  return () =&gt; clearInterval(timerRef.current);\n}, []);\n// &lt;input ref={inputRef} /&gt;  ... inputRef.current.focus()</code></pre> <h5>Rules and when not to use it</h5> <ul><li><strong class=\"k\">Do not read or write <code>ref.current</code> during render</strong> (except lazy initialization). Render must stay pure (Câu 174). Read and write in event handlers and effects.</li><li>If a value is <strong class=\"k\">displayed on screen</strong>, it must be state, otherwise the UI will not update when it changes. A counter in a ref shows stale text.</li><li>Do not use a ref to dodge dependencies of <code>useEffect</code> carelessly. Storing the latest callback is fine, hiding real data flow is not (Câu 56).</li><li>Prefer declarative props over imperative calls: <code>&lt;Modal open={open} /&gt;</code> beats <code>modalRef.current.open()</code>.</li></ul> <p>In React 19, <code>ref</code> is a normal prop for function components, so <code>forwardRef</code> is no longer needed in new code. Ref callbacks can also return a cleanup function.</p>",
+        "vi": "<p><code>useRef</code> trả về một <strong class=\"k\">object ổn định <code>{ current }</code> tồn tại qua các lần re-render, và đổi <code>ref.current</code> không gây re-render</strong>. Đó là toàn bộ khác biệt so với state.</p> <h5>Hai công dụng chính</h5> <ol><li><strong class=\"k\">Truy cập DOM node</strong>: focus một input, scroll tới phần tử, đo kích thước, tích hợp thư viện ngoài React (biểu đồ, video player).</li><li><strong class=\"k\">Giữ một giá trị mutable không thuộc UI</strong>: id của timer hoặc interval, <code>AbortController</code>, instance WebSocket, giá trị trước đó của một prop, hoặc callback mới nhất để effect không phải subscribe lại.</li></ol> <pre><code>const inputRef = useRef(null);\nconst timerRef = useRef(null);\n\nuseEffect(() =&gt; {\n  timerRef.current = setInterval(tick, 1000);\n  return () =&gt; clearInterval(timerRef.current);\n}, []);\n// &lt;input ref={inputRef} /&gt;  ... inputRef.current.focus()</code></pre> <h5>Quy tắc và khi nào không dùng</h5> <ul><li><strong class=\"k\">Không đọc hay ghi <code>ref.current</code> trong lúc render</strong> (trừ lazy initialization). Render phải thuần (Câu 174). Đọc và ghi trong event handler và effect.</li><li>Nếu một giá trị <strong class=\"k\">hiển thị trên màn hình</strong>, nó phải là state, nếu không UI sẽ không cập nhật khi nó đổi. Bộ đếm lưu trong ref sẽ hiện chữ cũ.</li><li>Đừng dùng ref để né dependency của <code>useEffect</code> một cách tùy tiện. Lưu callback mới nhất thì được, che giấu luồng dữ liệu thật thì không (Câu 56).</li><li>Ưu tiên props khai báo hơn gọi lệnh: <code>&lt;Modal open={open} /&gt;</code> tốt hơn <code>modalRef.current.open()</code>.</li></ul> <p>Ở React 19, <code>ref</code> là prop bình thường của function component, nên code mới không cần <code>forwardRef</code> nữa. Ref callback cũng có thể trả về hàm cleanup.</p>"
+      },
+      "terms": [
+        "useRef",
+        "mutable value",
+        "DOM access",
+        "re-render",
+        "forwardRef",
+        "ref callback"
+      ]
+    },
+    {
+      "id": "q171",
+      "number": 171,
+      "tag": "React · Context",
+      "title": "What is the Context API good for, and what is its re-render pitfall?",
+      "titleVi": "Context API phù hợp cho việc gì, và bẫy re-render của nó là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Context giải quyết prop drilling, không phải state manager",
+          "Cơ chế: mọi consumer re-render khi value đổi",
+          "Cách giảm: memo value, tách context, tách state và dispatch",
+          "Khi nào chuyển sang store có selector"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Context</strong> passes data deep into the tree without prop drilling. It is a good fit for <strong class=\"k\">low-frequency, app-wide values</strong>: theme, locale, the current user, feature flags, or a compound component's shared state.</p> <h5>The pitfall</h5> <p>Every component that calls <code>useContext(X)</code> <strong class=\"k\">re-renders whenever the provider's <code>value</code> changes</strong> (compared with <code>Object.is</code>), even if it reads only one field of it. <code>React.memo</code> on the consumer does not help, because context bypasses props. And a provider that builds a <strong class=\"k\">new object on every render</strong> (<code>value={{ user, setUser }}</code>) re-renders all consumers whenever the provider's parent renders (Câu 55).</p> <h5>How to limit the damage</h5> <ul><li><strong class=\"k\">Memoize the value</strong> (<code>useMemo</code>) or keep it stable, so unrelated parent renders do not propagate.</li><li><strong class=\"k\">Split contexts</strong> by concern and by change rate: <code>ThemeContext</code>, <code>AuthContext</code>, not one giant <code>AppContext</code>.</li><li><strong class=\"k\">Split state from dispatch</strong>: put <code>dispatch</code> (stable) in its own context, so components that only trigger actions never re-render on state changes.</li><li><strong class=\"k\">Colocate the provider</strong> as low in the tree as possible, and keep rarely-needed state out of the root.</li></ul> <pre><code>&lt;StateCtx value={state}&gt;\n  &lt;DispatchCtx value={dispatch}&gt;{children}&lt;/DispatchCtx&gt;\n&lt;/StateCtx&gt;</code></pre> <h5>When to leave Context</h5> <p>For <strong class=\"k\">fast-changing or large shared state</strong> (cart with many items, live data, filters), consumers cannot select a slice. Use a store with selectors (Zustand, Redux, Jotai) which re-renders only components whose selected slice changed (Câu 57). Server data belongs in React Query, not in context.</p> <p>In React 19 you can render <code>&lt;Context value={...}&gt;</code> directly; <code>&lt;Context.Provider&gt;</code> still works.</p>",
+        "vi": "<p><strong class=\"k\">Context</strong> truyền dữ liệu xuống sâu trong cây mà không cần prop drilling. Nó phù hợp với <strong class=\"k\">giá trị toàn app, ít thay đổi</strong>: theme, locale, user hiện tại, feature flag, hoặc state dùng chung của một compound component.</p> <h5>Cái bẫy</h5> <p>Mọi component gọi <code>useContext(X)</code> đều <strong class=\"k\">re-render mỗi khi <code>value</code> của provider đổi</strong> (so sánh bằng <code>Object.is</code>), dù nó chỉ đọc một trường. <code>React.memo</code> ở consumer không giúp được, vì context đi vòng qua props. Và provider tạo <strong class=\"k\">object mới ở mỗi lần render</strong> (<code>value={{ user, setUser }}</code>) sẽ làm mọi consumer re-render mỗi khi component cha của provider render (Câu 55).</p> <h5>Cách giảm thiệt hại</h5> <ul><li><strong class=\"k\">Memoize value</strong> (<code>useMemo</code>) hoặc giữ nó ổn định, để các lần render không liên quan của cha không lan xuống.</li><li><strong class=\"k\">Tách context</strong> theo mối quan tâm và tốc độ thay đổi: <code>ThemeContext</code>, <code>AuthContext</code>, đừng gom thành một <code>AppContext</code> khổng lồ.</li><li><strong class=\"k\">Tách state khỏi dispatch</strong>: đặt <code>dispatch</code> (ổn định) trong context riêng, để component chỉ kích hoạt action không bao giờ re-render khi state đổi.</li><li><strong class=\"k\">Colocate provider</strong> càng thấp trong cây càng tốt, và đừng đặt state ít dùng ở root.</li></ul> <pre><code>&lt;StateCtx value={state}&gt;\n  &lt;DispatchCtx value={dispatch}&gt;{children}&lt;/DispatchCtx&gt;\n&lt;/StateCtx&gt;</code></pre> <h5>Khi nào nên bỏ Context</h5> <p>Với <strong class=\"k\">state dùng chung đổi nhanh hoặc lớn</strong> (giỏ hàng nhiều món, dữ liệu realtime, bộ lọc), consumer không thể chọn một phần nhỏ. Hãy dùng store có selector (Zustand, Redux, Jotai), chỉ re-render component có phần được chọn thay đổi (Câu 57). Dữ liệu từ server thuộc về React Query, không đặt trong context.</p> <p>Ở React 19 bạn có thể render trực tiếp <code>&lt;Context value={...}&gt;</code>; <code>&lt;Context.Provider&gt;</code> vẫn chạy.</p>"
+      },
+      "terms": [
+        "Context API",
+        "prop drilling",
+        "useContext",
+        "split contexts",
+        "memoize value",
+        "selector"
+      ]
+    },
+    {
+      "id": "q172",
+      "number": 172,
+      "tag": "React · Pattern",
+      "title": "How do you share logic and build reusable components in React: custom hooks, HOC, render props, compound components?",
+      "titleVi": "Bạn chia sẻ logic và xây component tái sử dụng trong React như thế nào: custom hook, HOC, render props, compound component?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Tách logic có state: custom hook là lựa chọn mặc định",
+          "HOC và render props: vấn đề đã giải quyết và nhược điểm",
+          "Compound component cho API linh hoạt",
+          "Quy ước đặt tên và test"
+        ]
+      },
+      "answer": {
+        "en": "<p>Today the default is a <strong class=\"k\">custom hook</strong>: a function whose name starts with <code>use</code> that calls other hooks. It extracts <strong class=\"k\">stateful logic</strong> (not state itself: each component that calls it gets its own copy) such as <code>useDebounce</code>, <code>useMediaQuery</code>, <code>useLocalStorage</code>, or <code>useOrders</code>.</p> <pre><code>function useDebounce(value, delay = 300) {\n  const [debounced, setDebounced] = useState(value);\n  useEffect(() =&gt; {\n    const t = setTimeout(() =&gt; setDebounced(value), delay);\n    return () =&gt; clearTimeout(t);\n  }, [value, delay]);\n  return debounced;\n}</code></pre> <h5>Older patterns</h5> <ul><li><strong class=\"k\">HOC</strong> (<code>withAuth(Page)</code>): a function that wraps a component. It works, but gives <strong class=\"k\">wrapper hell</strong>, prop name collisions and awkward typing and debugging. Still seen in older code and some libraries.</li><li><strong class=\"k\">Render props</strong> (<code>&lt;Mouse&gt;{pos =&gt; ...}&lt;/Mouse&gt;</code>): flexible, but nesting gets deep. Hooks replaced most of this need.</li></ul> <h5>Compound components</h5> <p>For UI with several cooperating parts (<code>&lt;Tabs&gt;</code>, <code>&lt;Tabs.List&gt;</code>, <code>&lt;Tabs.Panel&gt;</code>, <code>&lt;Select&gt;</code>, <code>&lt;Accordion&gt;</code>), the parent shares state with children through <strong class=\"k\">context</strong>, and the consumer composes the markup. This gives a flexible API without a dozen props (<code>renderHeader</code>, <code>headerClassName</code>...). It is common in design systems and headless libraries such as Radix.</p> <h5>Practical advice</h5> <ul><li>Name hooks <code>useXxx</code> so the linter applies the Rules of Hooks (Câu 167).</li><li>A hook must be <strong class=\"k\">focused and testable</strong>: test it with <code>renderHook</code> from Testing Library, or test it through a component.</li><li>Do not extract a hook just to hide code that is used once. Extract when the logic is reused or when it separates concerns clearly.</li></ul> <p><strong class=\"k\">From your CV:</strong> in a UI library like <code>gnoud-ui</code>, parts such as tabs or select menus are natural candidates for the compound pattern.</p>",
+        "vi": "<p>Ngày nay lựa chọn mặc định là <strong class=\"k\">custom hook</strong>: một hàm có tên bắt đầu bằng <code>use</code> và gọi các hook khác. Nó tách <strong class=\"k\">logic có state</strong> (không phải bản thân state: mỗi component gọi nó nhận một bản riêng) như <code>useDebounce</code>, <code>useMediaQuery</code>, <code>useLocalStorage</code> hoặc <code>useOrders</code>.</p> <pre><code>function useDebounce(value, delay = 300) {\n  const [debounced, setDebounced] = useState(value);\n  useEffect(() =&gt; {\n    const t = setTimeout(() =&gt; setDebounced(value), delay);\n    return () =&gt; clearTimeout(t);\n  }, [value, delay]);\n  return debounced;\n}</code></pre> <h5>Các pattern cũ hơn</h5> <ul><li><strong class=\"k\">HOC</strong> (<code>withAuth(Page)</code>): hàm bọc một component. Nó chạy được, nhưng gây <strong class=\"k\">wrapper hell</strong>, trùng tên prop, và khó gõ kiểu cũng như debug. Vẫn gặp trong code cũ và một số thư viện.</li><li><strong class=\"k\">Render props</strong> (<code>&lt;Mouse&gt;{pos =&gt; ...}&lt;/Mouse&gt;</code>): linh hoạt, nhưng lồng nhau rất sâu. Hook đã thay thế phần lớn nhu cầu này.</li></ul> <h5>Compound component</h5> <p>Với UI có nhiều phần phối hợp (<code>&lt;Tabs&gt;</code>, <code>&lt;Tabs.List&gt;</code>, <code>&lt;Tabs.Panel&gt;</code>, <code>&lt;Select&gt;</code>, <code>&lt;Accordion&gt;</code>), component cha chia sẻ state cho con qua <strong class=\"k\">context</strong>, còn người dùng tự ghép markup. Cách này cho API linh hoạt mà không cần cả chục props (<code>renderHeader</code>, <code>headerClassName</code>...). Phổ biến trong design system và thư viện headless như Radix.</p> <h5>Lời khuyên thực tế</h5> <ul><li>Đặt tên hook <code>useXxx</code> để linter áp dụng Rules of Hooks (Câu 167).</li><li>Hook phải <strong class=\"k\">tập trung và dễ test</strong>: test bằng <code>renderHook</code> của Testing Library, hoặc test qua một component.</li><li>Đừng tách hook chỉ để giấu code chỉ dùng một lần. Hãy tách khi logic được dùng lại hoặc khi nó phân tách mối quan tâm rõ ràng.</li></ul> <p><strong class=\"k\">Từ CV của bạn:</strong> trong một thư viện UI như <code>gnoud-ui</code>, các phần như tabs hay select menu là ứng viên tự nhiên cho compound pattern.</p>"
+      },
+      "terms": [
+        "custom hook",
+        "HOC",
+        "render props",
+        "compound components",
+        "renderHook",
+        "headless"
+      ]
+    },
+    {
+      "id": "q173",
+      "number": 173,
+      "tag": "React · State",
+      "title": "Why do state updates look asynchronous in React? Explain batching, functional updates and <code>flushSync</code>.",
+      "titleVi": "Vì sao việc cập nhật state trong React trông như bất đồng bộ? Giải thích batching, functional update và <code>flushSync</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "State là snapshot của mỗi lần render",
+          "setState chỉ lên lịch render mới",
+          "Batching: gom nhiều update thành một render (React 18)",
+          "Functional update khi cần giá trị mới nhất",
+          "flushSync: hiếm khi cần"
+        ]
+      },
+      "answer": {
+        "en": "<p><code>setState</code> does not change the variable in the current render. <strong class=\"k\">State is a snapshot</strong>: each render closes over its own values. Calling <code>setCount(count + 1)</code> only <strong class=\"k\">schedules a new render</strong> with the new value, so reading <code>count</code> right after still gives the old value.</p> <pre><code>function handleClick() {\n  setCount(count + 1);\n  setCount(count + 1);       // both use the same snapshot: count goes up by 1\n  setCount(c =&gt; c + 1);\n  setCount(c =&gt; c + 1);      // updater form: each gets the latest value\n  console.log(count);        // still the old value\n}</code></pre> <h5>Batching</h5> <p>React <strong class=\"k\">batches</strong> several updates in the same tick into one re-render. Since React 18 with <code>createRoot</code>, this is <strong class=\"k\">automatic everywhere</strong>: event handlers, <code>setTimeout</code>, promises and native event handlers (React 17 batched only inside React event handlers). Fewer renders, and the UI never shows half-updated state.</p> <h5>Functional updates</h5> <p>When the next state depends on the previous one, pass an <strong class=\"k\">updater function</strong> (<code>setCount(c =&gt; c + 1)</code>). It receives the latest queued value, so it is correct in batches, in async callbacks and in effects with stale closures. Updaters must be pure.</p> <h5><code>flushSync</code></h5> <p><code>flushSync(() =&gt; setState(...))</code> from <code>react-dom</code> forces React to <strong class=\"k\">render and commit synchronously</strong>, opting out of batching for that update. Use it rarely, for example when you must read the updated DOM right after (scroll a new list item into view). It hurts performance and is a sign to reconsider the design. To react after a render, prefer an effect, or <code>useLayoutEffect</code> when you need to measure before paint.</p>",
+        "vi": "<p><code>setState</code> không đổi biến trong lần render hiện tại. <strong class=\"k\">State là một snapshot</strong>: mỗi lần render đóng gói giá trị của riêng nó. Gọi <code>setCount(count + 1)</code> chỉ <strong class=\"k\">lên lịch một lần render mới</strong> với giá trị mới, nên đọc <code>count</code> ngay sau đó vẫn ra giá trị cũ.</p> <pre><code>function handleClick() {\n  setCount(count + 1);\n  setCount(count + 1);       // cả hai dùng cùng snapshot: count chỉ tăng 1\n  setCount(c =&gt; c + 1);\n  setCount(c =&gt; c + 1);      // dạng updater: mỗi lần nhận giá trị mới nhất\n  console.log(count);        // vẫn là giá trị cũ\n}</code></pre> <h5>Batching</h5> <p>React <strong class=\"k\">gom (batch)</strong> nhiều update trong cùng một tick thành một lần re-render. Từ React 18 với <code>createRoot</code>, việc này <strong class=\"k\">tự động ở mọi nơi</strong>: event handler, <code>setTimeout</code>, promise và native event handler (React 17 chỉ batch trong event handler của React). Ít render hơn, và UI không bao giờ hiện state cập nhật dở dang.</p> <h5>Functional update</h5> <p>Khi state tiếp theo phụ thuộc state trước, hãy truyền một <strong class=\"k\">hàm updater</strong> (<code>setCount(c =&gt; c + 1)</code>). Nó nhận giá trị mới nhất trong hàng đợi, nên đúng trong batch, trong callback bất đồng bộ và trong effect có stale closure. Updater phải là hàm thuần.</p> <h5><code>flushSync</code></h5> <p><code>flushSync(() =&gt; setState(...))</code> từ <code>react-dom</code> ép React <strong class=\"k\">render và commit đồng bộ</strong>, bỏ qua batching cho update đó. Hiếm khi dùng, ví dụ khi bạn phải đọc DOM đã cập nhật ngay sau đó (scroll một item mới vào view). Nó làm giảm hiệu năng và là dấu hiệu nên xem lại thiết kế. Muốn phản ứng sau render, ưu tiên effect, hoặc <code>useLayoutEffect</code> khi cần đo trước khi paint.</p>"
+      },
+      "terms": [
+        "state snapshot",
+        "batching",
+        "functional update",
+        "flushSync",
+        "automatic batching",
+        "stale closure"
+      ]
+    },
+    {
+      "id": "q174",
+      "number": 174,
+      "tag": "React · Cơ chế",
+      "title": "How does React render internally: render phase vs commit phase, Fiber, and why must components be pure (StrictMode)?",
+      "titleVi": "React render bên trong như thế nào: render phase và commit phase, Fiber, và vì sao component phải thuần (StrictMode)?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba bước: trigger, render, commit",
+          "Fiber: đơn vị công việc có thể tạm dừng",
+          "Render phải thuần, không có side effect",
+          "StrictMode cố tình gọi hai lần để lộ bug"
+        ]
+      },
+      "answer": {
+        "en": "<p>An update goes through three steps: <strong class=\"k\">trigger</strong> (state change or initial render), <strong class=\"k\">render</strong> (React calls your components to compute the next tree), and <strong class=\"k\">commit</strong> (React applies the changes to the DOM).</p> <h5>Render vs commit</h5> <ul><li><strong class=\"k\">Render phase:</strong> only calls your function components and compares the result with the previous tree (reconciliation, Câu 54). It does not touch the DOM. In concurrent rendering this work can be <strong class=\"k\">paused, resumed or thrown away</strong>.</li><li><strong class=\"k\">Commit phase:</strong> synchronous. React mutates the DOM, runs layout effects, then lets the browser paint, then runs passive effects (<code>useEffect</code>).</li></ul> <h5>Fiber</h5> <p>A <strong class=\"k\">fiber</strong> is a plain object per component instance (type, props, state, hooks, pointers to parent, child and sibling). The tree of fibers lets React split rendering into <strong class=\"k\">small units of work</strong> that can be interrupted and prioritized. That architecture is what makes concurrent features possible (Câu 177).</p> <h5>Why components must be pure</h5> <p>Because the render phase may run <strong class=\"k\">more than once or be discarded</strong>, a component must be a pure function of props, state and context: no mutating outside variables or props, no network calls, no <code>Math.random()</code> or <code>Date.now()</code> directly in the output. Side effects belong in event handlers and effects.</p> <h5>StrictMode</h5> <p>In development only, <code>&lt;StrictMode&gt;</code> <strong class=\"k\">calls component bodies, updaters and reducers twice</strong>, and <strong class=\"k\">mounts effects twice</strong> (setup, cleanup, setup again) to simulate a remount. It has no effect in production. If something breaks, you have found a real bug: an impure render, or an effect with missing cleanup (Câu 56). Do not remove StrictMode to hide a double fetch. Fix the cleanup (abort the request) or use React Query.</p>",
+        "vi": "<p>Một lần cập nhật đi qua ba bước: <strong class=\"k\">trigger</strong> (state đổi hoặc render lần đầu), <strong class=\"k\">render</strong> (React gọi component của bạn để tính cây tiếp theo), và <strong class=\"k\">commit</strong> (React áp thay đổi vào DOM).</p> <h5>Render vs commit</h5> <ul><li><strong class=\"k\">Render phase:</strong> chỉ gọi function component và so sánh kết quả với cây trước (reconciliation, Câu 54). Nó không đụng vào DOM. Với concurrent rendering, công việc này có thể bị <strong class=\"k\">tạm dừng, tiếp tục hoặc bỏ đi</strong>.</li><li><strong class=\"k\">Commit phase:</strong> đồng bộ. React sửa DOM, chạy layout effect, để trình duyệt paint, rồi chạy passive effect (<code>useEffect</code>).</li></ul> <h5>Fiber</h5> <p>Một <strong class=\"k\">fiber</strong> là object thuần cho mỗi instance component (type, props, state, hook, con trỏ tới cha, con và anh em). Cây fiber cho phép React chia render thành <strong class=\"k\">các đơn vị công việc nhỏ</strong> có thể bị ngắt và ưu tiên hóa. Kiến trúc đó làm cho các tính năng concurrent khả thi (Câu 177).</p> <h5>Vì sao component phải thuần</h5> <p>Vì render phase có thể chạy <strong class=\"k\">nhiều hơn một lần hoặc bị bỏ đi</strong>, component phải là hàm thuần của props, state và context: không sửa biến bên ngoài hay props, không gọi network, không dùng <code>Math.random()</code> hay <code>Date.now()</code> trực tiếp trong output. Side effect thuộc về event handler và effect.</p> <h5>StrictMode</h5> <p>Chỉ ở môi trường development, <code>&lt;StrictMode&gt;</code> <strong class=\"k\">gọi thân component, updater và reducer hai lần</strong>, và <strong class=\"k\">mount effect hai lần</strong> (setup, cleanup, setup lại) để mô phỏng remount. Nó không có tác dụng ở production. Nếu có gì hỏng, bạn đã tìm ra bug thật: render không thuần, hoặc effect thiếu cleanup (Câu 56). Đừng gỡ StrictMode để giấu việc fetch hai lần. Hãy sửa cleanup (abort request) hoặc dùng React Query.</p>"
+      },
+      "terms": [
+        "render phase",
+        "commit phase",
+        "Fiber",
+        "pure component",
+        "StrictMode",
+        "reconciliation"
+      ]
+    },
+    {
+      "id": "q175",
+      "number": 175,
+      "tag": "React · Lỗi",
+      "title": "What is an Error Boundary? What does it not catch, and where would you place one?",
+      "titleVi": "Error Boundary là gì? Nó không bắt được những lỗi nào, và bạn đặt nó ở đâu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: một lỗi render làm sập cả cây",
+          "Boundary là class component, bắt lỗi của cây con",
+          "Danh sách lỗi KHÔNG bắt được",
+          "Vị trí đặt và cách reset",
+          "Next.js error.tsx"
+        ]
+      },
+      "answer": {
+        "en": "<p>By default, an error thrown while rendering <strong class=\"k\">unmounts the whole React tree</strong> and leaves a blank page. An <strong class=\"k\">Error Boundary</strong> catches errors in its <strong class=\"k\">children</strong> during rendering, lifecycle and constructors, shows a fallback UI, and lets the rest of the app keep working.</p> <p>It must be a <strong class=\"k\">class component</strong> that implements <code>static getDerivedStateFromError</code> (to show the fallback) and optionally <code>componentDidCatch</code> (to log). There is no hook equivalent, so most teams use the <code>react-error-boundary</code> library, which also gives <code>resetErrorBoundary</code> and <code>onError</code>.</p> <h5>What it does not catch</h5> <ul><li><strong class=\"k\">Event handlers</strong> (they run outside render): use <code>try/catch</code>.</li><li><strong class=\"k\">Async code</strong>: <code>setTimeout</code>, promises, <code>fetch</code> callbacks. Note that failed <code>fetch</code> calls are not exceptions in render anyway.</li><li><strong class=\"k\">Server-side rendering</strong> errors.</li><li><strong class=\"k\">Errors thrown in the boundary itself</strong> (the next boundary up catches those).</li></ul> <p>A common trick: catch an async error and rethrow it during render (<code>setState(() =&gt; { throw err; })</code>) so the boundary handles it. React Query can do the same with <code>throwOnError</code>.</p> <h5>Where to place them</h5> <ul><li>A <strong class=\"k\">top-level</strong> one so users never see a blank page, plus a log to Sentry or similar from <code>onError</code> or <code>componentDidCatch</code>.</li><li><strong class=\"k\">Granular</strong> ones around independent widgets (a chart, a comments list, a third-party embed), so one failing part does not take the page down.</li><li>Offer a <strong class=\"k\">retry</strong>: reset the boundary (<code>resetErrorBoundary</code>) or change its <code>key</code> after the user acts or the route changes.</li></ul> <p>In Next.js App Router, an <code>error.tsx</code> file is a route-segment error boundary (a Client Component), and <code>global-error.tsx</code> covers the root layout. React 19 also adds <code>onCaughtError</code> and <code>onUncaughtError</code> options on <code>createRoot</code> for central reporting.</p>",
+        "vi": "<p>Mặc định, một lỗi ném ra khi render sẽ <strong class=\"k\">unmount toàn bộ cây React</strong> và để lại trang trắng. <strong class=\"k\">Error Boundary</strong> bắt lỗi trong các <strong class=\"k\">component con</strong> khi render, lifecycle và constructor, hiện UI dự phòng, và để phần còn lại của app tiếp tục chạy.</p> <p>Nó phải là <strong class=\"k\">class component</strong> có <code>static getDerivedStateFromError</code> (để hiện fallback) và tùy chọn <code>componentDidCatch</code> (để log). Không có hook tương đương, nên đa số team dùng thư viện <code>react-error-boundary</code>, thư viện này còn cung cấp <code>resetErrorBoundary</code> và <code>onError</code>.</p> <h5>Những gì nó không bắt được</h5> <ul><li><strong class=\"k\">Event handler</strong> (chạy ngoài render): dùng <code>try/catch</code>.</li><li><strong class=\"k\">Code bất đồng bộ</strong>: <code>setTimeout</code>, promise, callback của <code>fetch</code>. Lưu ý <code>fetch</code> thất bại vốn không phải exception trong render.</li><li>Lỗi khi <strong class=\"k\">server-side rendering</strong>.</li><li><strong class=\"k\">Lỗi ném ra trong chính boundary đó</strong> (boundary cấp trên sẽ bắt).</li></ul> <p>Một mẹo phổ biến: bắt lỗi bất đồng bộ rồi ném lại trong lúc render (<code>setState(() =&gt; { throw err; })</code>) để boundary xử lý. React Query làm được tương tự với <code>throwOnError</code>.</p> <h5>Nên đặt ở đâu</h5> <ul><li>Một boundary <strong class=\"k\">ở cấp cao nhất</strong> để người dùng không bao giờ thấy trang trắng, kèm log lên Sentry hoặc tương tự từ <code>onError</code> hoặc <code>componentDidCatch</code>.</li><li>Các boundary <strong class=\"k\">chi tiết</strong> quanh widget độc lập (biểu đồ, danh sách bình luận, embed bên thứ ba), để một phần lỗi không kéo sập cả trang.</li><li>Cung cấp <strong class=\"k\">retry</strong>: reset boundary (<code>resetErrorBoundary</code>) hoặc đổi <code>key</code> sau khi người dùng thao tác hoặc đổi route.</li></ul> <p>Trong Next.js App Router, file <code>error.tsx</code> là error boundary của một route segment (một Client Component), và <code>global-error.tsx</code> bao phủ root layout. React 19 cũng thêm các option <code>onCaughtError</code> và <code>onUncaughtError</code> trên <code>createRoot</code> để báo cáo tập trung.</p>"
+      },
+      "terms": [
+        "Error Boundary",
+        "getDerivedStateFromError",
+        "componentDidCatch",
+        "react-error-boundary",
+        "error.tsx",
+        "fallback UI"
+      ]
+    },
+    {
+      "id": "q176",
+      "number": 176,
+      "tag": "React · Hiệu năng",
+      "title": "How do you do code splitting in React with <code>React.lazy</code> and Suspense? What should you split first?",
+      "titleVi": "Bạn làm code splitting trong React với <code>React.lazy</code> và Suspense như thế nào? Nên tách phần nào trước?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ý tưởng: dynamic import tạo chunk riêng",
+          "React.lazy + Suspense fallback",
+          "Ưu tiên: route, rồi modal/component nặng",
+          "Bẫy: waterfall, layout shift, preload",
+          "Next.js: next/dynamic"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Code splitting</strong> means shipping less JavaScript up front by loading parts of the app <strong class=\"k\">on demand</strong>. A dynamic <code>import()</code> makes the bundler create a <strong class=\"k\">separate chunk</strong>, and <code>React.lazy</code> turns that import into a component. It must be rendered inside <strong class=\"k\"><code>&lt;Suspense&gt;</code></strong> with a fallback shown while the chunk loads.</p> <pre><code>const Chart = lazy(() =&gt; import('./Chart'));   // Chart must be a default export\n\nfunction Dashboard() {\n  return (\n    &lt;Suspense fallback={&lt;ChartSkeleton /&gt;}&gt;\n      &lt;Chart data={data} /&gt;\n    &lt;/Suspense&gt;\n  );\n}</code></pre> <h5>What to split first</h5> <ol><li><strong class=\"k\">Routes</strong>: the biggest win with the least effort, since users only need the current page. Frameworks like Next.js do this per route automatically.</li><li><strong class=\"k\">Heavy, conditional components</strong>: modals, rich-text editors, charts, maps, admin-only screens, 3D or animation libraries (Câu 89).</li><li>Do not split tiny components: each chunk costs a network request.</li></ol> <h5>Pitfalls</h5> <ul><li><strong class=\"k\">Request waterfalls</strong>: the chunk loads only after the parent renders. <strong class=\"k\">Preload</strong> on hover or intent (<code>import('./Chart')</code> in <code>onMouseEnter</code>), or prefetch likely routes.</li><li><strong class=\"k\">Layout shift</strong>: make the fallback the same size as the final content (skeleton).</li><li>A failed chunk load (flaky network, new deploy removed the old file) throws, so wrap lazy components in an <strong class=\"k\">Error Boundary</strong> with a retry (Câu 175).</li><li>Check the result with a bundle analyzer, not by feeling.</li></ul> <p>In Next.js, <code>next/dynamic</code> wraps <code>lazy</code> and Suspense, and <code>ssr: false</code> can skip server rendering for browser-only widgets. Server Components already keep their code off the client.</p>",
+        "vi": "<p><strong class=\"k\">Code splitting</strong> nghĩa là gửi ít JavaScript hơn ngay từ đầu bằng cách tải từng phần của app <strong class=\"k\">khi cần</strong>. <code>import()</code> động khiến bundler tạo ra một <strong class=\"k\">chunk riêng</strong>, và <code>React.lazy</code> biến import đó thành component. Nó phải được render bên trong <strong class=\"k\"><code>&lt;Suspense&gt;</code></strong> với fallback hiển thị trong lúc chunk đang tải.</p> <pre><code>const Chart = lazy(() =&gt; import('./Chart'));   // Chart phải là default export\n\nfunction Dashboard() {\n  return (\n    &lt;Suspense fallback={&lt;ChartSkeleton /&gt;}&gt;\n      &lt;Chart data={data} /&gt;\n    &lt;/Suspense&gt;\n  );\n}</code></pre> <h5>Nên tách gì trước</h5> <ol><li><strong class=\"k\">Route</strong>: hiệu quả lớn nhất với ít công sức nhất, vì người dùng chỉ cần trang hiện tại. Framework như Next.js làm việc này tự động theo từng route.</li><li><strong class=\"k\">Component nặng và có điều kiện</strong>: modal, rich-text editor, biểu đồ, bản đồ, màn hình chỉ admin dùng, thư viện 3D hoặc animation (Câu 89).</li><li>Đừng tách component quá nhỏ: mỗi chunk tốn một request mạng.</li></ol> <h5>Cạm bẫy</h5> <ul><li><strong class=\"k\">Request waterfall</strong>: chunk chỉ bắt đầu tải sau khi cha render. Hãy <strong class=\"k\">preload</strong> khi hover hoặc có ý định (<code>import('./Chart')</code> trong <code>onMouseEnter</code>), hoặc prefetch các route có khả năng được mở.</li><li><strong class=\"k\">Layout shift</strong>: làm fallback có cùng kích thước với nội dung thật (skeleton).</li><li>Tải chunk thất bại (mạng chập chờn, bản deploy mới đã xóa file cũ) sẽ ném lỗi, nên bọc component lazy trong <strong class=\"k\">Error Boundary</strong> có retry (Câu 175).</li><li>Kiểm tra kết quả bằng bundle analyzer, không phải bằng cảm giác.</li></ul> <p>Trong Next.js, <code>next/dynamic</code> bọc <code>lazy</code> và Suspense, và <code>ssr: false</code> có thể bỏ qua server rendering cho widget chỉ chạy trên browser. Server Components vốn đã giữ code của chúng ngoài client.</p>"
+      },
+      "terms": [
+        "code splitting",
+        "React.lazy",
+        "Suspense",
+        "dynamic import",
+        "next/dynamic",
+        "preload"
+      ]
+    },
+    {
+      "id": "q177",
+      "number": 177,
+      "tag": "React · Concurrent",
+      "title": "What problem do <code>useTransition</code> and <code>useDeferredValue</code> solve? How are they different from debouncing?",
+      "titleVi": "<code>useTransition</code> và <code>useDeferredValue</code> giải quyết vấn đề gì? Chúng khác debounce thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: render nặng làm UI giật, input bị khựng",
+          "Update khẩn cấp vs không khẩn cấp",
+          "useTransition: bọc setState",
+          "useDeferredValue: trì hoãn một giá trị",
+          "So với debounce, và giới hạn"
+        ]
+      },
+      "answer": {
+        "en": "<p>Some updates are <strong class=\"k\">urgent</strong> (typing in an input, clicking) and some are not (filtering a big list, switching to a heavy tab). If both render at the same priority, a slow render <strong class=\"k\">blocks the input</strong> and the UI feels frozen. React 18's concurrent rendering lets React treat the non-urgent update as <strong class=\"k\">interruptible, lower-priority work</strong>.</p> <h5><code>useTransition</code></h5> <p>Wrap the non-urgent <strong class=\"k\">state update</strong> in <code>startTransition</code>. React renders it in the background, and if a new urgent update arrives it <strong class=\"k\">abandons the stale render</strong> and handles the urgent one first. <code>isPending</code> lets you show a subtle loading state.</p> <pre><code>const [isPending, startTransition] = useTransition();\n\nfunction onChange(e) {\n  setQuery(e.target.value);                         // urgent: input stays responsive\n  startTransition(() =&gt; setFilter(e.target.value)); // can wait\n}</code></pre> <h5><code>useDeferredValue</code></h5> <p>Use it when you <strong class=\"k\">do not control the setter</strong> (a value from props or a library). <code>const deferred = useDeferredValue(query)</code> returns a copy that <strong class=\"k\">lags behind</strong> during urgent updates and catches up when React is idle. Pass <code>deferred</code> to the heavy child and wrap that child in <code>memo</code>, otherwise it still re-renders on every keystroke.</p> <h5>Versus debounce</h5> <ul><li>Debounce uses a <strong class=\"k\">fixed delay</strong> and the work still blocks the main thread once it runs. Transitions have <strong class=\"k\">no artificial delay</strong>, adapt to the device speed, and the render can be interrupted.</li><li>They <strong class=\"k\">do not make rendering cheaper</strong>. The same work still happens, it is just interruptible. If the list is huge, you still need virtualization (Câu 91) or less work.</li><li>Debounce is still right to <strong class=\"k\">reduce network requests</strong>, which transitions do not do.</li></ul> <p>Limits: the state used by a controlled input must not be inside the transition, and a transition that suspends keeps showing the old UI instead of a Suspense fallback.</p>",
+        "vi": "<p>Một số update là <strong class=\"k\">khẩn cấp</strong> (gõ vào input, click) và một số thì không (lọc danh sách lớn, chuyển sang tab nặng). Nếu cả hai render cùng mức ưu tiên, một lần render chậm sẽ <strong class=\"k\">chặn input</strong> và UI có cảm giác bị đơ. Concurrent rendering của React 18 cho phép React coi update không khẩn cấp là <strong class=\"k\">công việc có thể bị ngắt, ưu tiên thấp hơn</strong>.</p> <h5><code>useTransition</code></h5> <p>Bọc <strong class=\"k\">state update</strong> không khẩn cấp trong <code>startTransition</code>. React render nó ở nền, và nếu có update khẩn cấp mới tới thì nó <strong class=\"k\">bỏ lần render cũ</strong> và xử lý update khẩn cấp trước. <code>isPending</code> cho phép bạn hiện trạng thái loading nhẹ nhàng.</p> <pre><code>const [isPending, startTransition] = useTransition();\n\nfunction onChange(e) {\n  setQuery(e.target.value);                         // khẩn cấp: input vẫn mượt\n  startTransition(() =&gt; setFilter(e.target.value)); // có thể chờ\n}</code></pre> <h5><code>useDeferredValue</code></h5> <p>Dùng khi bạn <strong class=\"k\">không kiểm soát được setter</strong> (giá trị từ props hoặc thư viện). <code>const deferred = useDeferredValue(query)</code> trả về một bản sao <strong class=\"k\">chậm hơn</strong> trong lúc có update khẩn cấp và bắt kịp khi React rảnh. Truyền <code>deferred</code> cho component con nặng và bọc con đó trong <code>memo</code>, nếu không nó vẫn re-render mỗi lần gõ.</p> <h5>So với debounce</h5> <ul><li>Debounce dùng <strong class=\"k\">độ trễ cố định</strong> và công việc vẫn chặn main thread khi nó chạy. Transition <strong class=\"k\">không có độ trễ nhân tạo</strong>, thích ứng theo tốc độ máy, và lần render có thể bị ngắt.</li><li>Chúng <strong class=\"k\">không làm render rẻ hơn</strong>. Cùng một khối lượng công việc vẫn diễn ra, chỉ là có thể ngắt. Nếu danh sách quá lớn, bạn vẫn cần virtualization (Câu 91) hoặc làm ít việc hơn.</li><li>Debounce vẫn đúng để <strong class=\"k\">giảm số request mạng</strong>, điều mà transition không làm.</li></ul> <p>Giới hạn: state của input controlled không được nằm trong transition, và transition bị suspend sẽ tiếp tục hiện UI cũ thay vì Suspense fallback.</p>"
+      },
+      "terms": [
+        "concurrent rendering",
+        "useTransition",
+        "useDeferredValue",
+        "startTransition",
+        "interruptible render",
+        "debounce"
+      ]
+    },
+    {
+      "id": "q178",
+      "number": 178,
+      "tag": "React · React 19",
+      "title": "What is new in React 19? Explain Actions, <code>useActionState</code>, <code>useOptimistic</code>, <code>use</code>, and the React Compiler.",
+      "titleVi": "React 19 có gì mới? Giải thích Actions, <code>useActionState</code>, <code>useOptimistic</code>, <code>use</code> và React Compiler.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Actions: async transition cho mutation",
+          "useActionState, useFormStatus và form action",
+          "useOptimistic: UI lạc quan, tự rollback",
+          "use và ref như prop, document metadata",
+          "React Compiler: tách biệt, tự memo hóa"
+        ]
+      },
+      "answer": {
+        "en": "<p>React 19 (stable since December 2024) makes <strong class=\"k\">mutations and forms</strong> first-class, and removes some boilerplate.</p> <h5>Actions</h5> <p>An <strong class=\"k\">Action</strong> is a function (possibly <code>async</code>) run inside a transition, usually from <code>&lt;form action={fn}&gt;</code> or <code>startTransition</code>. React tracks the <strong class=\"k\">pending state</strong>, errors and ordering for you, so you no longer hand-write <code>isLoading</code> and <code>try/catch/finally</code> state for every submit.</p> <h5>Hooks around Actions</h5> <ul><li><strong class=\"k\"><code>useActionState(action, initialState)</code></strong> returns <code>[state, formAction, isPending]</code>: the last result of the action (validation errors, a success message), the function to pass to <code>&lt;form action&gt;</code>, and a pending flag.</li><li><strong class=\"k\"><code>useFormStatus</code></strong> (from <code>react-dom</code>) lets a child, such as a submit button, read the pending status of its parent form without props.</li><li><strong class=\"k\"><code>useOptimistic(value, reducer)</code></strong> shows an <strong class=\"k\">optimistic value</strong> while the Action is running and automatically <strong class=\"k\">falls back to the real value</strong> when it ends, or if it fails.</li></ul> <pre><code>const [state, formAction, isPending] = useActionState(saveProfile, { error: null });\n// &lt;form action={formAction}&gt; ... &lt;button disabled={isPending}&gt;Save&lt;/button&gt;</code></pre> <h5>Other additions</h5> <ul><li><strong class=\"k\"><code>use(resource)</code></strong> reads a <strong class=\"k\">Promise</strong> (with Suspense) or a <strong class=\"k\">context</strong>, and unlike hooks it can be called inside conditions and loops.</li><li><strong class=\"k\"><code>ref</code> is a normal prop</strong> in function components, so <code>forwardRef</code> is not needed in new code.</li><li><code>&lt;title&gt;</code>, <code>&lt;meta&gt;</code> and <code>&lt;link&gt;</code> rendered in components are <strong class=\"k\">hoisted into <code>&lt;head&gt;</code></strong>, and <code>&lt;Context value&gt;</code> replaces <code>&lt;Context.Provider&gt;</code>.</li></ul> <h5>React Compiler</h5> <p>It is a <strong class=\"k\">separate build-time tool</strong> (a Babel plugin, v1.0 released in October 2025), not part of React 19 itself. It <strong class=\"k\">auto-memoizes</strong> components and values, so you write <code>useMemo</code>, <code>useCallback</code> and <code>memo</code> far less (Câu 55). It requires code that follows the Rules of React (pure render, Câu 174). Adopt it gradually and keep existing memoization until measured.</p>",
+        "vi": "<p>React 19 (ổn định từ tháng 12/2024) đưa <strong class=\"k\">mutation và form</strong> thành công dân hạng nhất, và loại bỏ bớt boilerplate.</p> <h5>Actions</h5> <p>Một <strong class=\"k\">Action</strong> là hàm (có thể <code>async</code>) chạy bên trong transition, thường từ <code>&lt;form action={fn}&gt;</code> hoặc <code>startTransition</code>. React tự theo dõi <strong class=\"k\">trạng thái pending</strong>, lỗi và thứ tự cho bạn, nên bạn không còn phải tự viết state <code>isLoading</code> và <code>try/catch/finally</code> cho mỗi lần submit.</p> <h5>Các hook quanh Actions</h5> <ul><li><strong class=\"k\"><code>useActionState(action, initialState)</code></strong> trả về <code>[state, formAction, isPending]</code>: kết quả gần nhất của action (lỗi validate, thông báo thành công), hàm để truyền vào <code>&lt;form action&gt;</code>, và cờ pending.</li><li><strong class=\"k\"><code>useFormStatus</code></strong> (từ <code>react-dom</code>) cho component con, như nút submit, đọc trạng thái pending của form cha mà không cần props.</li><li><strong class=\"k\"><code>useOptimistic(value, reducer)</code></strong> hiện một <strong class=\"k\">giá trị lạc quan</strong> trong lúc Action chạy và tự động <strong class=\"k\">quay về giá trị thật</strong> khi nó kết thúc, hoặc khi thất bại.</li></ul> <pre><code>const [state, formAction, isPending] = useActionState(saveProfile, { error: null });\n// &lt;form action={formAction}&gt; ... &lt;button disabled={isPending}&gt;Save&lt;/button&gt;</code></pre> <h5>Các bổ sung khác</h5> <ul><li><strong class=\"k\"><code>use(resource)</code></strong> đọc một <strong class=\"k\">Promise</strong> (cùng Suspense) hoặc một <strong class=\"k\">context</strong>, và khác với hook thông thường, nó có thể gọi trong điều kiện và vòng lặp.</li><li><strong class=\"k\"><code>ref</code> là prop bình thường</strong> của function component, nên code mới không cần <code>forwardRef</code>.</li><li><code>&lt;title&gt;</code>, <code>&lt;meta&gt;</code> và <code>&lt;link&gt;</code> render trong component được <strong class=\"k\">đưa lên <code>&lt;head&gt;</code></strong>, và <code>&lt;Context value&gt;</code> thay cho <code>&lt;Context.Provider&gt;</code>.</li></ul> <h5>React Compiler</h5> <p>Đây là <strong class=\"k\">công cụ build-time riêng</strong> (một Babel plugin, v1.0 phát hành tháng 10/2025), không phải một phần của chính React 19. Nó <strong class=\"k\">tự memo hóa</strong> component và giá trị, nên bạn viết <code>useMemo</code>, <code>useCallback</code> và <code>memo</code> ít đi nhiều (Câu 55). Nó yêu cầu code tuân thủ Rules of React (render thuần, Câu 174). Hãy áp dụng dần và giữ memo hóa hiện có cho đến khi đã đo đạc.</p>"
+      },
+      "terms": [
+        "Actions",
+        "useActionState",
+        "useOptimistic",
+        "use",
+        "React Compiler",
+        "ref as prop",
+        "useFormStatus"
+      ]
+    }
+  ]
+}
