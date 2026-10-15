@@ -1146,3 +1146,104 @@ html[data-practice="true"] .card:not(.revealed) .reveal {
   min-width: 0;
   flex: 1;
 }
+
+/* ---------- Review page: questions marked as learned ---------- */
+.progress-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.progress-link:hover {
+  color: var(--ink);
+}
+.review-empty {
+  margin-top: 40px;
+  max-width: 46rem;
+  color: var(--muted);
+}
+.review-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 24px;
+}
+.review-group {
+  margin-top: 44px;
+}
+.review-part-title {
+  margin: 24px 0 0;
+  font: 600 12px/1.3 var(--sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.review-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.review-row {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.review-row.removed {
+  opacity: 0.65;
+}
+.review-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.review-main {
+  min-width: 0;
+}
+.review-main .num {
+  display: block;
+  margin-bottom: 2px;
+}
+.review-title {
+  display: block;
+  font: 600 1.02rem/1.35 var(--sans);
+  letter-spacing: -0.01em;
+}
+.review-where {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.review-actions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.review-actions a.btn {
+  display: inline-block;
+  text-decoration: none;
+}
+.review-removed {
+  font-size: 13px;
+  color: var(--muted);
+}
+.review-preview {
+  margin-top: 18px;
+  padding-left: 16px;
+  border-left: 2px solid var(--line);
+}
+.review-preview .q-vi {
+  margin-top: 0;
+}
+
+@media (max-width: 700px) {
+  .review-head {
+    flex-direction: column;
+  }
+  .review-actions {
+    justify-content: flex-start;
+  }
+}

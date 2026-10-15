@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { resetProgress, useHandbook } from "@/lib/handbook-store";
 
 export function Progress({ ids }: { ids: string[] }) {
@@ -31,6 +32,9 @@ export function Progress({ ids }: { ids: string[] }) {
       >
         <div className="progress-fill" style={{ width: `${percent}%` }} />
       </div>
+      <Link href="/da-thuoc" className="progress-link">
+        Xem lại các câu đã thuộc →
+      </Link>
     </div>
   );
 }
