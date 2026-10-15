@@ -3,6 +3,7 @@ import { LangSwitch } from "./lang-switch";
 import { PartsNav, type NavGroup } from "./parts-nav";
 import { PracticeSwitch } from "./practice-switch";
 import { Progress } from "./progress";
+import { SpeechSettings } from "./speech-settings";
 import { SearchBox } from "./search-box";
 
 const navGroups: NavGroup[] = groups.map((group) => ({
@@ -30,6 +31,8 @@ export function Sidebar() {
       <LangSwitch />
 
       <PracticeSwitch />
+
+      <SpeechSettings />
 
       <span className="ctl-label">Tìm kiếm</span>
       <SearchBox />
