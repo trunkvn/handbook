@@ -22,6 +22,8 @@ import part19 from "./parts/19-leetcode-ngay-4.json";
 import part20 from "./parts/20-testing.json";
 import part21 from "./parts/21-accessibility.json";
 import part22 from "./parts/22-design-system.json";
+import part23 from "./parts/23-git.json";
+import part24 from "./parts/24-agile-tdd.json";
 
 export const parts: Part[] = [
   part01,
@@ -46,4 +48,6 @@ export const parts: Part[] = [
   part20,
   part21,
   part22,
+  part23,
+  part24,
 ];

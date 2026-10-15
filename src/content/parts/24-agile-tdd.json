@@ -1,0 +1,232 @@
+{
+  "id": "part-24",
+  "slug": "agile-tdd",
+  "roman": "XXIV",
+  "title": "Agile & TDD",
+  "description": "Agile và Scrum, ước lượng, definition of done, TDD (red, green, refactor), BDD và làm việc với yêu cầu thay đổi.",
+  "questions": [
+    {
+      "id": "q139",
+      "number": 139,
+      "tag": "Agile · Nền tảng",
+      "title": "What is Agile? How do Scrum and Kanban differ, and how do you choose?",
+      "titleVi": "Agile là gì? Scrum và Kanban khác nhau thế nào, và chọn cái nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Agile là tư duy, Scrum/Kanban là framework",
+          "Giá trị và nguyên tắc cốt lõi",
+          "So sánh Scrum và Kanban",
+          "Chọn theo bản chất công việc"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Agile</strong> is a mindset, not a process: deliver value in <strong class=\"k\">small increments</strong>, get feedback early, and adapt to change. The Agile Manifesto values individuals and interactions over processes and tools, working software over comprehensive documentation, customer collaboration over contract negotiation, and responding to change over following a plan. The items on the right still matter; the left matter more.</p> <p>Scrum and Kanban are frameworks that put that mindset into practice.</p> <ul><li><strong class=\"k\">Scrum:</strong> work is done in fixed-length <strong class=\"k\">sprints</strong> (usually 1 to 4 weeks) with defined roles, events and a sprint goal. Scope is committed per sprint and changes are normally held for the next one. Progress is tracked with velocity and a burndown.</li><li><strong class=\"k\">Kanban:</strong> continuous flow on a board, with <strong class=\"k\">WIP (work-in-progress) limits</strong> to expose bottlenecks. No fixed iterations or required roles; items are pulled when capacity frees up. Measured with lead time and throughput.</li></ul> <h5>How to choose</h5> <ul><li>Product development with goals that can be planned in iterations, and a team that benefits from a regular rhythm → <strong class=\"k\">Scrum</strong>.</li><li>Work that arrives unpredictably and has to be handled quickly (support, bug fixing, operations) → <strong class=\"k\">Kanban</strong>.</li><li>Many teams mix them (\"Scrumban\"). What matters is <strong class=\"k\">short feedback loops</strong>, a visible board and honest retrospectives, not the label.</li></ul> <p>A common failure is \"<strong class=\"k\">fake Agile</strong>\": all the meetings, but long phases, no real feedback and no ability to change course.</p>",
+        "vi": "<p><strong class=\"k\">Agile</strong> là một tư duy, không phải quy trình: giao giá trị theo <strong class=\"k\">từng phần nhỏ</strong>, lấy phản hồi sớm và thích nghi với thay đổi. Agile Manifesto đề cao cá nhân và tương tác hơn quy trình và công cụ, phần mềm chạy được hơn tài liệu đầy đủ, hợp tác với khách hàng hơn đàm phán hợp đồng, và phản ứng với thay đổi hơn bám theo kế hoạch. Những mục ở vế phải vẫn quan trọng; vế trái quan trọng hơn.</p> <p>Scrum và Kanban là các framework đưa tư duy đó vào thực tế.</p> <ul><li><strong class=\"k\">Scrum:</strong> công việc làm theo các <strong class=\"k\">sprint</strong> có độ dài cố định (thường 1 đến 4 tuần) với vai trò, sự kiện xác định và một sprint goal. Phạm vi được cam kết theo từng sprint và thay đổi thường để dành cho sprint sau. Tiến độ theo dõi bằng velocity và burndown.</li><li><strong class=\"k\">Kanban:</strong> luồng liên tục trên một board, với <strong class=\"k\">giới hạn WIP (work in progress)</strong> để lộ ra điểm nghẽn. Không có vòng lặp cố định hay vai trò bắt buộc; việc được kéo vào khi có chỗ trống. Đo bằng lead time và throughput.</li></ul> <h5>Chọn thế nào</h5> <ul><li>Phát triển sản phẩm với mục tiêu có thể lên kế hoạch theo vòng lặp, và team được lợi từ nhịp làm việc đều đặn → <strong class=\"k\">Scrum</strong>.</li><li>Công việc đến bất ngờ và phải xử lý nhanh (support, sửa bug, vận hành) → <strong class=\"k\">Kanban</strong>.</li><li>Nhiều team kết hợp cả hai (\"Scrumban\"). Điều quan trọng là <strong class=\"k\">vòng phản hồi ngắn</strong>, board nhìn thấy được và retrospective trung thực, không phải cái nhãn.</li></ul> <p>Một lỗi phổ biến là \"<strong class=\"k\">Agile giả</strong>\": có đủ các cuộc họp, nhưng pha kéo dài, không có phản hồi thật và không có khả năng đổi hướng.</p>"
+      },
+      "terms": [
+        "Agile Manifesto",
+        "Scrum",
+        "Kanban",
+        "WIP limit",
+        "iteration",
+        "feedback loop"
+      ]
+    },
+    {
+      "id": "q140",
+      "number": 140,
+      "tag": "Agile · Scrum",
+      "title": "Describe the Scrum roles, events and artifacts. What is your part in them as a frontend developer?",
+      "titleVi": "Hãy mô tả các vai trò, sự kiện và artifact của Scrum. Là frontend developer, phần của bạn trong đó là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba vai trò, năm sự kiện, ba artifact",
+          "Mục đích của từng sự kiện, ngắn gọn",
+          "Vai trò của developer trong từng sự kiện",
+          "Frontend cụ thể: làm rõ UI, thiết kế, API, hạn chế bị chặn"
+        ]
+      },
+      "answer": {
+        "en": "<p>In the 2020 Scrum Guide:</p> <ul><li><strong class=\"k\">Roles (accountabilities):</strong> the <strong class=\"k\">Product Owner</strong> (maximises value, owns the Product Backlog), the <strong class=\"k\">Scrum Master</strong> (helps the team follow Scrum and removes impediments), and the <strong class=\"k\">Developers</strong> (everyone who builds the increment, including designers and QA in many teams).</li><li><strong class=\"k\">Events:</strong> the <strong class=\"k\">Sprint</strong> itself (at most one month), <strong class=\"k\">Sprint Planning</strong> (what and how), the <strong class=\"k\">Daily Scrum</strong> (15 minutes, to plan the next 24 hours toward the Sprint Goal), the <strong class=\"k\">Sprint Review</strong> (show the increment and get feedback) and the <strong class=\"k\">Sprint Retrospective</strong> (improve how we work).</li><li><strong class=\"k\">Artifacts:</strong> the <strong class=\"k\">Product Backlog</strong> (with the Product Goal), the <strong class=\"k\">Sprint Backlog</strong> (with the Sprint Goal) and the <strong class=\"k\">Increment</strong> (with the Definition of Done, Câu 142).</li></ul> <h5>My part as a frontend developer</h5> <ul><li><strong class=\"k\">Refinement and planning:</strong> read stories early, ask about edge cases, empty and error states, responsive behavior, accessibility and analytics, and <strong class=\"k\">clarify the design and API contract</strong> before the sprint starts.</li><li><strong class=\"k\">Estimating and committing</strong> honestly, with the whole team (Câu 141).</li><li><strong class=\"k\">Daily:</strong> say what moves us toward the goal and raise blockers early, for example \"the endpoint is not ready, I will build against a mock\".</li><li><strong class=\"k\">Review:</strong> demo the working UI on a real environment, not slides.</li><li><strong class=\"k\">Retro:</strong> bring concrete observations such as slow CI or unclear designs, and own an action.</li></ul> <p>Also keep the board updated, review teammates' pull requests promptly, and keep the Definition of Done real: tested, accessible and deployed behind a flag if needed.</p>",
+        "vi": "<p>Theo Scrum Guide 2020:</p> <ul><li><strong class=\"k\">Vai trò (accountability):</strong> <strong class=\"k\">Product Owner</strong> (tối đa hóa giá trị, sở hữu Product Backlog), <strong class=\"k\">Scrum Master</strong> (giúp team làm đúng Scrum và gỡ vướng mắc), và <strong class=\"k\">Developers</strong> (mọi người xây dựng increment, ở nhiều team gồm cả designer và QA).</li><li><strong class=\"k\">Sự kiện:</strong> chính <strong class=\"k\">Sprint</strong> (tối đa một tháng), <strong class=\"k\">Sprint Planning</strong> (làm gì và làm thế nào), <strong class=\"k\">Daily Scrum</strong> (15 phút, lập kế hoạch cho 24 giờ tới hướng về Sprint Goal), <strong class=\"k\">Sprint Review</strong> (cho xem increment và nhận phản hồi) và <strong class=\"k\">Sprint Retrospective</strong> (cải thiện cách làm việc).</li><li><strong class=\"k\">Artifact:</strong> <strong class=\"k\">Product Backlog</strong> (cùng Product Goal), <strong class=\"k\">Sprint Backlog</strong> (cùng Sprint Goal) và <strong class=\"k\">Increment</strong> (cùng Definition of Done, Câu 142).</li></ul> <h5>Phần của tôi với vai trò frontend developer</h5> <ul><li><strong class=\"k\">Refinement và planning:</strong> đọc story sớm, hỏi về edge case, trạng thái rỗng và lỗi, hành vi responsive, accessibility và analytics, và <strong class=\"k\">làm rõ thiết kế cùng API contract</strong> trước khi sprint bắt đầu.</li><li><strong class=\"k\">Ước lượng và cam kết</strong> một cách trung thực, cùng cả team (Câu 141).</li><li><strong class=\"k\">Hằng ngày:</strong> nói điều gì đưa chúng ta tới mục tiêu và nêu blocker sớm, ví dụ \"endpoint chưa sẵn sàng, tôi sẽ build trên mock\".</li><li><strong class=\"k\">Review:</strong> demo UI chạy thật trên môi trường thật, không phải slide.</li><li><strong class=\"k\">Retro:</strong> mang theo quan sát cụ thể như CI chậm hay thiết kế chưa rõ, và nhận một action.</li></ul> <p>Ngoài ra, giữ board luôn cập nhật, review pull request của đồng đội nhanh, và giữ Definition of Done có thật: đã test, accessible và deploy sau feature flag nếu cần.</p>"
+      },
+      "terms": [
+        "Product Owner",
+        "Scrum Master",
+        "Sprint Planning",
+        "Daily Scrum",
+        "Sprint Review",
+        "Retrospective"
+      ]
+    },
+    {
+      "id": "q141",
+      "number": 141,
+      "tag": "Agile · Ước lượng",
+      "title": "How do you estimate work? Why are estimates often wrong, and how do you communicate risk?",
+      "titleVi": "Bạn ước lượng công việc thế nào? Vì sao ước lượng hay sai, và bạn truyền đạt rủi ro ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Story point và planning poker",
+          "Vì sao ước lượng sai",
+          "Cách làm tốt hơn: chia nhỏ, spike, khoảng giá trị",
+          "Truyền đạt rủi ro và giả định cho PO/stakeholder"
+        ]
+      },
+      "answer": {
+        "en": "<p>Many teams use <strong class=\"k\">story points</strong>: a relative measure of effort, complexity and uncertainty, not hours. In <strong class=\"k\">planning poker</strong> each person picks a number (often Fibonacci: 1, 2, 3, 5, 8) at the same time. Big gaps show <strong class=\"k\">different assumptions</strong>, and discussing them is the real value. Points make sense only inside one team; they are not a way to compare teams or measure people.</p> <h5>Why estimates are wrong</h5> <ul><li><strong class=\"k\">Unknowns:</strong> unclear requirements, an unfinished design, a backend that does not exist yet, legacy code.</li><li><strong class=\"k\">Optimism:</strong> we picture the happy path and forget testing, review, accessibility, deploy and edge cases.</li><li><strong class=\"k\">Dependencies and interruptions:</strong> other teams, third-party APIs (a payment gateway sandbox), meetings, bugs.</li><li><strong class=\"k\">Pressure:</strong> an estimate becomes a commitment, so people pad or compress it.</li></ul> <h5>How I make them better</h5> <ol><li><strong class=\"k\">Break work into small slices</strong> (one or two days). Small items are far easier to estimate.</li><li>Use a <strong class=\"k\">reference story</strong> the team already knows as a baseline.</li><li>For real unknowns, run a time-boxed <strong class=\"k\">spike</strong> first, then estimate.</li><li>Give a <strong class=\"k\">range</strong> (\"3 to 5 days\") and state <strong class=\"k\">assumptions</strong> (\"if the API contract is fixed by Wednesday\").</li><li>Include testing, review and deployment in the estimate.</li></ol> <h5>Communicating risk</h5> <p>Say it <strong class=\"k\">early and plainly</strong>: what is risky, what it would cost, and the options (cut scope, add time, drop the least valuable part). Update the forecast as you learn rather than defending the first number. An estimate is a forecast, not a promise.</p>",
+        "vi": "<p>Nhiều team dùng <strong class=\"k\">story point</strong>: thước đo tương đối cho công sức, độ phức tạp và độ bất định, không phải giờ. Trong <strong class=\"k\">planning poker</strong>, mỗi người chọn một con số (thường theo Fibonacci: 1, 2, 3, 5, 8) cùng lúc. Chênh lệch lớn cho thấy <strong class=\"k\">giả định khác nhau</strong>, và việc thảo luận chúng mới là giá trị thật. Point chỉ có nghĩa trong một team; chúng không dùng để so sánh các team hay đánh giá con người.</p> <h5>Vì sao ước lượng sai</h5> <ul><li><strong class=\"k\">Ẩn số:</strong> yêu cầu chưa rõ, thiết kế chưa xong, backend chưa tồn tại, legacy code.</li><li><strong class=\"k\">Lạc quan:</strong> ta hình dung happy path và quên test, review, accessibility, deploy và edge case.</li><li><strong class=\"k\">Phụ thuộc và gián đoạn:</strong> team khác, API bên thứ ba (sandbox của cổng thanh toán), họp hành, bug.</li><li><strong class=\"k\">Áp lực:</strong> ước lượng biến thành cam kết, nên người ta thêm đệm hoặc nén lại.</li></ul> <h5>Cách tôi làm cho tốt hơn</h5> <ol><li><strong class=\"k\">Chia việc thành lát nhỏ</strong> (một hai ngày). Việc nhỏ dễ ước lượng hơn nhiều.</li><li>Dùng một <strong class=\"k\">reference story</strong> mà team đã biết làm mốc.</li><li>Với ẩn số thật sự, chạy trước một <strong class=\"k\">spike</strong> có giới hạn thời gian, rồi mới ước lượng.</li><li>Đưa ra <strong class=\"k\">khoảng</strong> (\"3 đến 5 ngày\") và nêu <strong class=\"k\">giả định</strong> (\"nếu API contract chốt trước thứ Tư\").</li><li>Tính cả test, review và deploy vào ước lượng.</li></ol> <h5>Truyền đạt rủi ro</h5> <p>Nói <strong class=\"k\">sớm và thẳng</strong>: điều gì rủi ro, nó sẽ tốn gì, và các lựa chọn (cắt phạm vi, thêm thời gian, bỏ phần ít giá trị nhất). Cập nhật dự báo khi biết thêm thay vì bảo vệ con số đầu tiên. Ước lượng là một dự báo, không phải lời hứa.</p>"
+      },
+      "terms": [
+        "story points",
+        "planning poker",
+        "spike",
+        "velocity",
+        "assumptions",
+        "time-box"
+      ]
+    },
+    {
+      "id": "q142",
+      "number": 142,
+      "tag": "Agile · Định nghĩa hoàn thành",
+      "title": "What is the difference between Definition of Ready and Definition of Done? What does \"done\" mean in your team?",
+      "titleVi": "Definition of Ready và Definition of Done khác nhau thế nào? Với bạn, “done” nghĩa là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "DoR: điều kiện để bắt đầu; DoD: điều kiện để coi là xong",
+          "DoD là cam kết chất lượng của cả team",
+          "Ví dụ DoD cho frontend",
+          "Cạm bẫy: DoR thành thủ tục, DoD bị bỏ qua dưới áp lực"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Definition of Done (DoD)</strong> is a shared checklist that an item must satisfy to count as complete. It is part of Scrum (it defines the Increment), and it makes \"done\" mean the same thing to everyone. <strong class=\"k\">Definition of Ready (DoR)</strong> is a team convention, not part of the Scrum Guide: criteria a story should meet <strong class=\"k\">before</strong> it enters a sprint (clear acceptance criteria, design and API contract available, dependencies known, small enough).</p> <h5>A typical frontend DoD</h5> <ul><li>Acceptance criteria met and demoed to the Product Owner.</li><li>Code reviewed and merged, CI green (lint, <code>tsc</code>, build).</li><li><strong class=\"k\">Tests</strong> added or updated: unit and integration, and E2E for critical flows (Câu 100).</li><li>Responsive and <strong class=\"k\">accessible</strong> (keyboard, labels, contrast), checked in the browsers we support.</li><li>No new console errors, performance budget respected (Core Web Vitals).</li><li>Analytics and error tracking in place, behind a feature flag if needed.</li><li>Deployed to staging and verified. Docs or changelog updated if relevant.</li></ul> <p><strong class=\"k\">From your CV:</strong> keeping Jest and Playwright coverage around 80% is useful as a team habit, but I treat it as a <strong class=\"k\">signal inside the DoD, not the goal</strong>: coverage says what was executed, not what was verified.</p> <h5>Pitfalls</h5> <ul><li>A DoR used as a <strong class=\"k\">gate that blocks work</strong> turns into bureaucracy. Use it as a conversation: \"is this clear enough to start?\"</li><li>A DoD that is <strong class=\"k\">skipped under deadline pressure</strong> becomes hidden technical debt (Câu 146). If an item is not done, it is not done: split it and carry the rest over honestly.</li><li>\"Done\" means releasable quality, not \"works on my machine\".</li></ul>",
+        "vi": "<p><strong class=\"k\">Definition of Done (DoD)</strong> là một checklist chung mà một mục phải thỏa mãn để được coi là hoàn thành. Nó là một phần của Scrum (định nghĩa Increment), và làm cho \"xong\" có cùng ý nghĩa với mọi người. <strong class=\"k\">Definition of Ready (DoR)</strong> là quy ước của team, không nằm trong Scrum Guide: các tiêu chí một story nên đạt <strong class=\"k\">trước khi</strong> vào sprint (acceptance criteria rõ, đã có thiết kế và API contract, biết các phụ thuộc, đủ nhỏ).</p> <h5>Một DoD điển hình cho frontend</h5> <ul><li>Acceptance criteria đạt và đã demo cho Product Owner.</li><li>Code đã được review và merge, CI xanh (lint, <code>tsc</code>, build).</li><li><strong class=\"k\">Test</strong> đã thêm hoặc cập nhật: unit và integration, cùng E2E cho các luồng quan trọng (Câu 100).</li><li>Responsive và <strong class=\"k\">accessible</strong> (bàn phím, label, độ tương phản), đã kiểm tra trên các trình duyệt hỗ trợ.</li><li>Không có lỗi console mới, giữ ngân sách hiệu năng (Core Web Vitals).</li><li>Đã có analytics và error tracking, sau feature flag nếu cần.</li><li>Đã deploy lên staging và xác nhận. Cập nhật tài liệu hoặc changelog nếu liên quan.</li></ul> <p><strong class=\"k\">Từ CV của bạn:</strong> duy trì coverage Jest và Playwright khoảng 80% là thói quen tốt cho team, nhưng tôi coi nó là <strong class=\"k\">một tín hiệu trong DoD, không phải mục tiêu</strong>: coverage cho biết dòng nào đã được chạy, không cho biết điều gì đã được kiểm chứng.</p> <h5>Cạm bẫy</h5> <ul><li>DoR bị dùng như <strong class=\"k\">cổng chặn công việc</strong> sẽ thành quan liêu. Hãy dùng nó như một cuộc trao đổi: \"việc này đã đủ rõ để bắt đầu chưa?\"</li><li>DoD bị <strong class=\"k\">bỏ qua khi sát deadline</strong> sẽ trở thành technical debt ngầm (Câu 146). Nếu một mục chưa xong thì là chưa xong: hãy tách nó ra và chuyển phần còn lại sang một cách trung thực.</li><li>\"Done\" nghĩa là chất lượng có thể release, không phải \"chạy được trên máy tôi\".</li></ul>"
+      },
+      "terms": [
+        "Definition of Done",
+        "Definition of Ready",
+        "acceptance criteria",
+        "Increment",
+        "quality gate"
+      ]
+    },
+    {
+      "id": "q143",
+      "number": 143,
+      "tag": "TDD · Red, green, refactor",
+      "title": "What is TDD? Walk me through the red, green, refactor cycle with an example. What are its benefits and limits?",
+      "titleVi": "TDD là gì? Hãy đi qua chu trình red, green, refactor bằng một ví dụ. Lợi ích và giới hạn của nó là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa: viết test trước, theo vòng ngắn",
+          "Ví dụ ba bước: red, green, refactor",
+          "Lợi ích: thiết kế, phản hồi nhanh, tự tin refactor",
+          "Giới hạn và khi nào không dùng TDD"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Test-Driven Development</strong> means you write a <strong class=\"k\">failing test first</strong>, then just enough code to pass it, then clean up. The loop is minutes long and has three steps. Example: a price helper.</p> <h5>1. Red: write a failing test</h5> <pre><code>// applyDiscount.test.js\nimport { applyDiscount } from './applyDiscount';\n\ntest('applies a percentage discount', () =&gt; {\n  expect(applyDiscount(200000, 10)).toBe(180000);\n});\n// FAIL: applyDiscount is not a function</code></pre> <h5>2. Green: the simplest code that passes</h5> <pre><code>export function applyDiscount(price, percent) {\n  return price - (price * percent) / 100;\n}</code></pre> <p>Add the next test, for example <code>applyDiscount(99999, 15)</code> should give an integer, and <code>applyDiscount(100, 120)</code> should throw. Each one fails first.</p> <h5>3. Refactor: improve with the tests green</h5> <pre><code>export function applyDiscount(price, percent) {\n  if (percent &lt; 0 || percent &gt; 100) throw new RangeError('percent must be 0-100');\n  return Math.round((price * (100 - percent)) / 100);\n}</code></pre> <p>Rename, extract, remove duplication, and the tests prove behavior did not change.</p> <h5>Benefits and limits</h5> <ul><li>TDD is as much a <strong class=\"k\">design tool as a testing tool</strong>: writing the test first forces a small, easy-to-call API, and testable code tends to be decoupled. You also get fast feedback and <strong class=\"k\">confidence to refactor</strong>.</li><li>It fits <strong class=\"k\">pure logic and business rules</strong> best (money, validation, state machines).</li><li>It is slow going for <strong class=\"k\">exploratory work</strong> (a prototype, a spike), visual design and CSS, or glue code where the design is unknown. There I write tests after, and tests do not replace review or manual checks.</li><li>Done badly (tests coupled to implementation), it adds maintenance cost without safety (Câu 101).</li></ul>",
+        "vi": "<p><strong class=\"k\">Test-Driven Development</strong> nghĩa là bạn viết một <strong class=\"k\">test fail trước</strong>, rồi viết vừa đủ code để nó pass, sau đó dọn dẹp. Vòng lặp dài vài phút và có ba bước. Ví dụ: một helper tính giá.</p> <h5>1. Red: viết một test fail</h5> <pre><code>// applyDiscount.test.js\nimport { applyDiscount } from './applyDiscount';\n\ntest('applies a percentage discount', () =&gt; {\n  expect(applyDiscount(200000, 10)).toBe(180000);\n});\n// FAIL: applyDiscount is not a function</code></pre> <h5>2. Green: code đơn giản nhất để pass</h5> <pre><code>export function applyDiscount(price, percent) {\n  return price - (price * percent) / 100;\n}</code></pre> <p>Thêm test tiếp theo, ví dụ <code>applyDiscount(99999, 15)</code> phải ra số nguyên, và <code>applyDiscount(100, 120)</code> phải ném lỗi. Mỗi test đều fail trước.</p> <h5>3. Refactor: cải thiện khi test vẫn xanh</h5> <pre><code>export function applyDiscount(price, percent) {\n  if (percent &lt; 0 || percent &gt; 100) throw new RangeError('percent must be 0-100');\n  return Math.round((price * (100 - percent)) / 100);\n}</code></pre> <p>Đổi tên, tách hàm, loại bỏ trùng lặp, và test chứng minh hành vi không đổi.</p> <h5>Lợi ích và giới hạn</h5> <ul><li>TDD là <strong class=\"k\">công cụ thiết kế không kém công cụ test</strong>: viết test trước buộc bạn tạo API nhỏ, dễ gọi, và code dễ test thường có ít phụ thuộc. Bạn còn có phản hồi nhanh và <strong class=\"k\">tự tin để refactor</strong>.</li><li>Nó hợp nhất với <strong class=\"k\">logic thuần và business rule</strong> (tiền, validate, state machine).</li><li>Nó chậm với <strong class=\"k\">công việc khám phá</strong> (prototype, spike), thiết kế giao diện và CSS, hoặc code kết nối khi chưa biết thiết kế. Ở đó tôi viết test sau, và test không thay thế review hay kiểm tra thủ công.</li><li>Làm dở (test gắn chặt vào cách cài đặt) thì chỉ tốn công bảo trì mà không an toàn hơn (Câu 101).</li></ul>"
+      },
+      "terms": [
+        "TDD",
+        "red green refactor",
+        "failing test",
+        "refactoring",
+        "Jest",
+        "design feedback"
+      ]
+    },
+    {
+      "id": "q144",
+      "number": 144,
+      "tag": "TDD · BDD",
+      "title": "What is the difference between TDD and BDD? What does Given/When/Then look like in a frontend project?",
+      "titleVi": "TDD và BDD khác nhau thế nào? Given/When/Then trông ra sao trong một dự án frontend?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "TDD: vòng viết code và test; BDD: ngôn ngữ chung về hành vi",
+          "Given/When/Then và Gherkin",
+          "Trong frontend: viết test theo hành vi",
+          "Khi nào đáng dùng Cucumber, khi nào không"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">TDD</strong> is a developer practice: a short loop of test, code and refactor (Câu 143). <strong class=\"k\">BDD (Behaviour-Driven Development)</strong> builds on it but focuses on <strong class=\"k\">shared understanding</strong>: the Product Owner, QA and developers describe behavior in concrete examples before building, using a common language. The three amigos (business, dev, QA) talk through examples, and those examples become acceptance criteria and, optionally, automated tests.</p> <p>The standard format is <strong class=\"k\">Given / When / Then</strong>:</p> <pre><code>Scenario: Voucher is applied at checkout\n  Given the cart total is 200,000 VND\n  And I have a valid 10% voucher\n  When I apply the voucher\n  Then the total shows 180,000 VND</code></pre> <h5>In a frontend project</h5> <p>You do not need a special tool to think in this style. The same structure fits a normal test, named by behavior and written the way a user acts (Câu 101):</p> <pre><code>describe('checkout', () =&gt; {\n  it('shows the discounted total when a valid voucher is applied', async () =&gt; {\n    render(&lt;Checkout total={200000} /&gt;);                      // Given\n    await user.type(screen.getByLabelText('Voucher'), 'SAVE10');\n    await user.click(screen.getByRole('button', { name: 'Apply' })); // When\n    expect(screen.getByText('180,000 ₫')).toBeVisible();      // Then\n  });\n});</code></pre> <h5>Tooling and trade-offs</h5> <p><strong class=\"k\">Cucumber</strong> (and Playwright BDD wrappers) run Gherkin files directly and fit when non-engineers really read and write the scenarios, usually for E2E acceptance tests (Câu 104). If only developers read them, the extra translation layer is overhead and plain Jest or Playwright tests are simpler. The real value of BDD is the <strong class=\"k\">conversation</strong>, not the syntax.</p>",
+        "vi": "<p><strong class=\"k\">TDD</strong> là một thực hành của developer: vòng ngắn gồm test, code và refactor (Câu 143). <strong class=\"k\">BDD (Behaviour-Driven Development)</strong> xây trên nền đó nhưng tập trung vào <strong class=\"k\">sự hiểu biết chung</strong>: Product Owner, QA và developer mô tả hành vi bằng các ví dụ cụ thể trước khi xây, dùng một ngôn ngữ chung. Ba \"amigos\" (business, dev, QA) cùng bàn các ví dụ, và các ví dụ đó trở thành acceptance criteria, và tùy chọn là test tự động.</p> <p>Định dạng chuẩn là <strong class=\"k\">Given / When / Then</strong>:</p> <pre><code>Scenario: Voucher is applied at checkout\n  Given the cart total is 200,000 VND\n  And I have a valid 10% voucher\n  When I apply the voucher\n  Then the total shows 180,000 VND</code></pre> <h5>Trong một dự án frontend</h5> <p>Bạn không cần công cụ đặc biệt để suy nghĩ theo cách này. Cùng cấu trúc đó hợp với một test thông thường, đặt tên theo hành vi và viết theo cách người dùng thao tác (Câu 101):</p> <pre><code>describe('checkout', () =&gt; {\n  it('shows the discounted total when a valid voucher is applied', async () =&gt; {\n    render(&lt;Checkout total={200000} /&gt;);                      // Given\n    await user.type(screen.getByLabelText('Voucher'), 'SAVE10');\n    await user.click(screen.getByRole('button', { name: 'Apply' })); // When\n    expect(screen.getByText('180,000 ₫')).toBeVisible();      // Then\n  });\n});</code></pre> <h5>Công cụ và đánh đổi</h5> <p><strong class=\"k\">Cucumber</strong> (và các wrapper BDD cho Playwright) chạy trực tiếp file Gherkin và phù hợp khi người không phải kỹ sư thực sự đọc và viết các scenario, thường cho acceptance test E2E (Câu 104). Nếu chỉ developer đọc, lớp dịch thêm vào là gánh nặng và test Jest hay Playwright thông thường đơn giản hơn. Giá trị thật của BDD là <strong class=\"k\">cuộc trao đổi</strong>, không phải cú pháp.</p>"
+      },
+      "terms": [
+        "BDD",
+        "Given When Then",
+        "Gherkin",
+        "Cucumber",
+        "three amigos",
+        "acceptance criteria"
+      ]
+    },
+    {
+      "id": "q145",
+      "number": 145,
+      "tag": "Agile · Thay đổi yêu cầu",
+      "title": "A stakeholder asks for a big change in the middle of the sprint. How do you handle changing requirements and scope creep?",
+      "titleVi": "Giữa sprint, một stakeholder yêu cầu một thay đổi lớn. Bạn xử lý yêu cầu thay đổi và scope creep thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Không nhận ngay, không từ chối ngay",
+          "Làm rõ giá trị, mức độ khẩn cấp và chi phí",
+          "Đưa ra lựa chọn đánh đổi cho PO quyết định",
+          "Phòng ngừa: sprint goal, refinement, backlog minh bạch"
+        ]
+      },
+      "answer": {
+        "en": "<p>Agile welcomes change, but <strong class=\"k\">welcoming change is not the same as absorbing it for free</strong>. My response is neither a silent yes nor a flat no.</p> <ol><li><strong class=\"k\">Clarify first.</strong> What problem does it solve, who asked, what is the deadline, and what happens if it waits until the next sprint? Many urgent requests turn out to be next-sprint requests.</li><li><strong class=\"k\">Size it quickly.</strong> Give a rough estimate with a range and the risks (Câu 141), including design, API and testing impact.</li><li><strong class=\"k\">Take it to the Product Owner.</strong> The PO owns priorities, so I present the <strong class=\"k\">trade-off</strong>: \"we can do this, but it replaces X, or the sprint goal slips\". The decision is made visibly, not by the loudest voice.</li><li><strong class=\"k\">Protect the Sprint Goal.</strong> If the change threatens the goal, the team and PO may renegotiate scope within the sprint. Only the Product Owner can cancel a sprint, and that is rare. Otherwise the item goes to the top of the Product Backlog for the next planning.</li><li><strong class=\"k\">Record it</strong> in the backlog, so it is transparent and nothing is lost.</li></ol> <h5>Preventing scope creep</h5> <ul><li>A clear <strong class=\"k\">Sprint Goal</strong> gives everyone something to protect.</li><li>Good <strong class=\"k\">refinement</strong> and acceptance criteria, so requirements are understood before work starts.</li><li>Show <strong class=\"k\">working software often</strong> (sprint review, preview deployments), because stakeholders change their mind less when they can see and click.</li><li>Keep stories <strong class=\"k\">small</strong>, so a change affects less in-progress work.</li><li>Real emergencies (a production bug) are handled, but made visible with an explicit trade-off.</li></ul> <p>The aim is a <strong class=\"k\">calm, transparent trade-off</strong>, not hero overtime.</p>",
+        "vi": "<p>Agile chào đón thay đổi, nhưng <strong class=\"k\">chào đón thay đổi không có nghĩa là gánh nó miễn phí</strong>. Phản ứng của tôi không phải là đồng ý lặng lẽ hay từ chối thẳng.</p> <ol><li><strong class=\"k\">Làm rõ trước.</strong> Nó giải quyết vấn đề gì, ai yêu cầu, deadline là khi nào, và chuyện gì xảy ra nếu chờ tới sprint sau? Nhiều yêu cầu \"khẩn\" hóa ra là yêu cầu của sprint sau.</li><li><strong class=\"k\">Ước lượng nhanh.</strong> Đưa ra ước lượng thô theo khoảng cùng các rủi ro (Câu 141), gồm tác động tới thiết kế, API và test.</li><li><strong class=\"k\">Đưa lên Product Owner.</strong> PO sở hữu thứ tự ưu tiên, nên tôi trình bày <strong class=\"k\">đánh đổi</strong>: \"làm được, nhưng nó sẽ thay thế X, hoặc sprint goal bị trượt\". Quyết định được đưa ra công khai, không phải do người nói to nhất.</li><li><strong class=\"k\">Bảo vệ Sprint Goal.</strong> Nếu thay đổi đe dọa mục tiêu, team và PO có thể thương lượng lại phạm vi trong sprint. Chỉ Product Owner mới hủy được sprint, và việc đó hiếm. Nếu không, mục đó lên đầu Product Backlog cho lần planning kế tiếp.</li><li><strong class=\"k\">Ghi lại</strong> vào backlog, để minh bạch và không có gì bị mất.</li></ol> <h5>Phòng ngừa scope creep</h5> <ul><li>Một <strong class=\"k\">Sprint Goal</strong> rõ ràng cho mọi người thứ để bảo vệ.</li><li><strong class=\"k\">Refinement</strong> tốt và acceptance criteria, để yêu cầu được hiểu trước khi làm.</li><li>Cho xem <strong class=\"k\">phần mềm chạy được thường xuyên</strong> (sprint review, preview deployment), vì stakeholder ít đổi ý hơn khi họ thấy và bấm thử được.</li><li>Giữ story <strong class=\"k\">nhỏ</strong>, để một thay đổi ảnh hưởng ít việc đang làm dở.</li><li>Sự cố khẩn thật (bug production) vẫn được xử lý, nhưng được làm hiển thị với một đánh đổi rõ ràng.</li></ul> <p>Mục tiêu là một <strong class=\"k\">đánh đổi bình tĩnh, minh bạch</strong>, không phải tăng ca kiểu anh hùng.</p>"
+      },
+      "terms": [
+        "scope creep",
+        "Sprint Goal",
+        "trade-off",
+        "Product Owner",
+        "refinement",
+        "change management"
+      ]
+    },
+    {
+      "id": "q146",
+      "number": 146,
+      "tag": "Agile · Technical debt",
+      "title": "What is technical debt? How do you talk about it with non-technical people and decide what to pay down?",
+      "titleVi": "Technical debt là gì? Bạn nói về nó với người không chuyên kỹ thuật thế nào và quyết định trả nợ cái gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa bằng ẩn dụ, không phải mọi code xấu đều là nợ",
+          "Nợ có chủ đích và nợ vô ý",
+          "Nói bằng ngôn ngữ kinh doanh: tốc độ, rủi ro, chi phí",
+          "Ưu tiên và cách trả: boy scout, ngân sách, gắn vào feature"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Technical debt</strong> is the future cost of a shortcut taken now, such as a quick hack, missing tests or an outdated dependency. Like financial debt it can be useful (borrow to ship a deadline) but you pay <strong class=\"k\">interest</strong>: every later change in that area gets slower and riskier. Not all ugly code is debt: code nobody touches costs nothing.</p> <p>It comes in two kinds: <strong class=\"k\">deliberate</strong> (\"ship now with a hardcoded config, fix next sprint\") and <strong class=\"k\">accidental</strong> (we did not know better at the time). Deliberate debt is fine only if it is <strong class=\"k\">recorded and has an owner</strong>.</p> <h5>Talking to non-technical people</h5> <p>Do not say \"the code is ugly\". Use business language: <strong class=\"k\">speed, risk and cost</strong>.</p> <ul><li>\"Every checkout change now takes three days instead of one, because of how this module is built.\"</li><li>\"Payment callbacks have no tests, so each release carries a risk of breaking revenue.\"</li><li>\"This library has a known security issue and no longer receives patches.\"</li></ul> <h5>Deciding what to pay down</h5> <p>Rank by <strong class=\"k\">interest and risk, not by annoyance</strong>: how often we touch it, how much it slows us, how much damage a failure causes (money, security, SEO), and how big the fix is.</p> <ul><li><strong class=\"k\">Make it visible:</strong> keep debt items in the backlog with impact and effort.</li><li><strong class=\"k\">Pay as you go:</strong> the boy-scout rule, and refactor the area <strong class=\"k\">when a feature touches it</strong>, which is easier to justify.</li><li><strong class=\"k\">Reserve capacity</strong> (for example 10 to 20% of each sprint) for debt and upgrades instead of a rewrite someday.</li><li>Avoid \"big rewrites\": they are rarely finished and replace known problems with new ones.</li></ul> <p>Keeping the Definition of Done honest (Câu 142) is the cheapest way to avoid creating new debt.</p>",
+        "vi": "<p><strong class=\"k\">Technical debt</strong> là chi phí tương lai của một đường tắt đi hôm nay, như hack nhanh, thiếu test hay dependency lỗi thời. Giống nợ tài chính, nó có thể hữu ích (vay để kịp deadline) nhưng bạn phải trả <strong class=\"k\">lãi</strong>: mỗi thay đổi sau này ở khu vực đó đều chậm hơn và rủi ro hơn. Không phải code xấu nào cũng là nợ: code không ai đụng tới thì không tốn gì.</p> <p>Nó có hai loại: <strong class=\"k\">có chủ đích</strong> (\"ship bây giờ với config hardcode, sprint sau sửa\") và <strong class=\"k\">vô ý</strong> (lúc đó chúng ta chưa biết cách tốt hơn). Nợ có chủ đích chỉ ổn nếu nó <strong class=\"k\">được ghi lại và có người chịu trách nhiệm</strong>.</p> <h5>Nói với người không chuyên kỹ thuật</h5> <p>Đừng nói \"code xấu\". Hãy dùng ngôn ngữ kinh doanh: <strong class=\"k\">tốc độ, rủi ro và chi phí</strong>.</p> <ul><li>\"Mỗi thay đổi ở checkout giờ mất ba ngày thay vì một, vì cách module này được xây.\"</li><li>\"Các callback thanh toán chưa có test, nên mỗi lần release đều có rủi ro làm hỏng doanh thu.\"</li><li>\"Thư viện này có lỗ hổng bảo mật đã biết và không còn nhận bản vá.\"</li></ul> <h5>Quyết định trả nợ cái gì</h5> <p>Xếp hạng theo <strong class=\"k\">lãi và rủi ro, không theo mức khó chịu</strong>: ta đụng tới nó thường xuyên đến đâu, nó làm chậm ta bao nhiêu, thất bại gây thiệt hại thế nào (tiền, bảo mật, SEO), và việc sửa lớn cỡ nào.</p> <ul><li><strong class=\"k\">Làm cho nó nhìn thấy được:</strong> giữ các mục nợ trong backlog kèm tác động và công sức.</li><li><strong class=\"k\">Trả dần:</strong> quy tắc boy scout, và refactor khu vực đó <strong class=\"k\">khi một feature chạm tới nó</strong>, việc này dễ biện minh hơn.</li><li><strong class=\"k\">Dành sẵn năng lực</strong> (ví dụ 10 đến 20% mỗi sprint) cho nợ và nâng cấp thay vì một ngày nào đó viết lại.</li><li>Tránh \"viết lại toàn bộ\": chúng hiếm khi hoàn thành và thay các vấn đề đã biết bằng vấn đề mới.</li></ul> <p>Giữ Definition of Done trung thực (Câu 142) là cách rẻ nhất để tránh tạo thêm nợ mới.</p>"
+      },
+      "terms": [
+        "technical debt",
+        "interest",
+        "boy scout rule",
+        "refactoring",
+        "prioritisation",
+        "backlog"
+      ]
+    }
+  ]
+}

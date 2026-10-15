@@ -1,0 +1,254 @@
+{
+  "id": "part-23",
+  "slug": "git",
+  "roman": "XXIII",
+  "title": "Git",
+  "description": "Rebase và merge, hoàn tác thay đổi, chiến lược nhánh, commit message, pull request và các tình huống Git hay gặp.",
+  "questions": [
+    {
+      "id": "q130",
+      "number": 130,
+      "tag": "Git · Rebase và merge",
+      "title": "What is the difference between <code>git merge</code> and <code>git rebase</code>? When do you use each?",
+      "titleVi": "<code>git merge</code> và <code>git rebase</code> khác nhau thế nào? Khi nào dùng cái nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa: merge tạo merge commit, rebase viết lại commit",
+          "Hệ quả với lịch sử: phân nhánh vs đường thẳng",
+          "Quy tắc vàng: không rebase lịch sử đã chia sẻ",
+          "Quy trình thực tế: rebase nhánh của mình, merge vào main"
+        ]
+      },
+      "answer": {
+        "en": "<p>Both integrate changes from one branch into another. <strong class=\"k\">Merge</strong> joins two histories with a new <strong class=\"k\">merge commit</strong> and keeps every original commit untouched. <strong class=\"k\">Rebase</strong> takes your commits and <strong class=\"k\">replays them on top of</strong> the target branch, which creates new commits with new hashes and a straight, linear history.</p> <ul><li><strong class=\"k\">Merge:</strong> non-destructive, shows exactly when and how branches joined, but the log gets noisy with merge commits.</li><li><strong class=\"k\">Rebase:</strong> a clean linear history that is easy to read, <code>bisect</code> and revert, but it <strong class=\"k\">rewrites history</strong>.</li></ul> <h5>The golden rule</h5> <p><strong class=\"k\">Never rebase commits that other people already have</strong> (<code>main</code>, a shared feature branch). Rewriting them gives your teammates a different history than the remote, and they end up with duplicated commits and painful conflicts.</p> <h5>What I do in practice</h5> <pre><code>git switch feature/checkout\ngit fetch origin\ngit rebase origin/main        # replay my commits on top of the latest main\ngit push --force-with-lease   # only because this branch is mine</code></pre> <ul><li>Rebase my <strong class=\"k\">own, not yet shared</strong> branch onto <code>main</code> to stay up to date and to tidy commits (<code>git rebase -i</code> to squash fixups).</li><li>Merge (or squash merge) the pull request into <code>main</code>, so shared history is never rewritten.</li><li>Use <code>--force-with-lease</code>, never plain <code>--force</code>: it refuses to overwrite commits you have not seen.</li><li>If a rebase goes wrong, <code>git rebase --abort</code>, or find the old tip in <code>git reflog</code> (Câu 132).</li></ul> <p>The honest answer is that neither is better: the team should pick one convention and apply it consistently.</p>",
+        "vi": "<p>Cả hai đều đưa thay đổi từ nhánh này vào nhánh khác. <strong class=\"k\">Merge</strong> nối hai lịch sử bằng một <strong class=\"k\">merge commit</strong> mới và giữ nguyên mọi commit gốc. <strong class=\"k\">Rebase</strong> lấy các commit của bạn rồi <strong class=\"k\">phát lại chúng lên trên</strong> nhánh đích, tạo ra commit mới với hash mới và một lịch sử thẳng, tuyến tính.</p> <ul><li><strong class=\"k\">Merge:</strong> không phá hủy gì, cho thấy chính xác khi nào và cách các nhánh được nối, nhưng log bị rối vì các merge commit.</li><li><strong class=\"k\">Rebase:</strong> lịch sử tuyến tính gọn gàng, dễ đọc, dễ <code>bisect</code> và revert, nhưng nó <strong class=\"k\">viết lại lịch sử</strong>.</li></ul> <h5>Quy tắc vàng</h5> <p><strong class=\"k\">Không bao giờ rebase những commit mà người khác đã có</strong> (<code>main</code>, một nhánh feature dùng chung). Viết lại chúng khiến đồng đội có lịch sử khác với remote, và họ sẽ gặp commit bị nhân đôi cùng những conflict khó chịu.</p> <h5>Tôi làm gì trong thực tế</h5> <pre><code>git switch feature/checkout\ngit fetch origin\ngit rebase origin/main        # phát lại commit của tôi lên main mới nhất\ngit push --force-with-lease   # chỉ vì nhánh này là của riêng tôi</code></pre> <ul><li>Rebase nhánh <strong class=\"k\">của riêng mình, chưa chia sẻ</strong> lên <code>main</code> để cập nhật và dọn commit (<code>git rebase -i</code> để gộp các commit fixup).</li><li>Merge (hoặc squash merge) pull request vào <code>main</code>, nên lịch sử chung không bao giờ bị viết lại.</li><li>Dùng <code>--force-with-lease</code>, đừng bao giờ dùng <code>--force</code> trần: nó từ chối ghi đè những commit bạn chưa thấy.</li><li>Nếu rebase hỏng, <code>git rebase --abort</code>, hoặc tìm lại đỉnh cũ trong <code>git reflog</code> (Câu 132).</li></ul> <p>Câu trả lời trung thực là không cái nào tốt hơn: team nên chọn một quy ước và áp dụng nhất quán.</p>"
+      },
+      "terms": [
+        "merge commit",
+        "rebase",
+        "linear history",
+        "force-with-lease",
+        "interactive rebase"
+      ]
+    },
+    {
+      "id": "q131",
+      "number": 131,
+      "tag": "Git · Merge strategy",
+      "title": "What are fast-forward, merge commit and squash merge? Which one would you choose for pull requests?",
+      "titleVi": "Fast-forward, merge commit và squash merge là gì? Bạn chọn cái nào cho pull request?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba kiểu merge và kết quả lịch sử của từng kiểu",
+          "Đánh đổi: chi tiết vs sạch, revert dễ hay khó",
+          "Chọn mặc định cho team và lý do",
+          "Lưu ý với squash: nhánh cũ không dùng tiếp"
+        ]
+      },
+      "answer": {
+        "en": "<p>They are three ways the result of a branch lands on <code>main</code>.</p> <ul><li><strong class=\"k\">Fast-forward:</strong> if <code>main</code> has not moved, Git just moves the pointer forward. No merge commit, linear history. <code>git merge --ff-only</code> refuses when a fast-forward is not possible.</li><li><strong class=\"k\">Merge commit</strong> (<code>--no-ff</code>): always creates a merge commit, so the branch and its commits stay visible in history.</li><li><strong class=\"k\">Squash merge:</strong> all commits of the branch become <strong class=\"k\">one commit</strong> on <code>main</code>; the branch's own history is not kept.</li></ul> <pre><code>git merge --ff-only feature          # fails if main has moved\ngit merge --no-ff feature            # always a merge commit\ngit merge --squash feature &amp;&amp; git commit</code></pre> <h5>Which one for pull requests</h5> <p>I usually pick <strong class=\"k\">squash merge</strong> for feature PRs: <code>main</code> gets one commit per pull request, with a clear message, so the log reads like a changelog and <strong class=\"k\">reverting a feature is a single <code>git revert</code></strong>. The messy \"wip\", \"fix typo\" commits disappear.</p> <p>The trade-offs:</p> <ul><li>You lose the detailed commit history inside the PR, so PRs must stay <strong class=\"k\">small and focused</strong>. A squashed 2,000-line PR is hard to bisect.</li><li>After a squash, the original branch is not an ancestor of <code>main</code>. <strong class=\"k\">Delete it and branch again</strong> instead of reusing it, or you will get repeated conflicts.</li><li>Choose <strong class=\"k\">merge commit</strong> when the individual commits are meaningful (a long-running branch, a release) and <strong class=\"k\">rebase and fast-forward</strong> if the team wants fully linear history with carefully curated commits.</li></ul> <p>Configure it once in the repository settings so everyone follows the same rule.</p>",
+        "vi": "<p>Đây là ba cách kết quả của một nhánh được đưa vào <code>main</code>.</p> <ul><li><strong class=\"k\">Fast-forward:</strong> nếu <code>main</code> chưa đi tiếp, Git chỉ việc dời con trỏ về phía trước. Không có merge commit, lịch sử tuyến tính. <code>git merge --ff-only</code> từ chối khi không thể fast-forward.</li><li><strong class=\"k\">Merge commit</strong> (<code>--no-ff</code>): luôn tạo một merge commit, nên nhánh và các commit của nó vẫn hiện trong lịch sử.</li><li><strong class=\"k\">Squash merge:</strong> toàn bộ commit của nhánh gộp thành <strong class=\"k\">một commit</strong> trên <code>main</code>; lịch sử riêng của nhánh không được giữ lại.</li></ul> <pre><code>git merge --ff-only feature          # fails if main has moved\ngit merge --no-ff feature            # always a merge commit\ngit merge --squash feature &amp;&amp; git commit</code></pre> <h5>Chọn cái nào cho pull request</h5> <p>Tôi thường chọn <strong class=\"k\">squash merge</strong> cho PR của feature: <code>main</code> có một commit cho mỗi pull request, với message rõ ràng, nên log đọc như changelog và <strong class=\"k\">revert một feature chỉ cần một lệnh <code>git revert</code></strong>. Những commit lộn xộn kiểu \"wip\", \"fix typo\" biến mất.</p> <p>Các đánh đổi:</p> <ul><li>Bạn mất lịch sử commit chi tiết trong PR, nên PR phải <strong class=\"k\">nhỏ và tập trung</strong>. Một PR 2.000 dòng bị squash thì rất khó bisect.</li><li>Sau khi squash, nhánh gốc không còn là tổ tiên của <code>main</code>. <strong class=\"k\">Hãy xóa nhánh đó và tạo nhánh mới</strong> thay vì dùng lại, nếu không bạn sẽ gặp conflict lặp đi lặp lại.</li><li>Chọn <strong class=\"k\">merge commit</strong> khi từng commit đều có ý nghĩa (nhánh sống lâu, một bản release) và <strong class=\"k\">rebase rồi fast-forward</strong> nếu team muốn lịch sử hoàn toàn tuyến tính với các commit được chăm chút.</li></ul> <p>Cấu hình một lần trong settings của repository để mọi người theo cùng một quy tắc.</p>"
+      },
+      "terms": [
+        "fast-forward",
+        "merge commit",
+        "squash merge",
+        "--no-ff",
+        "linear history"
+      ]
+    },
+    {
+      "id": "q132",
+      "number": 132,
+      "tag": "Git · Hoàn tác",
+      "title": "How do you undo things in Git? Explain <code>reset</code> (soft, mixed, hard), <code>revert</code> and <code>restore</code>, and how to recover a lost commit.",
+      "titleVi": "Bạn hoàn tác thay đổi trong Git thế nào? Giải thích <code>reset</code> (soft, mixed, hard), <code>revert</code>, <code>restore</code> và cách lấy lại commit đã mất.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hỏi trước: thay đổi đã commit chưa, đã push chưa",
+          "restore cho file, reset cho local, revert cho lịch sử chung",
+          "Ba chế độ của reset",
+          "reflog để cứu commit tưởng đã mất"
+        ]
+      },
+      "answer": {
+        "en": "<p>Start by asking two questions: is the change <strong class=\"k\">committed</strong>, and is it <strong class=\"k\">pushed</strong>? That decides the safe tool.</p> <ul><li><strong class=\"k\"><code>git restore &lt;file&gt;</code>:</strong> discards unstaged edits in a file; <code>git restore --staged &lt;file&gt;</code> unstages while keeping the edit.</li><li><strong class=\"k\"><code>git reset</code>:</strong> moves the branch pointer back. Use it on <strong class=\"k\">local, unpushed</strong> commits. Modes: <code>--soft</code> keeps changes staged, <code>--mixed</code> (default) keeps them in the working tree but unstaged, <code>--hard</code> <strong class=\"k\">throws them away</strong>.</li><li><strong class=\"k\"><code>git revert &lt;commit&gt;</code>:</strong> creates a <strong class=\"k\">new commit that reverses</strong> an old one. History is preserved, so it is the right tool on shared branches such as <code>main</code>.</li></ul> <pre><code>git restore --staged src/app.ts   # unstage, keep the edit\ngit reset --soft HEAD~1           # undo the commit, keep changes staged\ngit reset --hard HEAD~1           # undo the commit AND the changes\ngit revert a1b2c3d                # safe undo on a shared branch\ngit reflog                        # list where HEAD has been\ngit reset --hard HEAD@{2}         # jump back to a state from the reflog</code></pre> <h5>Recovering \"lost\" work</h5> <p>Git rarely deletes commits immediately. <strong class=\"k\"><code>git reflog</code></strong> records every position of <code>HEAD</code> locally, so after a bad <code>reset --hard</code> or rebase you can find the old commit and reset or <code>git branch rescue &lt;hash&gt;</code> to it. Entries expire after a while (by default weeks to months), and uncommitted changes are never in the reflog.</p> <p>Rule of thumb: <strong class=\"k\">never <code>reset</code> or force-push shared history; <code>revert</code> instead.</strong> Before anything destructive, make a backup branch with <code>git branch backup</code>.</p>",
+        "vi": "<p>Bắt đầu bằng hai câu hỏi: thay đổi đã <strong class=\"k\">commit</strong> chưa, và đã <strong class=\"k\">push</strong> chưa? Điều đó quyết định công cụ an toàn.</p> <ul><li><strong class=\"k\"><code>git restore &lt;file&gt;</code>:</strong> bỏ các chỉnh sửa chưa stage trong một file; <code>git restore --staged &lt;file&gt;</code> bỏ stage nhưng giữ lại chỉnh sửa.</li><li><strong class=\"k\"><code>git reset</code>:</strong> lùi con trỏ của nhánh. Dùng cho các commit <strong class=\"k\">local, chưa push</strong>. Các chế độ: <code>--soft</code> giữ thay đổi ở trạng thái staged, <code>--mixed</code> (mặc định) giữ trong working tree nhưng chưa stage, <code>--hard</code> <strong class=\"k\">vứt bỏ chúng</strong>.</li><li><strong class=\"k\"><code>git revert &lt;commit&gt;</code>:</strong> tạo <strong class=\"k\">một commit mới đảo ngược</strong> commit cũ. Lịch sử được giữ nguyên, nên đây là công cụ đúng trên các nhánh chung như <code>main</code>.</li></ul> <pre><code>git restore --staged src/app.ts   # unstage, keep the edit\ngit reset --soft HEAD~1           # undo the commit, keep changes staged\ngit reset --hard HEAD~1           # undo the commit AND the changes\ngit revert a1b2c3d                # safe undo on a shared branch\ngit reflog                        # list where HEAD has been\ngit reset --hard HEAD@{2}         # jump back to a state from the reflog</code></pre> <h5>Lấy lại công việc \"đã mất\"</h5> <p>Git hiếm khi xóa commit ngay lập tức. <strong class=\"k\"><code>git reflog</code></strong> ghi lại mọi vị trí của <code>HEAD</code> ở máy local, nên sau một lần <code>reset --hard</code> hay rebase sai, bạn có thể tìm commit cũ rồi reset hoặc <code>git branch rescue &lt;hash&gt;</code> về đó. Các mục này hết hạn sau một thời gian (mặc định vài tuần đến vài tháng), và thay đổi chưa commit thì không bao giờ nằm trong reflog.</p> <p>Quy tắc ngón tay cái: <strong class=\"k\">không bao giờ <code>reset</code> hay force-push lịch sử chung; hãy <code>revert</code>.</strong> Trước khi làm gì phá hủy, tạo nhánh dự phòng bằng <code>git branch backup</code>.</p>"
+      },
+      "terms": [
+        "reset --soft/--mixed/--hard",
+        "revert",
+        "restore",
+        "reflog",
+        "HEAD"
+      ]
+    },
+    {
+      "id": "q133",
+      "number": 133,
+      "tag": "Git · Conflict",
+      "title": "How do you resolve a merge conflict? How do you reduce conflicts in the first place?",
+      "titleVi": "Bạn giải quyết merge conflict thế nào? Làm sao để giảm conflict ngay từ đầu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hiểu conflict: hai bên sửa cùng chỗ",
+          "Quy trình giải quyết từng bước",
+          "Trường hợp đặc biệt: lockfile, file sinh tự động",
+          "Phòng ngừa: nhánh ngắn, đồng bộ thường xuyên, format thống nhất"
+        ]
+      },
+      "answer": {
+        "en": "<p>A conflict appears when two branches changed <strong class=\"k\">the same lines</strong> (or one deleted what the other edited) and Git cannot decide which version wins. It is normal, not a failure.</p> <h5>Resolving one</h5> <ol><li>Run <code>git status</code> to list conflicted files.</li><li>Open each file and read the markers. Do not just pick a side: <strong class=\"k\">understand both changes</strong> and write the correct combined result.</li><li>Remove the markers, run the app and the tests.</li><li><code>git add &lt;file&gt;</code>, then <code>git commit</code> (merge) or <code>git rebase --continue</code> (rebase). If it is a mess, <code>git merge --abort</code> or <code>git rebase --abort</code> returns to the start.</li></ol> <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\nconst timeout = 5000;\n=======\nconst timeout = 10000;\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/payment-retry</code></pre> <p>Tools help (VS Code merge editor, <code>git mergetool</code>), and <code>git rerere</code> can remember a resolution you made so it is reused. For <code>package-lock.json</code>, do not merge by hand: take one side, then run <code>npm install</code> to regenerate it. If the other author is reachable and the logic is unclear, <strong class=\"k\">ask them</strong>.</p> <h5>Reducing conflicts</h5> <ul><li>Keep branches <strong class=\"k\">short-lived and small</strong>, and merge or rebase from <code>main</code> often (Câu 137).</li><li>Agree on one formatter (Prettier) and run it on commit, so style changes do not collide.</li><li>Avoid giant files and \"reformat everything\" commits mixed with real changes.</li><li>Talk to teammates before refactoring or moving files that others are editing.</li></ul>",
+        "vi": "<p>Conflict xuất hiện khi hai nhánh sửa <strong class=\"k\">cùng những dòng</strong> (hoặc một bên xóa thứ bên kia đã sửa) và Git không biết phiên bản nào thắng. Đó là chuyện bình thường, không phải thất bại.</p> <h5>Giải quyết một conflict</h5> <ol><li>Chạy <code>git status</code> để liệt kê các file bị conflict.</li><li>Mở từng file và đọc các marker. Đừng chỉ chọn bừa một bên: <strong class=\"k\">hãy hiểu cả hai thay đổi</strong> rồi viết kết quả kết hợp đúng.</li><li>Xóa các marker, chạy app và test.</li><li><code>git add &lt;file&gt;</code>, rồi <code>git commit</code> (merge) hoặc <code>git rebase --continue</code> (rebase). Nếu rối quá, <code>git merge --abort</code> hoặc <code>git rebase --abort</code> đưa bạn về điểm bắt đầu.</li></ol> <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\nconst timeout = 5000;\n=======\nconst timeout = 10000;\n&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/payment-retry</code></pre> <p>Công cụ giúp được nhiều (merge editor của VS Code, <code>git mergetool</code>), và <code>git rerere</code> có thể nhớ cách bạn đã giải quyết để dùng lại. Với <code>package-lock.json</code>, đừng merge tay: lấy một bên rồi chạy <code>npm install</code> để sinh lại. Nếu liên lạc được với tác giả bên kia và logic chưa rõ, <strong class=\"k\">hãy hỏi họ</strong>.</p> <h5>Giảm conflict</h5> <ul><li>Giữ nhánh <strong class=\"k\">sống ngắn và nhỏ</strong>, và merge hoặc rebase từ <code>main</code> thường xuyên (Câu 137).</li><li>Thống nhất một formatter (Prettier) và chạy khi commit, để thay đổi style không đụng nhau.</li><li>Tránh file khổng lồ và commit \"format lại tất cả\" trộn lẫn với thay đổi thật.</li><li>Nói chuyện với đồng đội trước khi refactor hoặc di chuyển file mà người khác đang sửa.</li></ul>"
+      },
+      "terms": [
+        "merge conflict",
+        "conflict markers",
+        "git rerere",
+        "mergetool",
+        "short-lived branches"
+      ]
+    },
+    {
+      "id": "q134",
+      "number": 134,
+      "tag": "Git · Công cụ hằng ngày",
+      "title": "When would you use <code>git cherry-pick</code>, <code>git stash</code> and <code>git bisect</code>?",
+      "titleVi": "Khi nào bạn dùng <code>git cherry-pick</code>, <code>git stash</code> và <code>git bisect</code>?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi lệnh giải quyết một tình huống cụ thể",
+          "cherry-pick: lấy đúng một commit (hotfix, backport)",
+          "stash: cất việc dở để đổi ngữ cảnh",
+          "bisect: tìm commit gây lỗi bằng tìm nhị phân"
+        ]
+      },
+      "answer": {
+        "en": "<p>Each one solves a specific everyday situation.</p> <h5><code>cherry-pick</code>: take one commit, not a whole branch</h5> <p>Copies the changes of a commit onto the current branch as a new commit. Typical uses: a <strong class=\"k\">hotfix</strong> made on <code>main</code> that must also go to a <code>release/1.4</code> branch, or rescuing one good commit from an abandoned branch. <code>git cherry-pick -x &lt;hash&gt;</code> records the original hash in the message. Pitfall: the copy has a different hash, so overusing it creates duplicate commits and later conflicts.</p> <h5><code>stash</code>: park unfinished work</h5> <p>You are halfway through a feature and an urgent bug arrives. <code>git stash push -u -m \"wip: filter UI\"</code> shelves tracked and untracked changes, you switch branches and fix the bug, then <code>git stash pop</code> brings the work back. Use names, check <code>git stash list</code>, and do not treat the stash as long-term storage: a WIP commit on a branch is safer.</p> <h5><code>bisect</code>: find the commit that broke something</h5> <p>It does a <strong class=\"k\">binary search</strong> through history, so 1,000 commits take about 10 steps.</p> <pre><code>git bisect start\ngit bisect bad                 # current commit is broken\ngit bisect good v2.3.0         # this tag was fine\ngit bisect run npm test        # let a script decide good/bad\ngit bisect reset               # go back when done</code></pre> <p>It works best with <strong class=\"k\">small, atomic commits</strong> and a quick reproducible test, which is another reason to avoid giant commits.</p>",
+        "vi": "<p>Mỗi lệnh giải quyết một tình huống cụ thể trong công việc hằng ngày.</p> <h5><code>cherry-pick</code>: lấy một commit, không lấy cả nhánh</h5> <p>Sao chép thay đổi của một commit sang nhánh hiện tại dưới dạng commit mới. Dùng điển hình: một <strong class=\"k\">hotfix</strong> làm trên <code>main</code> mà cũng phải đưa vào nhánh <code>release/1.4</code>, hoặc cứu một commit tốt từ nhánh đã bỏ. <code>git cherry-pick -x &lt;hash&gt;</code> ghi hash gốc vào message. Cạm bẫy: bản sao có hash khác, nên lạm dụng sẽ tạo commit trùng lặp và conflict về sau.</p> <h5><code>stash</code>: cất công việc dang dở</h5> <p>Bạn đang làm dở một feature thì có bug khẩn. <code>git stash push -u -m \"wip: filter UI\"</code> cất các thay đổi đã track lẫn chưa track, bạn đổi nhánh và sửa bug, rồi <code>git stash pop</code> đưa công việc trở lại. Hãy đặt tên, xem <code>git stash list</code>, và đừng coi stash là nơi lưu lâu dài: một WIP commit trên nhánh an toàn hơn.</p> <h5><code>bisect</code>: tìm commit làm hỏng thứ gì đó</h5> <p>Nó <strong class=\"k\">tìm kiếm nhị phân</strong> trong lịch sử, nên 1.000 commit chỉ mất khoảng 10 bước.</p> <pre><code>git bisect start\ngit bisect bad                 # current commit is broken\ngit bisect good v2.3.0         # this tag was fine\ngit bisect run npm test        # let a script decide good/bad\ngit bisect reset               # go back when done</code></pre> <p>Nó hoạt động tốt nhất với <strong class=\"k\">commit nhỏ, nguyên tử</strong> và một test nhanh, tái hiện được, đây là một lý do nữa để tránh commit khổng lồ.</p>"
+      },
+      "terms": [
+        "cherry-pick",
+        "stash",
+        "bisect",
+        "hotfix",
+        "atomic commits"
+      ]
+    },
+    {
+      "id": "q135",
+      "number": 135,
+      "tag": "Git · Commit message",
+      "title": "What makes a good commit message? What are Conventional Commits and how do you enforce them?",
+      "titleVi": "Một commit message tốt cần gì? Conventional Commits là gì và làm sao ép dùng?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Commit nhỏ, một ý, message trả lời “vì sao”",
+          "Quy ước dòng tiêu đề và phần body",
+          "Conventional Commits: type(scope): mô tả",
+          "Ép bằng commitlint + husky, lợi ích changelog và versioning"
+        ]
+      },
+      "answer": {
+        "en": "<p>A good commit is <strong class=\"k\">one logical change</strong>, and its message explains <strong class=\"k\">what changed and why</strong>, because the diff already shows how. Future you (running <code>git blame</code> or <code>bisect</code>) is the reader.</p> <ul><li><strong class=\"k\">Subject line:</strong> short (about 50 to 72 characters), imperative mood: \"Fix double submit on pay button\", not \"fixed stuff\".</li><li><strong class=\"k\">Body</strong> (optional, after a blank line): the reason, the trade-off, a link to the ticket.</li><li>No \"wip\" or \"misc changes\" in shared history; clean them with an interactive rebase or a squash merge (Câu 131).</li></ul> <h5>Conventional Commits</h5> <p>A lightweight convention: <code>type(scope): description</code>.</p> <pre><code>feat(auth): add Google sign-in\nfix(checkout): prevent double submit on pay button\nrefactor(cart): extract price calculation\nfeat(api)!: rename orderId to orderCode</code></pre> <p>Common types: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>perf</code>, <code>chore</code>. A <code>!</code> or a <code>BREAKING CHANGE:</code> footer marks an incompatible change.</p> <p>Benefits: the history is scannable, tools such as <code>semantic-release</code> can <strong class=\"k\">derive the next semver version and generate the changelog</strong>, and reviewers see intent at a glance.</p> <h5>Enforcing it</h5> <p>Humans forget, so automate: <strong class=\"k\">commitlint</strong> with a <code>commit-msg</code> hook installed by <strong class=\"k\">husky</strong>, plus the same check in CI for squash-merged PR titles. Convention without enforcement fades in a few weeks.</p>",
+        "vi": "<p>Một commit tốt là <strong class=\"k\">một thay đổi logic</strong>, và message giải thích <strong class=\"k\">cái gì đã đổi và vì sao</strong>, vì diff đã cho thấy đổi như thế nào. Người đọc là chính bạn trong tương lai (khi chạy <code>git blame</code> hay <code>bisect</code>).</p> <ul><li><strong class=\"k\">Dòng tiêu đề:</strong> ngắn (khoảng 50 đến 72 ký tự), thể mệnh lệnh: \"Fix double submit on pay button\", không phải \"fixed stuff\".</li><li><strong class=\"k\">Body</strong> (tùy chọn, sau một dòng trống): lý do, đánh đổi, link tới ticket.</li><li>Không để \"wip\" hay \"misc changes\" trong lịch sử chung; dọn bằng interactive rebase hoặc squash merge (Câu 131).</li></ul> <h5>Conventional Commits</h5> <p>Một quy ước gọn nhẹ: <code>type(scope): description</code>.</p> <pre><code>feat(auth): add Google sign-in\nfix(checkout): prevent double submit on pay button\nrefactor(cart): extract price calculation\nfeat(api)!: rename orderId to orderCode</code></pre> <p>Các type thường dùng: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>perf</code>, <code>chore</code>. Dấu <code>!</code> hoặc footer <code>BREAKING CHANGE:</code> đánh dấu thay đổi không tương thích.</p> <p>Lợi ích: lịch sử dễ quét, các công cụ như <code>semantic-release</code> có thể <strong class=\"k\">suy ra phiên bản semver kế tiếp và sinh changelog</strong>, và reviewer thấy ý định ngay lập tức.</p> <h5>Ép dùng quy ước</h5> <p>Con người hay quên, nên hãy tự động hóa: <strong class=\"k\">commitlint</strong> với hook <code>commit-msg</code> do <strong class=\"k\">husky</strong> cài, cộng thêm kiểm tra tương tự trong CI cho tiêu đề PR khi squash merge. Quy ước mà không có ép buộc sẽ phai nhạt sau vài tuần.</p>"
+      },
+      "terms": [
+        "Conventional Commits",
+        "commitlint",
+        "husky",
+        "semantic-release",
+        "imperative mood"
+      ]
+    },
+    {
+      "id": "q136",
+      "number": 136,
+      "tag": "Git · Pull request",
+      "title": "What makes a good pull request, and what do you look for when reviewing one?",
+      "titleVi": "Một pull request tốt cần gì, và bạn tìm gì khi review PR của người khác?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Tác giả: PR nhỏ, mô tả rõ, tự review trước",
+          "Tự động hóa phần máy làm được: lint, test, CI",
+          "Reviewer: đúng đắn, edge case, test, bảo mật, a11y, dễ đọc",
+          "Văn hóa review: lịch sự, nhanh, phân biệt blocker và nit"
+        ]
+      },
+      "answer": {
+        "en": "<h5>As the author</h5> <ul><li><strong class=\"k\">Small and focused:</strong> one concern per PR, ideally a few hundred lines at most. Big PRs get shallow reviews and hide bugs.</li><li><strong class=\"k\">A useful description:</strong> what and why, how to test, screenshots or a short video for UI, a link to the ticket, and any risk or follow-up.</li><li><strong class=\"k\">Review your own diff first</strong> and remove debug code. Open a <strong class=\"k\">draft PR</strong> for early feedback.</li><li>Make sure CI is green before asking for review.</li></ul> <h5>Automate the boring part</h5> <p>Reviewers should discuss design, not semicolons. <strong class=\"k\">husky + lint-staged</strong> run ESLint, Prettier and a type check on staged files before commit (keep them fast). <strong class=\"k\">CI</strong> runs the full lint, <code>tsc</code>, unit and E2E tests and the build on every PR, and branch protection blocks merging without green checks and an approval. <code>CODEOWNERS</code> routes reviews to the right people.</p> <h5>As a reviewer</h5> <ul><li><strong class=\"k\">Correctness:</strong> does it do what the ticket says? Edge cases, error and loading states, empty data.</li><li><strong class=\"k\">Tests:</strong> is the new behavior covered, and do the tests check behavior (Câu 101)?</li><li><strong class=\"k\">Security and accessibility:</strong> unvalidated input, secrets, <code>dangerouslySetInnerHTML</code>, keyboard and labels.</li><li><strong class=\"k\">Performance and maintainability:</strong> unnecessary re-renders or requests, naming, duplication, over-engineering.</li></ul> <p>Review <strong class=\"k\">within a working day</strong>, comment on the code not the person, ask questions (\"what happens if the list is empty?\"), and label comments as <strong class=\"k\">blocking</strong> or <code>nit:</code>. Approve when it is good enough, not when it matches how you would have written it.</p>",
+        "vi": "<h5>Với vai trò tác giả</h5> <ul><li><strong class=\"k\">Nhỏ và tập trung:</strong> mỗi PR một mối quan tâm, tốt nhất tối đa vài trăm dòng. PR lớn bị review qua loa và che giấu bug.</li><li><strong class=\"k\">Mô tả hữu ích:</strong> cái gì và vì sao, cách test, ảnh chụp hoặc video ngắn cho UI, link ticket, và mọi rủi ro hay việc làm tiếp.</li><li><strong class=\"k\">Tự review diff của mình trước</strong> và xóa code debug. Mở <strong class=\"k\">draft PR</strong> để lấy feedback sớm.</li><li>Đảm bảo CI xanh trước khi nhờ review.</li></ul> <h5>Tự động hóa phần nhàm chán</h5> <p>Reviewer nên bàn về thiết kế, không phải dấu chấm phẩy. <strong class=\"k\">husky + lint-staged</strong> chạy ESLint, Prettier và kiểm tra type trên các file đã stage trước khi commit (giữ cho nhanh). <strong class=\"k\">CI</strong> chạy đầy đủ lint, <code>tsc</code>, unit test, E2E và build trên mỗi PR, còn branch protection chặn merge nếu thiếu check xanh và một approval. <code>CODEOWNERS</code> điều hướng review tới đúng người.</p> <h5>Với vai trò reviewer</h5> <ul><li><strong class=\"k\">Tính đúng đắn:</strong> có làm đúng như ticket nói không? Edge case, trạng thái lỗi và loading, dữ liệu rỗng.</li><li><strong class=\"k\">Test:</strong> hành vi mới đã được phủ chưa, và test có kiểm tra hành vi không (Câu 101)?</li><li><strong class=\"k\">Bảo mật và accessibility:</strong> input chưa validate, secret, <code>dangerouslySetInnerHTML</code>, bàn phím và label.</li><li><strong class=\"k\">Hiệu năng và khả năng bảo trì:</strong> re-render hoặc request thừa, đặt tên, trùng lặp, over-engineering.</li></ul> <p>Review <strong class=\"k\">trong vòng một ngày làm việc</strong>, nhận xét về code chứ không về người, đặt câu hỏi (\"nếu danh sách rỗng thì sao?\"), và gắn nhãn comment là <strong class=\"k\">blocking</strong> hay <code>nit:</code>. Hãy approve khi code đã đủ tốt, không phải khi nó giống cách bạn sẽ viết.</p>"
+      },
+      "terms": [
+        "pull request",
+        "code review",
+        "draft PR",
+        "husky",
+        "lint-staged",
+        "branch protection"
+      ]
+    },
+    {
+      "id": "q137",
+      "number": 137,
+      "tag": "Git · Chiến lược nhánh",
+      "title": "Trunk-based development or GitFlow: how do you choose a branching strategy? Where do feature flags fit in?",
+      "titleVi": "Trunk-based development hay GitFlow: chọn chiến lược nhánh thế nào? Feature flag nằm ở đâu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mô tả hai mô hình",
+          "Tiêu chí chọn: cách release, quy mô, độ trưởng thành CI",
+          "Nhánh ngắn hạn và feature flag giúp merge sớm",
+          "Kết luận cho web app deploy liên tục"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">GitFlow</strong> uses long-lived branches: <code>main</code> (production), <code>develop</code>, plus <code>feature/*</code>, <code>release/*</code> and <code>hotfix/*</code>. It suits <strong class=\"k\">versioned releases</strong> that need stabilisation and several supported versions (mobile apps, installed software, libraries).</p> <p><strong class=\"k\">Trunk-based development</strong> has one main branch. Everyone integrates into it <strong class=\"k\">at least daily</strong> through very <strong class=\"k\">short-lived branches</strong> (hours to a day or two) or directly. Releases come from <code>main</code> or from a short release branch cut from it. GitHub Flow is a simple variant: branch from <code>main</code>, open a PR, merge, deploy.</p> <h5>How I choose</h5> <ul><li>A <strong class=\"k\">web app deployed continuously</strong> (like most Next.js or Nuxt projects) fits trunk-based or GitHub Flow. GitFlow adds ceremony: long-lived <code>develop</code> drifts from <code>main</code>, and merges become big and painful.</li><li>It needs <strong class=\"k\">good automation</strong>: fast CI, solid tests, and easy rollback. Without them, merging to <code>main</code> daily feels dangerous.</li><li>Use GitFlow-like release branches only if you must maintain several released versions.</li></ul> <h5>Feature flags make it work</h5> <p>Unfinished work cannot wait on a branch for weeks, so it is merged <strong class=\"k\">behind a flag</strong> and stays dark in production:</p> <pre><code>if (flags.newCheckout) {\n  return &lt;NewCheckout /&gt;;\n}\nreturn &lt;LegacyCheckout /&gt;;</code></pre> <p>This separates <strong class=\"k\">deploy from release</strong>: you can roll out to 5% of users, turn it off instantly without a redeploy, and remove the flag and old path once stable. The cost is flag debt, so every flag needs an owner and a removal date, and both paths need testing.</p>",
+        "vi": "<p><strong class=\"k\">GitFlow</strong> dùng các nhánh sống lâu: <code>main</code> (production), <code>develop</code>, cùng <code>feature/*</code>, <code>release/*</code> và <code>hotfix/*</code>. Nó phù hợp với <strong class=\"k\">các bản release có phiên bản</strong> cần ổn định hóa và nhiều phiên bản được hỗ trợ (ứng dụng mobile, phần mềm cài đặt, thư viện).</p> <p><strong class=\"k\">Trunk-based development</strong> chỉ có một nhánh chính. Mọi người tích hợp vào đó <strong class=\"k\">ít nhất mỗi ngày</strong> qua các <strong class=\"k\">nhánh rất ngắn hạn</strong> (vài giờ đến một hai ngày) hoặc commit thẳng. Release đi từ <code>main</code> hoặc từ một nhánh release ngắn cắt ra từ đó. GitHub Flow là biến thể đơn giản: tách nhánh từ <code>main</code>, mở PR, merge, deploy.</p> <h5>Tôi chọn thế nào</h5> <ul><li>Một <strong class=\"k\">web app deploy liên tục</strong> (như hầu hết dự án Next.js hay Nuxt) hợp với trunk-based hoặc GitHub Flow. GitFlow thêm nhiều thủ tục: <code>develop</code> sống lâu trôi xa <code>main</code>, và các lần merge trở nên lớn và đau đớn.</li><li>Nó cần <strong class=\"k\">tự động hóa tốt</strong>: CI nhanh, test vững, rollback dễ. Thiếu chúng, merge vào <code>main</code> mỗi ngày sẽ gây lo.</li><li>Chỉ dùng nhánh release kiểu GitFlow nếu bạn phải duy trì nhiều phiên bản đã phát hành.</li></ul> <h5>Feature flag làm cho nó khả thi</h5> <p>Công việc dang dở không thể nằm chờ trên nhánh nhiều tuần, nên nó được merge <strong class=\"k\">sau một flag</strong> và vẫn \"tối\" trên production:</p> <pre><code>if (flags.newCheckout) {\n  return &lt;NewCheckout /&gt;;\n}\nreturn &lt;LegacyCheckout /&gt;;</code></pre> <p>Điều này tách <strong class=\"k\">deploy khỏi release</strong>: bạn có thể mở cho 5% người dùng, tắt ngay mà không cần redeploy, rồi xóa flag và đường cũ khi đã ổn định. Cái giá là flag debt, nên mỗi flag cần một người chịu trách nhiệm và hạn xóa, và cả hai đường đều phải được test.</p>"
+      },
+      "terms": [
+        "trunk-based development",
+        "GitFlow",
+        "GitHub Flow",
+        "feature flag",
+        "short-lived branches"
+      ]
+    },
+    {
+      "id": "q138",
+      "number": 138,
+      "tag": "Git · Sự cố",
+      "title": "You committed a secret or a huge file by mistake. What do you do?",
+      "titleVi": "Bạn lỡ commit một secret hoặc một file rất lớn. Bạn làm gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Secret: thu hồi (rotate) trước, dọn lịch sử sau",
+          "Chưa push khác đã push",
+          "Xóa khỏi toàn bộ lịch sử bằng git filter-repo rồi force push",
+          "File lớn: Git LFS và phòng ngừa bằng hook, scanning"
+        ]
+      },
+      "answer": {
+        "en": "<h5>A leaked secret: rotate first</h5> <p>If an API key, token or password reached a remote, <strong class=\"k\">assume it is compromised</strong>. Deleting it in a new commit does nothing, because it is still in history, and bots scan public repos within minutes.</p> <ol><li><strong class=\"k\">Revoke and rotate the secret immediately</strong> at the provider. This is the only step that truly fixes the problem.</li><li>Check logs for misuse.</li><li>Then clean the history.</li></ol> <h5>Cleaning history</h5> <ul><li><strong class=\"k\">Not pushed yet:</strong> <code>git commit --amend</code>, or <code>git reset --soft HEAD~1</code>, remove the file and commit again.</li><li><strong class=\"k\">Already pushed:</strong> rewrite history with <strong class=\"k\"><code>git filter-repo</code></strong> (the recommended replacement for <code>filter-branch</code>; BFG Repo-Cleaner also works), force push, and ask everyone to <strong class=\"k\">re-clone or reset</strong>, otherwise old commits come back. Forks and cached pull request refs may keep copies, which is one more reason rotation comes first.</li></ul> <pre><code>git filter-repo --invert-paths --path .env\ngit push --force-with-lease --all</code></pre> <h5>A huge file</h5> <p>The same tool can strip it (<code>git filter-repo --strip-blobs-bigger-than 10M</code>). Going forward, keep large binaries out of Git or use <strong class=\"k\">Git LFS</strong>.</p> <h5>Prevent it</h5> <ul><li><code>.gitignore</code> for <code>.env</code> and build output, and keep secrets in environment variables or a secret manager. Only <code>NEXT_PUBLIC_</code> style variables are safe to expose, and they are public by design.</li><li>A pre-commit scanner such as <strong class=\"k\">gitleaks</strong>, and the host's secret scanning or push protection.</li><li>A size limit check in CI.</li></ul>",
+        "vi": "<h5>Secret bị lộ: rotate trước tiên</h5> <p>Nếu một API key, token hay mật khẩu đã lên remote, <strong class=\"k\">hãy coi như nó đã bị lộ</strong>. Xóa nó bằng một commit mới không có tác dụng, vì nó vẫn nằm trong lịch sử, và bot quét các repo công khai trong vài phút.</p> <ol><li><strong class=\"k\">Thu hồi và rotate secret ngay</strong> ở nhà cung cấp. Đây là bước duy nhất thực sự giải quyết vấn đề.</li><li>Kiểm tra log xem có bị dùng sai không.</li><li>Sau đó mới dọn lịch sử.</li></ol> <h5>Dọn lịch sử</h5> <ul><li><strong class=\"k\">Chưa push:</strong> <code>git commit --amend</code>, hoặc <code>git reset --soft HEAD~1</code>, xóa file rồi commit lại.</li><li><strong class=\"k\">Đã push:</strong> viết lại lịch sử bằng <strong class=\"k\"><code>git filter-repo</code></strong> (công cụ được khuyến nghị thay cho <code>filter-branch</code>; BFG Repo-Cleaner cũng dùng được), force push, và yêu cầu mọi người <strong class=\"k\">clone lại hoặc reset</strong>, nếu không các commit cũ sẽ quay lại. Fork và các ref pull request được cache có thể vẫn giữ bản sao, đây là một lý do nữa để rotate trước.</li></ul> <pre><code>git filter-repo --invert-paths --path .env\ngit push --force-with-lease --all</code></pre> <h5>File rất lớn</h5> <p>Cùng công cụ đó có thể gỡ nó (<code>git filter-repo --strip-blobs-bigger-than 10M</code>). Từ giờ, đừng đưa file nhị phân lớn vào Git hoặc dùng <strong class=\"k\">Git LFS</strong>.</p> <h5>Phòng ngừa</h5> <ul><li><code>.gitignore</code> cho <code>.env</code> và output build, và giữ secret trong biến môi trường hoặc secret manager. Chỉ các biến kiểu <code>NEXT_PUBLIC_</code> là an toàn để lộ, và chúng công khai theo thiết kế.</li><li>Một công cụ quét trước khi commit như <strong class=\"k\">gitleaks</strong>, cùng secret scanning hay push protection của nền tảng hosting.</li><li>Kiểm tra giới hạn kích thước file trong CI.</li></ul>"
+      },
+      "terms": [
+        "secret rotation",
+        "git filter-repo",
+        "BFG",
+        "Git LFS",
+        "gitleaks",
+        "push protection"
+      ]
+    }
+  ]
+}

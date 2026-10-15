@@ -30,6 +30,11 @@ const layout = [
     slugs: ["testing", "accessibility", "design-system"],
   },
   {
+    id: "quy-trinh",
+    title: "Quy trình làm việc",
+    slugs: ["git", "agile-tdd"],
+  },
+  {
     id: "viet-code",
     title: "Viết code",
     slugs: ["viet-code-tay", "viet-code-ngay-3", "viet-code-ngay-4"],
