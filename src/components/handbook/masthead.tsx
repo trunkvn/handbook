@@ -4,7 +4,7 @@ export function Masthead() {
   return (
     <header className="masthead">
       <p className="eyebrow">Tài liệu ôn tập</p>
-      <h1>Phỏng vấn Frontend</h1>
+      <h1>Handbook</h1>
       <p className="lede">
         {totalQuestions} câu hỏi, nhóm theo chủ đề: dự án thực tế (thanh toán, xác thực, bảo mật,
         kiến trúc), JavaScript, TypeScript, React, Next.js, Vue và Nuxt, hiệu năng web, testing,
