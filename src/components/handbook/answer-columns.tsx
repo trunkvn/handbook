@@ -1,12 +1,16 @@
 import type { AnswerColumns as AnswerColumnsData } from "@/content/types";
 import { CopyButton } from "./copy-button";
+import { SpeakButton } from "./speak-button";
 
 function Column({ lang, label, html }: { lang: "en" | "vi"; label: string; html: string }) {
   return (
     <div className="col" lang={lang}>
       <div className="col-head">
         <span className="col-label">{label}</span>
-        <CopyButton />
+        <div className="col-tools">
+          <SpeakButton lang={lang} />
+          <CopyButton />
+        </div>
       </div>
       <div className="col-body" dangerouslySetInnerHTML={{ __html: html }} />
     </div>
