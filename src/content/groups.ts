@@ -12,7 +12,12 @@ const layout = [
   {
     id: "du-an",
     title: "Dự án thực tế",
-    slugs: ["kien-truc-tang-api", "thanh-toan-thuong-mai", "xac-thuc-bao-mat", "thanh-toan-bao-mat-nang-cao"],
+    slugs: [
+      "kien-truc-tang-api",
+      "thanh-toan-thuong-mai",
+      "xac-thuc-bao-mat",
+      "thanh-toan-bao-mat-nang-cao",
+    ],
   },
   {
     id: "js-ts",
@@ -22,7 +27,15 @@ const layout = [
   {
     id: "framework",
     title: "React, Vue & hiệu năng",
-    slugs: ["react-next-js", "react-nang-cao", "nextjs-nang-cao", "vue-nuxt", "vue-nang-cao", "nuxt-nang-cao", "hieu-nang-web"],
+    slugs: [
+      "react-next-js",
+      "react-nang-cao",
+      "nextjs-nang-cao",
+      "vue-nuxt",
+      "vue-nang-cao",
+      "nuxt-nang-cao",
+      "hieu-nang-web",
+    ],
   },
   {
     id: "chat-luong",
