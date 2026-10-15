@@ -81,3 +81,12 @@ q101: {
 Test được viết bằng JS và chạy cùng scope với code của người dùng nên gọi hàm theo tên. Các hàm hỗ trợ (xem `src/lib/code-runner/harness.ts`): `test(tên, fn)`, `eq(thực tế, kỳ vọng)`, `same(...)` (không phân biệt thứ tự), `cases(fn, hàng, "same"?)`, `wait(ms)`, và `ListNode`/`list()`/`toArray()`, `TreeNode`/`tree()` cho danh sách liên kết và cây nhị phân.
 
 Mỗi bài nên được kiểm chứng: lời giải mẫu trong thẻ phải qua hết test, và vài lời giải sai phải bị bắt.
+
+## Nghe đọc
+
+Mỗi cột đáp án có nút loa "Nghe" cạnh nút Copy. Giọng đọc dùng Web Speech API (`speechSynthesis`) của trình duyệt nên không cần server hay API key; chất lượng giọng phụ thuộc vào các giọng đã cài trên thiết bị. Nút và phần cài đặt sẽ tự ẩn nếu trình duyệt không hỗ trợ.
+
+- Phần đang đọc được tô sáng; code block được bỏ qua; bấm lại để dừng; chỉ một cột được đọc tại một thời điểm.
+- "Giọng đọc" trong sidebar chọn tốc độ và giọng cho tiếng Anh và tiếng Việt (có nút Nghe thử), lưu cùng các tuỳ chọn khác trong `localStorage`.
+- Máy chưa có giọng tiếng Việt thì nút báo rõ thay vì đọc sai; macOS và iOS có sẵn giọng Vietnamese, Windows và Android cần cài thêm.
+- Mã nằm ở `src/lib/speech.ts` (điều khiển phát), `src/lib/speech-text.ts` (làm sạch và cắt văn bản thành đoạn ngắn, vì Chrome tự dừng khi một lần đọc quá dài) và `src/components/handbook/speak-button.tsx`.
