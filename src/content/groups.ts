@@ -17,7 +17,7 @@ const layout = [
   {
     id: "js-ts",
     title: "JavaScript & TypeScript",
-    slugs: ["javascript-core", "typescript"],
+    slugs: ["javascript-core", "javascript-nang-cao", "typescript", "typescript-nang-cao"],
   },
   {
     id: "framework",

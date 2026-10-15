@@ -1,0 +1,360 @@
+{
+  "id": "part-25",
+  "slug": "javascript-nang-cao",
+  "roman": "XXV",
+  "title": "JavaScript · Nâng cao",
+  "description": "Module, iterator và generator, quản lý bộ nhớ, event delegation, Proxy, lưu trữ phía client, rendering pipeline của trình duyệt và các khái niệm JavaScript hay bị hỏi sâu.",
+  "questions": [
+    {
+      "id": "q147",
+      "number": 147,
+      "tag": "JavaScript · Cú pháp hiện đại",
+      "title": "What do <code>?.</code>, <code>??</code> and <code>??=</code> do, and how do they differ from <code>||</code> and <code>&amp;&amp;</code>? What are the pitfalls?",
+      "titleVi": "<code>?.</code>, <code>??</code> và <code>??=</code> làm gì, khác <code>||</code> và <code>&amp;&amp;</code> ở đâu? Có những bẫy nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa từng toán tử bằng một câu",
+          "So sánh <code>??</code> với <code>||</code>: falsy và nullish",
+          "Logical assignment <code>||=</code>, <code>&amp;&amp;=</code>, <code>??=</code>",
+          "Bẫy: trộn toán tử, che giấu lỗi, dữ liệu API"
+        ]
+      },
+      "answer": {
+        "en": "<p>These operators deal with <strong class=\"k\">missing values</strong>, but they test different things.</p> <ul><li><strong class=\"k\">Optional chaining <code>?.</code></strong> short-circuits the whole chain and returns <code>undefined</code> when the left side is <code>null</code> or <code>undefined</code>.</li><li><strong class=\"k\">Nullish coalescing <code>??</code></strong> returns the right side <strong class=\"k\">only when the left side is <code>null</code> or <code>undefined</code></strong>.</li><li><strong class=\"k\"><code>||</code></strong> returns the right side for any <strong class=\"k\">falsy</strong> value: <code>0</code>, <code>''</code>, <code>false</code>, <code>NaN</code>, <code>null</code>, <code>undefined</code>.</li></ul> <pre><code>const cfg = { retries: 0, label: '', onSave: null };\n\ncfg.retries || 3;        // 3  (bug: 0 is a valid value)\ncfg.retries ?? 3;        // 0  (correct)\ncfg.label ?? 'Untitled'; // ''  (empty string is kept)\n\ncfg.user?.profile?.url;  // undefined, no TypeError\ncfg.list?.[0];           // optional index access\ncfg.onSave?.();          // call only if it exists\n\ncfg.timeout ??= 5000;    // assign only if null/undefined\ncfg.debug ||= false;     // assign if falsy\ncfg.ready &amp;&amp;= check();   // assign only if truthy</code></pre> <p>The <code>a ??= b</code> form is a short-circuit: <code>b</code> is not even evaluated when <code>a</code> already has a value.</p> <h5>Pitfalls</h5> <ul><li>Mixing <code>??</code> with <code>||</code> or <code>&amp;&amp;</code> without parentheses is a <strong class=\"k\">SyntaxError</strong>: write <code>(a || b) ?? c</code>.</li><li>Do not sprinkle <code>?.</code> everywhere. It can <strong class=\"k\">hide real bugs</strong> (a required field silently becomes <code>undefined</code> and fails three layers later). Use it for data that is genuinely optional, and validate API data at the boundary.</li><li><code>?.</code> only guards the value right before it: in <code>a?.b.c</code>, if <code>a.b</code> is <code>undefined</code> then <code>.c</code> still throws.</li><li>You cannot assign through it: <code>a?.b = 1</code> is a syntax error.</li><li>For form fields and numeric inputs, <code>??</code> is almost always what you want instead of <code>||</code>.</li></ul>",
+        "vi": "<p>Các toán tử này xử lý <strong class=\"k\">giá trị bị thiếu</strong>, nhưng mỗi cái kiểm tra một thứ khác nhau.</p> <ul><li><strong class=\"k\">Optional chaining <code>?.</code></strong> dừng cả chuỗi và trả <code>undefined</code> khi vế trái là <code>null</code> hoặc <code>undefined</code>.</li><li><strong class=\"k\">Nullish coalescing <code>??</code></strong> trả vế phải <strong class=\"k\">chỉ khi vế trái là <code>null</code> hoặc <code>undefined</code></strong>.</li><li><strong class=\"k\"><code>||</code></strong> trả vế phải với mọi giá trị <strong class=\"k\">falsy</strong>: <code>0</code>, <code>''</code>, <code>false</code>, <code>NaN</code>, <code>null</code>, <code>undefined</code>.</li></ul> <pre><code>const cfg = { retries: 0, label: '', onSave: null };\n\ncfg.retries || 3;        // 3  (bug: 0 là giá trị hợp lệ)\ncfg.retries ?? 3;        // 0  (đúng)\ncfg.label ?? 'Untitled'; // ''  (chuỗi rỗng được giữ lại)\n\ncfg.user?.profile?.url;  // undefined, không bị TypeError\ncfg.list?.[0];           // truy cập index tùy chọn\ncfg.onSave?.();          // chỉ gọi nếu tồn tại\n\ncfg.timeout ??= 5000;    // chỉ gán nếu null/undefined\ncfg.debug ||= false;     // gán nếu falsy\ncfg.ready &amp;&amp;= check();   // chỉ gán nếu truthy</code></pre> <p>Dạng <code>a ??= b</code> là short-circuit: <code>b</code> thậm chí không được tính khi <code>a</code> đã có giá trị.</p> <h5>Các bẫy</h5> <ul><li>Trộn <code>??</code> với <code>||</code> hoặc <code>&amp;&amp;</code> mà không có ngoặc sẽ gây <strong class=\"k\">SyntaxError</strong>: hãy viết <code>(a || b) ?? c</code>.</li><li>Đừng rải <code>?.</code> khắp nơi. Nó có thể <strong class=\"k\">che giấu bug thật</strong> (một field bắt buộc âm thầm thành <code>undefined</code> rồi lỗi ở ba tầng sau). Chỉ dùng cho dữ liệu thật sự tùy chọn, và validate dữ liệu API ở biên.</li><li><code>?.</code> chỉ bảo vệ giá trị ngay trước nó: với <code>a?.b.c</code>, nếu <code>a.b</code> là <code>undefined</code> thì <code>.c</code> vẫn ném lỗi.</li><li>Không thể gán qua nó: <code>a?.b = 1</code> là lỗi cú pháp.</li><li>Với field form và input số, gần như luôn nên dùng <code>??</code> thay cho <code>||</code>.</li></ul>"
+      },
+      "terms": [
+        "optional chaining",
+        "nullish coalescing",
+        "falsy",
+        "logical assignment",
+        "short-circuit"
+      ]
+    },
+    {
+      "id": "q148",
+      "number": 148,
+      "tag": "JavaScript · Cấu trúc dữ liệu",
+      "title": "When would you use <code>Map</code>, <code>Set</code>, <code>WeakMap</code> and <code>WeakSet</code> instead of plain objects and arrays?",
+      "titleVi": "Khi nào bạn dùng <code>Map</code>, <code>Set</code>, <code>WeakMap</code>, <code>WeakSet</code> thay vì object và array thường?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Map và Set giải quyết vấn đề gì",
+          "So với object/array: key, thứ tự, hiệu năng",
+          "WeakMap/WeakSet: key là object, không chặn GC",
+          "Use case thực tế và giới hạn"
+        ]
+      },
+      "answer": {
+        "en": "<p>Use <strong class=\"k\"><code>Map</code></strong> for a real dictionary, <strong class=\"k\"><code>Set</code></strong> for unique values, and the <strong class=\"k\">weak</strong> versions to attach data to an object <strong class=\"k\">without keeping it alive</strong>.</p> <h5>Map and Set</h5> <ul><li><strong class=\"k\"><code>Map</code></strong> accepts <strong class=\"k\">any type as a key</strong> (objects, functions, numbers), keeps <strong class=\"k\">insertion order</strong>, has <code>.size</code>, and is designed for frequent add and delete. A plain object turns keys into strings, inherits keys like <code>constructor</code> from its prototype, and has no cheap size.</li><li><strong class=\"k\"><code>Set</code></strong> stores unique values with <strong class=\"k\">O(1) <code>has</code></strong>, so <code>new Set(arr)</code> is the idiomatic dedupe, and <code>set.has(id)</code> beats <code>arr.includes(id)</code> in loops.</li><li>Both are iterable, but <strong class=\"k\">not JSON-serialisable</strong> (<code>JSON.stringify(new Map())</code> gives <code>{}</code>), so convert with <code>Object.fromEntries</code> or <code>[...map]</code> first.</li></ul> <p>Keep plain objects for fixed-shape records with known fields (a <code>User</code>) and for JSON data.</p> <h5>WeakMap and WeakSet</h5> <p>Keys must be <strong class=\"k\">objects</strong>, are held <strong class=\"k\">weakly</strong> (the entry vanishes when nothing else references the key), and are <strong class=\"k\">not iterable</strong> and have no <code>size</code>.</p> <pre><code>const meta = new WeakMap();\n\nfunction track(el) {\n  meta.set(el, { clicks: 0 });      // data lives and dies with the element\n}\n// when el is removed and unreferenced, its entry is garbage-collected</code></pre> <p>Typical uses: <strong class=\"k\">caches</strong> or <strong class=\"k\">private metadata keyed by DOM nodes or objects</strong>, without writing cleanup code. A normal <code>Map</code> here would be a <strong class=\"k\">memory leak</strong>, because it keeps every key alive.</p> <p><code>WeakRef</code> and <code>FinalizationRegistry</code> also exist, but callbacks run at a time the engine chooses, so avoid relying on them for correctness.</p>",
+        "vi": "<p>Dùng <strong class=\"k\"><code>Map</code></strong> cho dictionary đúng nghĩa, <strong class=\"k\"><code>Set</code></strong> cho các giá trị duy nhất, và các bản <strong class=\"k\">weak</strong> để gắn dữ liệu vào một object <strong class=\"k\">mà không giữ nó sống</strong>.</p> <h5>Map và Set</h5> <ul><li><strong class=\"k\"><code>Map</code></strong> cho phép <strong class=\"k\">mọi kiểu làm key</strong> (object, function, number), giữ <strong class=\"k\">thứ tự thêm vào</strong>, có <code>.size</code>, và được thiết kế cho việc thêm xóa thường xuyên. Object thường biến key thành string, kế thừa key như <code>constructor</code> từ prototype, và không có size rẻ.</li><li><strong class=\"k\"><code>Set</code></strong> lưu giá trị duy nhất với <strong class=\"k\"><code>has</code> O(1)</strong>, nên <code>new Set(arr)</code> là cách dedupe quen thuộc, và <code>set.has(id)</code> tốt hơn <code>arr.includes(id)</code> trong vòng lặp.</li><li>Cả hai đều iterable, nhưng <strong class=\"k\">không serialize được sang JSON</strong> (<code>JSON.stringify(new Map())</code> ra <code>{}</code>), nên phải chuyển bằng <code>Object.fromEntries</code> hoặc <code>[...map]</code> trước.</li></ul> <p>Giữ object thường cho record có hình dạng cố định với các field đã biết (một <code>User</code>) và cho dữ liệu JSON.</p> <h5>WeakMap và WeakSet</h5> <p>Key phải là <strong class=\"k\">object</strong>, được giữ <strong class=\"k\">yếu</strong> (entry biến mất khi không còn ai tham chiếu key), <strong class=\"k\">không iterate được</strong> và không có <code>size</code>.</p> <pre><code>const meta = new WeakMap();\n\nfunction track(el) {\n  meta.set(el, { clicks: 0 });      // dữ liệu sống và chết cùng element\n}\n// khi el bị gỡ và không còn tham chiếu, entry của nó được garbage-collect</code></pre> <p>Dùng điển hình: <strong class=\"k\">cache</strong> hoặc <strong class=\"k\">metadata riêng theo DOM node hay object</strong>, không cần viết code dọn dẹp. Nếu dùng <code>Map</code> thường ở đây sẽ gây <strong class=\"k\">memory leak</strong> vì nó giữ mọi key sống mãi.</p> <p><code>WeakRef</code> và <code>FinalizationRegistry</code> cũng có, nhưng callback chạy vào thời điểm engine tự chọn, nên đừng dựa vào chúng để đảm bảo tính đúng đắn.</p>"
+      },
+      "terms": [
+        "Map",
+        "Set",
+        "WeakMap",
+        "WeakRef",
+        "garbage collection",
+        "O(1) lookup"
+      ]
+    },
+    {
+      "id": "q149",
+      "number": 149,
+      "tag": "JavaScript · Module",
+      "title": "What is the difference between ES modules and CommonJS? What are tree-shaking and dynamic <code>import()</code>?",
+      "titleVi": "ES modules khác CommonJS thế nào? Tree-shaking và <code>import()</code> động là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hai hệ module và cú pháp",
+          "Khác biệt cốt lõi: static vs dynamic, live binding",
+          "Tree-shaking dựa trên tính static",
+          "Dynamic import để code splitting",
+          "Bẫy khi trộn ESM và CJS"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">ES modules (ESM)</strong> are the language standard (<code>import</code> / <code>export</code>). <strong class=\"k\">CommonJS (CJS)</strong> is the older Node.js system (<code>require</code> / <code>module.exports</code>).</p> <p>The key differences:</p> <ul><li><strong class=\"k\">Static vs dynamic:</strong> <code>import</code> and <code>export</code> must be at the top level with string paths, so tools can analyse the dependency graph <strong class=\"k\">without running the code</strong>. <code>require()</code> is a normal function call and can sit inside an <code>if</code>.</li><li><strong class=\"k\">Live bindings:</strong> an ESM import is a <strong class=\"k\">live read-only view</strong> of the exporter's variable. CJS gives you a <strong class=\"k\">copy of the value</strong> at <code>require</code> time.</li><li><strong class=\"k\">Loading:</strong> ESM is asynchronous and supports <strong class=\"k\">top-level <code>await</code></strong>; CJS is synchronous. ESM is always in strict mode.</li><li>In Node you opt into ESM with <code>\"type\": \"module\"</code> or the <code>.mjs</code> extension.</li></ul> <h5>Tree-shaking</h5> <p>Because ESM is static, bundlers (Vite, Rollup, webpack, Turbopack) can see which exports are never used and <strong class=\"k\">drop them</strong>. It breaks when code has side effects on import, uses CJS, or does <code>import * as _</code> and uses it dynamically. Libraries should ship ESM and set <code>\"sideEffects\": false</code> when safe. Prefer named imports (<code>import { debounce } from 'lodash-es'</code>) over importing a whole CJS package.</p> <h5>Dynamic <code>import()</code></h5> <p>It returns a <strong class=\"k\">Promise</strong> of the module and is the basis of <strong class=\"k\">code splitting</strong>:</p> <pre><code>button.addEventListener('click', async () =&gt; {\n  const { renderChart } = await import('./chart.js'); // separate chunk, loaded on demand\n  renderChart(data);\n});</code></pre> <p>In Next.js and Nuxt this is what <code>next/dynamic</code>, <code>React.lazy</code> and lazy routes build on.</p> <p>Pitfall: mixing both systems. <code>require()</code> of an ESM-only package can fail in older Node versions, and a default import from CJS may need <code>.default</code> interop.</p>",
+        "vi": "<p><strong class=\"k\">ES modules (ESM)</strong> là chuẩn của ngôn ngữ (<code>import</code> / <code>export</code>). <strong class=\"k\">CommonJS (CJS)</strong> là hệ thống cũ của Node.js (<code>require</code> / <code>module.exports</code>).</p> <p>Các khác biệt chính:</p> <ul><li><strong class=\"k\">Static vs dynamic:</strong> <code>import</code> và <code>export</code> phải nằm ở top level với đường dẫn là string, nên công cụ phân tích được dependency graph <strong class=\"k\">mà không cần chạy code</strong>. <code>require()</code> chỉ là một lời gọi hàm thường và có thể nằm trong <code>if</code>.</li><li><strong class=\"k\">Live binding:</strong> import ESM là <strong class=\"k\">một góc nhìn chỉ đọc, luôn cập nhật</strong> vào biến của module export. CJS cho bạn <strong class=\"k\">một bản sao giá trị</strong> tại thời điểm <code>require</code>.</li><li><strong class=\"k\">Cách load:</strong> ESM bất đồng bộ và hỗ trợ <strong class=\"k\">top-level <code>await</code></strong>; CJS đồng bộ. ESM luôn ở strict mode.</li><li>Trong Node, bạn bật ESM bằng <code>\"type\": \"module\"</code> hoặc đuôi <code>.mjs</code>.</li></ul> <h5>Tree-shaking</h5> <p>Vì ESM là static, bundler (Vite, Rollup, webpack, Turbopack) thấy được export nào không bao giờ dùng và <strong class=\"k\">loại bỏ chúng</strong>. Nó mất tác dụng khi code có side effect lúc import, dùng CJS, hoặc <code>import * as _</code> rồi truy cập động. Thư viện nên phát hành ESM và đặt <code>\"sideEffects\": false</code> khi an toàn. Ưu tiên named import (<code>import { debounce } from 'lodash-es'</code>) thay vì import cả một package CJS.</p> <h5>Dynamic <code>import()</code></h5> <p>Nó trả về <strong class=\"k\">Promise</strong> của module và là nền tảng của <strong class=\"k\">code splitting</strong>:</p> <pre><code>button.addEventListener('click', async () =&gt; {\n  const { renderChart } = await import('./chart.js'); // chunk riêng, tải khi cần\n  renderChart(data);\n});</code></pre> <p>Trong Next.js và Nuxt, đây là thứ mà <code>next/dynamic</code>, <code>React.lazy</code> và lazy route được xây trên đó.</p> <p>Bẫy: trộn hai hệ thống. <code>require()</code> một package chỉ có ESM có thể lỗi trên bản Node cũ, và default import từ CJS đôi khi cần xử lý <code>.default</code>.</p>"
+      },
+      "terms": [
+        "ESM",
+        "CommonJS",
+        "tree-shaking",
+        "live binding",
+        "dynamic import",
+        "code splitting",
+        "sideEffects"
+      ]
+    },
+    {
+      "id": "q150",
+      "number": 150,
+      "tag": "JavaScript · DOM",
+      "title": "Explain event bubbling, capturing and event delegation. When is delegation a good idea?",
+      "titleVi": "Giải thích event bubbling, capturing và event delegation. Khi nào nên dùng delegation?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba pha của một event",
+          "target và currentTarget",
+          "Delegation: một listener ở cha",
+          "Lợi ích và giới hạn",
+          "Bẫy: stopPropagation, event không bubble"
+        ]
+      },
+      "answer": {
+        "en": "<p>A DOM event travels in three phases: <strong class=\"k\">capturing</strong> (from <code>window</code> down to the target), <strong class=\"k\">target</strong>, then <strong class=\"k\">bubbling</strong> (back up to <code>window</code>). Listeners run in the bubbling phase by default; pass <code>{ capture: true }</code> to listen while it goes down.</p> <p><strong class=\"k\">Event delegation</strong> means attaching <strong class=\"k\">one listener to a common ancestor</strong> and using <code>event.target</code> to find which child was actually hit, instead of adding a listener to every child.</p> <pre><code>list.addEventListener('click', (e) =&gt; {\n  const item = e.target.closest('[data-id]');   // survives clicks on inner &lt;span&gt;, &lt;img&gt;\n  if (!item || !list.contains(item)) return;\n  select(item.dataset.id);\n});</code></pre> <ul><li><code>event.target</code> is the element that was clicked; <code>event.currentTarget</code> is the element the listener is attached to.</li><li>Use <code>closest()</code> rather than comparing <code>target</code> directly, because the click may land on a child of your item.</li></ul> <h5>Why it is useful</h5> <ul><li><strong class=\"k\">Less memory and setup:</strong> one listener for a list of 1,000 rows instead of 1,000.</li><li><strong class=\"k\">Works for dynamic content:</strong> items added later are handled automatically, no re-binding.</li></ul> <h5>Limits and pitfalls</h5> <ul><li>Some events <strong class=\"k\">do not bubble</strong>: <code>focus</code>, <code>blur</code>, <code>mouseenter</code>, <code>mouseleave</code>. Use <code>focusin</code> / <code>focusout</code> or the capture phase.</li><li>A child that calls <strong class=\"k\"><code>stopPropagation()</code></strong> hides the event from the delegate. Avoid it, and prefer <code>preventDefault()</code> when that is what you mean.</li><li>Do not delegate very high-frequency events like <code>mousemove</code> to <code>document</code>; the handler runs for everything.</li></ul> <p>Frameworks use the same idea: React attaches its listeners at the <strong class=\"k\">root container</strong>, not on each element.</p>",
+        "vi": "<p>Một DOM event đi qua ba pha: <strong class=\"k\">capturing</strong> (từ <code>window</code> xuống target), <strong class=\"k\">target</strong>, rồi <strong class=\"k\">bubbling</strong> (đi ngược lên <code>window</code>). Mặc định listener chạy ở pha bubbling; truyền <code>{ capture: true }</code> để lắng nghe lúc event đi xuống.</p> <p><strong class=\"k\">Event delegation</strong> nghĩa là gắn <strong class=\"k\">một listener vào tổ tiên chung</strong> và dùng <code>event.target</code> để biết phần tử con nào thật sự bị tác động, thay vì gắn listener cho từng con.</p> <pre><code>list.addEventListener('click', (e) =&gt; {\n  const item = e.target.closest('[data-id]');   // vẫn đúng khi click vào &lt;span&gt;, &lt;img&gt; bên trong\n  if (!item || !list.contains(item)) return;\n  select(item.dataset.id);\n});</code></pre> <ul><li><code>event.target</code> là phần tử được click; <code>event.currentTarget</code> là phần tử mà listener được gắn vào.</li><li>Dùng <code>closest()</code> thay vì so sánh trực tiếp <code>target</code>, vì click có thể rơi vào phần tử con của item.</li></ul> <h5>Vì sao hữu ích</h5> <ul><li><strong class=\"k\">Ít bộ nhớ và ít setup:</strong> một listener cho danh sách 1.000 dòng thay vì 1.000 listener.</li><li><strong class=\"k\">Chạy được với nội dung động:</strong> item thêm vào sau được xử lý tự động, không cần gắn lại.</li></ul> <h5>Giới hạn và bẫy</h5> <ul><li>Một số event <strong class=\"k\">không bubble</strong>: <code>focus</code>, <code>blur</code>, <code>mouseenter</code>, <code>mouseleave</code>. Dùng <code>focusin</code> / <code>focusout</code> hoặc pha capture.</li><li>Phần tử con gọi <strong class=\"k\"><code>stopPropagation()</code></strong> sẽ giấu event khỏi delegate. Hãy tránh nó, và dùng <code>preventDefault()</code> khi đó mới là điều bạn muốn.</li><li>Đừng delegate event tần suất rất cao như <code>mousemove</code> lên <code>document</code>; handler sẽ chạy cho mọi thứ.</li></ul> <p>Framework cũng dùng ý tưởng này: React gắn listener ở <strong class=\"k\">root container</strong>, không phải trên từng element.</p>"
+      },
+      "terms": [
+        "bubbling",
+        "capturing",
+        "event delegation",
+        "event.target",
+        "closest",
+        "stopPropagation"
+      ]
+    },
+    {
+      "id": "q151",
+      "number": 151,
+      "tag": "JavaScript · Iterator",
+      "title": "What are iterators and generators? How do async iterators and <code>for await...of</code> fit in?",
+      "titleVi": "Iterator và generator là gì? Async iterator và <code>for await...of</code> nằm ở đâu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Iterator protocol: next() và done",
+          "Iterable và Symbol.iterator",
+          "Generator: yield, lazy, tạm dừng",
+          "Async generator cho dữ liệu theo trang/stream",
+          "Khi nào dùng, khi nào không"
+        ]
+      },
+      "answer": {
+        "en": "<p>An <strong class=\"k\">iterator</strong> is an object with a <code>next()</code> method that returns <code>{ value, done }</code>. An <strong class=\"k\">iterable</strong> is an object with a <code>[Symbol.iterator]()</code> method that returns an iterator. <code>for...of</code>, spread (<code>[...x]</code>), destructuring, <code>Array.from</code>, <code>Map</code> and <code>Set</code> all use this protocol. Plain objects are <strong class=\"k\">not</strong> iterable by default.</p> <p>A <strong class=\"k\">generator</strong> (<code>function*</code>) is the easy way to write an iterator. <code>yield</code> <strong class=\"k\">pauses</strong> the function and hands a value out; the next <code>next()</code> call resumes where it stopped. Because nothing runs until asked, generators are <strong class=\"k\">lazy</strong>:</p> <pre><code>function* range(from, to) {\n  for (let i = from; i &lt;= to; i++) yield i;\n}\nfunction* naturals() { let n = 1; while (true) yield n++; }   // infinite, fine because lazy\n\nfor (const n of range(1, 3)) console.log(n); // 1 2 3</code></pre> <p><code>next(value)</code> can also send a value <strong class=\"k\">into</strong> the generator, and <code>return()</code> / <code>throw()</code> stop it early, which is how redux-saga style libraries work.</p> <h5>Async iterators</h5> <p><code>async function*</code> produces values over time, and <code>for await...of</code> consumes them. This fits <strong class=\"k\">paginated APIs and streams</strong>:</p> <pre><code>async function* pages(url) {\n  let next = url;\n  while (next) {\n    const res = await fetch(next);\n    const { items, nextUrl } = await res.json();\n    yield* items;\n    next = nextUrl;\n  }\n}\nfor await (const item of pages('/api/orders')) process(item);</code></pre> <p>A <code>fetch</code> body (<code>ReadableStream</code>) is also async-iterable in modern runtimes.</p> <h5>Trade-offs</h5> <p>Great for lazy pipelines, large or infinite sequences, and custom <code>Symbol.iterator</code>. For ordinary arrays, <code>map</code> and <code>filter</code> are simpler. Generators are single-use, and <code>break</code> in <code>for...of</code> calls <code>return()</code>, which runs <code>finally</code> for cleanup.</p>",
+        "vi": "<p><strong class=\"k\">Iterator</strong> là object có method <code>next()</code> trả về <code>{ value, done }</code>. <strong class=\"k\">Iterable</strong> là object có method <code>[Symbol.iterator]()</code> trả về một iterator. <code>for...of</code>, spread (<code>[...x]</code>), destructuring, <code>Array.from</code>, <code>Map</code> và <code>Set</code> đều dùng protocol này. Object thường <strong class=\"k\">không</strong> iterable mặc định.</p> <p><strong class=\"k\">Generator</strong> (<code>function*</code>) là cách dễ nhất để viết iterator. <code>yield</code> <strong class=\"k\">tạm dừng</strong> hàm và đưa một giá trị ra; lần gọi <code>next()</code> tiếp theo chạy tiếp từ chỗ đã dừng. Vì không có gì chạy cho đến khi được yêu cầu, generator là <strong class=\"k\">lazy</strong>:</p> <pre><code>function* range(from, to) {\n  for (let i = from; i &lt;= to; i++) yield i;\n}\nfunction* naturals() { let n = 1; while (true) yield n++; }   // vô hạn, vẫn ổn vì lazy\n\nfor (const n of range(1, 3)) console.log(n); // 1 2 3</code></pre> <p><code>next(value)</code> còn gửi được giá trị <strong class=\"k\">vào</strong> generator, và <code>return()</code> / <code>throw()</code> dừng nó sớm; đó là cách các thư viện kiểu redux-saga hoạt động.</p> <h5>Async iterator</h5> <p><code>async function*</code> sinh giá trị theo thời gian, và <code>for await...of</code> tiêu thụ chúng. Rất hợp với <strong class=\"k\">API phân trang và stream</strong>:</p> <pre><code>async function* pages(url) {\n  let next = url;\n  while (next) {\n    const res = await fetch(next);\n    const { items, nextUrl } = await res.json();\n    yield* items;\n    next = nextUrl;\n  }\n}\nfor await (const item of pages('/api/orders')) process(item);</code></pre> <p>Body của <code>fetch</code> (<code>ReadableStream</code>) cũng async-iterable trên các runtime hiện đại.</p> <h5>Đánh đổi</h5> <p>Rất tốt cho pipeline lazy, chuỗi lớn hoặc vô hạn, và tự viết <code>Symbol.iterator</code>. Với array thường, <code>map</code> và <code>filter</code> đơn giản hơn. Generator chỉ dùng được một lần, và <code>break</code> trong <code>for...of</code> gọi <code>return()</code>, nên <code>finally</code> chạy để dọn dẹp.</p>"
+      },
+      "terms": [
+        "iterator protocol",
+        "Symbol.iterator",
+        "generator",
+        "yield",
+        "lazy evaluation",
+        "async iterator",
+        "for await"
+      ]
+    },
+    {
+      "id": "q152",
+      "number": 152,
+      "tag": "JavaScript · Số",
+      "title": "Why is <code>0.1 + 0.2 !== 0.3</code>? What are the limits of <code>Number</code>, and when do you need <code>BigInt</code>?",
+      "titleVi": "Vì sao <code>0.1 + 0.2 !== 0.3</code>? Giới hạn của <code>Number</code> là gì, và khi nào cần <code>BigInt</code>?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nguyên nhân: IEEE 754 double",
+          "So sánh số thực an toàn",
+          "Giới hạn số nguyên an toàn",
+          "BigInt: cú pháp và hạn chế",
+          "Áp dụng với tiền"
+        ]
+      },
+      "answer": {
+        "en": "<p>JavaScript's <code>Number</code> is a <strong class=\"k\">64-bit IEEE 754 double</strong>. Many decimals such as <code>0.1</code> have no exact binary representation, so <code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. It is not a JavaScript bug; every language using doubles behaves this way.</p> <ul><li><strong class=\"k\">Comparing floats:</strong> compare with a tolerance, <code>Math.abs(a - b) &lt; Number.EPSILON</code>, never with <code>===</code>.</li><li><strong class=\"k\">Safe integers:</strong> a double represents integers exactly only up to <code>Number.MAX_SAFE_INTEGER</code> (<code>2^53 - 1</code>, about 9 quadrillion). Beyond that, neighbours collapse: <code>MAX_SAFE_INTEGER + 2 === MAX_SAFE_INTEGER + 1</code> is <code>true</code>. Typical victims: 64-bit database ids and snowflake ids from an API.</li><li><strong class=\"k\">Other traps:</strong> <code>NaN !== NaN</code> (use <code>Number.isNaN</code>), <code>toFixed</code> returns a <strong class=\"k\">string</strong> and has rounding surprises, <code>parseInt('08abc')</code> ignores trailing junk.</li></ul> <h5>BigInt</h5> <p><code>BigInt</code> is an arbitrary-precision <strong class=\"k\">integer</strong> type, written with an <code>n</code> suffix.</p> <pre><code>const id = 9007199254740993n;\nid + 1n;              // 9007199254740994n\ntypeof id;            // 'bigint'\n// 1n + 1             // TypeError: cannot mix BigInt and Number\n// JSON.stringify({ id })  // TypeError: BigInt is not serialisable\nNumber.isSafeInteger(2 ** 53); // false</code></pre> <p>Limits: no mixing with <code>Number</code>, no <code>Math.*</code>, no decimals, and <code>JSON.stringify</code> throws. When an API sends large ids, ask for them as <strong class=\"k\">strings</strong> and keep them as strings in the UI.</p> <h5>Money</h5> <p>Do not store money as float. Use <strong class=\"k\">integers in the smallest unit</strong> (VND has no minor unit, USD uses cents) or a decimal library, and format only for display. See Câu 65.</p>",
+        "vi": "<p><code>Number</code> trong JavaScript là <strong class=\"k\">số thực double 64-bit theo chuẩn IEEE 754</strong>. Nhiều số thập phân như <code>0.1</code> không có biểu diễn nhị phân chính xác, nên <code>0.1 + 0.2</code> ra <code>0.30000000000000004</code>. Đây không phải bug của JavaScript; mọi ngôn ngữ dùng double đều như vậy.</p> <ul><li><strong class=\"k\">So sánh số thực:</strong> so với một sai số cho phép, <code>Math.abs(a - b) &lt; Number.EPSILON</code>, không bao giờ dùng <code>===</code>.</li><li><strong class=\"k\">Số nguyên an toàn:</strong> double chỉ biểu diễn chính xác số nguyên đến <code>Number.MAX_SAFE_INTEGER</code> (<code>2^53 - 1</code>, khoảng 9 triệu tỷ). Vượt qua đó, các số liền kề bị gộp: <code>MAX_SAFE_INTEGER + 2 === MAX_SAFE_INTEGER + 1</code> là <code>true</code>. Nạn nhân điển hình: id 64-bit của database và snowflake id từ API.</li><li><strong class=\"k\">Các bẫy khác:</strong> <code>NaN !== NaN</code> (dùng <code>Number.isNaN</code>), <code>toFixed</code> trả về <strong class=\"k\">string</strong> và có làm tròn gây bất ngờ, <code>parseInt('08abc')</code> bỏ qua phần rác phía sau.</li></ul> <h5>BigInt</h5> <p><code>BigInt</code> là kiểu <strong class=\"k\">số nguyên</strong> độ chính xác tùy ý, viết với hậu tố <code>n</code>.</p> <pre><code>const id = 9007199254740993n;\nid + 1n;              // 9007199254740994n\ntypeof id;            // 'bigint'\n// 1n + 1             // TypeError: không trộn được BigInt và Number\n// JSON.stringify({ id })  // TypeError: BigInt không serialize được\nNumber.isSafeInteger(2 ** 53); // false</code></pre> <p>Giới hạn: không trộn với <code>Number</code>, không dùng <code>Math.*</code>, không có số thập phân, và <code>JSON.stringify</code> ném lỗi. Khi API gửi id lớn, hãy yêu cầu trả về dạng <strong class=\"k\">string</strong> và giữ nguyên là string trong UI.</p> <h5>Tiền</h5> <p>Đừng lưu tiền bằng số thực. Dùng <strong class=\"k\">số nguyên theo đơn vị nhỏ nhất</strong> (VND không có đơn vị nhỏ hơn, USD dùng cent) hoặc thư viện decimal, và chỉ format khi hiển thị. Xem Câu 65.</p>"
+      },
+      "terms": [
+        "IEEE 754",
+        "Number.EPSILON",
+        "MAX_SAFE_INTEGER",
+        "BigInt",
+        "floating point",
+        "integer minor units"
+      ]
+    },
+    {
+      "id": "q153",
+      "number": 153,
+      "tag": "JavaScript · Ngày giờ",
+      "title": "What are the common <code>Date</code> pitfalls (time zones, parsing, DST)? How do you format dates and numbers for <code>vi-VN</code> with <code>Intl</code>?",
+      "titleVi": "Những bẫy thường gặp của <code>Date</code> (múi giờ, parse, DST) là gì? Format ngày và số theo <code>vi-VN</code> bằng <code>Intl</code> thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Date là một timestamp UTC, hiển thị theo múi giờ local",
+          "Bẫy parse chuỗi ngày",
+          "Lưu UTC/ISO, hiển thị local",
+          "Intl.DateTimeFormat và NumberFormat cho vi-VN",
+          "SSR: server và client khác múi giờ"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <code>Date</code> is just <strong class=\"k\">milliseconds since 1970-01-01 UTC</strong>. Time zones only appear when you <strong class=\"k\">read or print</strong> it, which is the root of most bugs.</p> <h5>Pitfalls</h5> <ul><li><strong class=\"k\">Parsing:</strong> <code>new Date('2026-10-15')</code> (date only, ISO) is parsed as <strong class=\"k\">UTC</strong>, but <code>new Date('2026-10-15T00:00')</code> is parsed as <strong class=\"k\">local time</strong>. Non-ISO strings like <code>'15/10/2026'</code> are implementation-dependent or <code>Invalid Date</code>.</li><li><strong class=\"k\">Months are zero-based</strong> (<code>new Date(2026, 9, 15)</code> is October), and <code>getDay()</code> is the weekday, not the day of month.</li><li><strong class=\"k\">Mutation:</strong> <code>setDate</code>, <code>setMonth</code> mutate the object. Copy first.</li><li><strong class=\"k\">DST and \"add one day\":</strong> adding <code>24 * 3600 * 1000</code> ms is wrong across a DST change. Vietnam has no DST (UTC+7), but your users and servers may.</li><li><strong class=\"k\">SSR:</strong> the server (often UTC) and the browser (Asia/Ho_Chi_Minh) print different strings, causing a <strong class=\"k\">hydration mismatch</strong> (Câu 50). Format with an explicit <code>timeZone</code>, or only on the client.</li></ul> <h5>Good practice</h5> <p>Store and transmit <strong class=\"k\">UTC ISO strings</strong> (<code>2026-10-15T03:00:00Z</code>) or timestamps, convert to the user's zone only for display. For anything serious, use a library (date-fns, Day.js with plugins, Luxon); the <strong class=\"k\">Temporal</strong> API is the modern replacement, so check browser support first.</p> <h5>Formatting with <code>Intl</code></h5> <pre><code>const d = new Date('2026-10-15T03:00:00Z');\n\nnew Intl.DateTimeFormat('vi-VN', {\n  dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Ho_Chi_Minh',\n}).format(d);                                   // e.g. \"10:00 15/10/2026\"\n\nnew Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })\n  .format(150000);                              // \"150.000 ₫\"</code></pre> <p><code>Intl</code> follows locale rules for separators (<code>.</code> for thousands in <code>vi-VN</code>), so do not build strings by hand. Exact output can vary slightly between engines.</p>",
+        "vi": "<p><code>Date</code> thực chất chỉ là <strong class=\"k\">số mili-giây kể từ 1970-01-01 UTC</strong>. Múi giờ chỉ xuất hiện khi bạn <strong class=\"k\">đọc hoặc in</strong> nó, và đó là gốc của phần lớn bug.</p> <h5>Các bẫy</h5> <ul><li><strong class=\"k\">Parse:</strong> <code>new Date('2026-10-15')</code> (chỉ có ngày, dạng ISO) được parse là <strong class=\"k\">UTC</strong>, nhưng <code>new Date('2026-10-15T00:00')</code> được parse là <strong class=\"k\">giờ local</strong>. Chuỗi không phải ISO như <code>'15/10/2026'</code> tùy engine hoặc ra <code>Invalid Date</code>.</li><li><strong class=\"k\">Tháng bắt đầu từ 0</strong> (<code>new Date(2026, 9, 15)</code> là tháng Mười), và <code>getDay()</code> là thứ trong tuần, không phải ngày trong tháng.</li><li><strong class=\"k\">Mutation:</strong> <code>setDate</code>, <code>setMonth</code> làm thay đổi chính object. Hãy copy trước.</li><li><strong class=\"k\">DST và \"cộng một ngày\":</strong> cộng <code>24 * 3600 * 1000</code> ms là sai khi qua mốc đổi DST. Việt Nam không có DST (UTC+7), nhưng người dùng và server của bạn có thể có.</li><li><strong class=\"k\">SSR:</strong> server (thường là UTC) và trình duyệt (Asia/Ho_Chi_Minh) in ra chuỗi khác nhau, gây <strong class=\"k\">hydration mismatch</strong> (Câu 50). Hãy format với <code>timeZone</code> tường minh, hoặc chỉ format ở client.</li></ul> <h5>Thực hành tốt</h5> <p>Lưu và truyền <strong class=\"k\">chuỗi ISO UTC</strong> (<code>2026-10-15T03:00:00Z</code>) hoặc timestamp, chỉ chuyển sang múi giờ người dùng khi hiển thị. Với việc nghiêm túc, dùng thư viện (date-fns, Day.js kèm plugin, Luxon); API <strong class=\"k\">Temporal</strong> là bản thay thế hiện đại, nên kiểm tra độ hỗ trợ của trình duyệt trước.</p> <h5>Format bằng <code>Intl</code></h5> <pre><code>const d = new Date('2026-10-15T03:00:00Z');\n\nnew Intl.DateTimeFormat('vi-VN', {\n  dateStyle: 'short', timeStyle: 'short', timeZone: 'Asia/Ho_Chi_Minh',\n}).format(d);                                   // ví dụ \"10:00 15/10/2026\"\n\nnew Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })\n  .format(150000);                              // \"150.000 ₫\"</code></pre> <p><code>Intl</code> tuân theo quy tắc của locale về dấu phân cách (<code>.</code> cho hàng nghìn trong <code>vi-VN</code>), nên đừng tự ghép chuỗi bằng tay. Kết quả chính xác có thể hơi khác giữa các engine.</p>"
+      },
+      "terms": [
+        "Date",
+        "UTC",
+        "time zone",
+        "ISO 8601",
+        "Intl.DateTimeFormat",
+        "Intl.NumberFormat",
+        "Temporal"
+      ]
+    },
+    {
+      "id": "q154",
+      "number": 154,
+      "tag": "JavaScript · Meta-programming",
+      "title": "What are <code>Proxy</code> and <code>Reflect</code>? How does Vue 3 reactivity use them, and what are the limitations?",
+      "titleVi": "<code>Proxy</code> và <code>Reflect</code> là gì? Reactivity của Vue 3 dùng chúng thế nào, và có những hạn chế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Proxy: bao một object và chặn thao tác bằng trap",
+          "Reflect: gọi hành vi mặc định",
+          "Vue 3: track trong get, trigger trong set",
+          "Vì sao hơn Object.defineProperty của Vue 2",
+          "Hạn chế: identity, primitive, hiệu năng"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\"><code>Proxy</code></strong> wraps a target object and lets you <strong class=\"k\">intercept operations</strong> on it (read, write, <code>in</code>, <code>delete</code>, function calls) through handler functions called <strong class=\"k\">traps</strong>. <strong class=\"k\"><code>Reflect</code></strong> exposes the default behaviour of those same operations as functions, so a trap can do its extra work and then <strong class=\"k\">forward</strong> to the original.</p> <pre><code>function reactive(target) {\n  return new Proxy(target, {\n    get(obj, key, receiver) {\n      track(obj, key);                         // remember who read this\n      return Reflect.get(obj, key, receiver);\n    },\n    set(obj, key, value, receiver) {\n      const ok = Reflect.set(obj, key, value, receiver);\n      trigger(obj, key);                       // re-run effects that read it\n      return ok;\n    },\n  });\n}</code></pre> <p>That is the core of <strong class=\"k\">Vue 3 reactivity</strong> (Câu 79): <code>reactive()</code> returns a Proxy; reading a property <strong class=\"k\">tracks</strong> the running effect or component render, and writing <strong class=\"k\">triggers</strong> it again. Passing <code>receiver</code> to <code>Reflect</code> keeps <code>this</code> and getters correct.</p> <h5>Why Proxy beats Vue 2's <code>Object.defineProperty</code></h5> <p>Vue 2 had to convert each existing property, so it <strong class=\"k\">could not detect added or deleted keys</strong> or array index changes (hence <code>Vue.set</code>). A Proxy sees every operation, including new keys, and it works lazily on nested objects.</p> <h5>Limitations</h5> <ul><li>A proxy is <strong class=\"k\">not the same identity</strong> as its target: <code>proxy !== target</code>, which breaks <code>===</code> checks and <code>Set</code>/<code>Map</code> lookups if you mix the two.</li><li>Only <strong class=\"k\">objects</strong> can be proxied, which is why Vue has <code>ref()</code> for primitives, and destructuring a reactive object <strong class=\"k\">copies plain values</strong> and loses reactivity.</li><li>Slower than a plain property access, and <strong class=\"k\">private fields (<code>#x</code>) and some built-ins</strong> (e.g. <code>Map</code> internals) can throw when <code>this</code> is the proxy.</li><li>Cannot be polyfilled fully, which is why Vue 3 dropped IE11.</li></ul> <p>Other uses: validation, default values, logging, and API wrappers. Avoid it in hot paths.</p>",
+        "vi": "<p><strong class=\"k\"><code>Proxy</code></strong> bao một object đích và cho phép bạn <strong class=\"k\">chặn các thao tác</strong> lên nó (đọc, ghi, <code>in</code>, <code>delete</code>, gọi hàm) thông qua các hàm handler gọi là <strong class=\"k\">trap</strong>. <strong class=\"k\"><code>Reflect</code></strong> cung cấp hành vi mặc định của chính các thao tác đó dưới dạng hàm, để một trap làm thêm việc của mình rồi <strong class=\"k\">chuyển tiếp</strong> về bản gốc.</p> <pre><code>function reactive(target) {\n  return new Proxy(target, {\n    get(obj, key, receiver) {\n      track(obj, key);                         // ghi nhớ ai đã đọc\n      return Reflect.get(obj, key, receiver);\n    },\n    set(obj, key, value, receiver) {\n      const ok = Reflect.set(obj, key, value, receiver);\n      trigger(obj, key);                       // chạy lại các effect đã đọc nó\n      return ok;\n    },\n  });\n}</code></pre> <p>Đó là cốt lõi của <strong class=\"k\">reactivity trong Vue 3</strong> (Câu 79): <code>reactive()</code> trả về một Proxy; đọc property sẽ <strong class=\"k\">track</strong> effect hoặc render của component đang chạy, ghi sẽ <strong class=\"k\">trigger</strong> chúng chạy lại. Truyền <code>receiver</code> cho <code>Reflect</code> giữ <code>this</code> và getter đúng.</p> <h5>Vì sao Proxy tốt hơn <code>Object.defineProperty</code> của Vue 2</h5> <p>Vue 2 phải chuyển đổi từng property đã tồn tại, nên <strong class=\"k\">không phát hiện được key được thêm hay xóa</strong> hoặc thay đổi index của array (vì vậy mới có <code>Vue.set</code>). Proxy thấy mọi thao tác, kể cả key mới, và xử lý object lồng nhau một cách lazy.</p> <h5>Hạn chế</h5> <ul><li>Proxy <strong class=\"k\">không cùng identity</strong> với target: <code>proxy !== target</code>, làm hỏng so sánh <code>===</code> và tra cứu <code>Set</code>/<code>Map</code> nếu bạn trộn lẫn hai bên.</li><li>Chỉ <strong class=\"k\">object</strong> mới được proxy, nên Vue có <code>ref()</code> cho primitive, và destructure một reactive object sẽ <strong class=\"k\">sao chép giá trị thường</strong> và mất reactivity.</li><li>Chậm hơn truy cập property thường, và <strong class=\"k\">private field (<code>#x</code>) cùng một số built-in</strong> (ví dụ phần nội bộ của <code>Map</code>) có thể ném lỗi khi <code>this</code> là proxy.</li><li>Không thể polyfill đầy đủ, vì vậy Vue 3 bỏ hỗ trợ IE11.</li></ul> <p>Các công dụng khác: validation, giá trị mặc định, logging, wrapper cho API. Tránh dùng trong hot path.</p>"
+      },
+      "terms": [
+        "Proxy",
+        "Reflect",
+        "traps",
+        "Vue 3 reactivity",
+        "track and trigger",
+        "Object.defineProperty"
+      ]
+    },
+    {
+      "id": "q155",
+      "number": 155,
+      "tag": "JavaScript · Bất đồng bộ",
+      "title": "How do you cancel a <code>fetch</code> request, and why does it matter? What is <code>AbortController</code>?",
+      "titleVi": "Làm sao hủy một request <code>fetch</code>, và vì sao điều đó quan trọng? <code>AbortController</code> là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: race condition và request thừa",
+          "AbortController và signal",
+          "Xử lý AbortError",
+          "Timeout và tổ hợp signal",
+          "Dùng trong effect cleanup, cancel không dừng server"
+        ]
+      },
+      "answer": {
+        "en": "<p><code>fetch</code> has no <code>.cancel()</code>. You create an <strong class=\"k\"><code>AbortController</code></strong>, pass its <strong class=\"k\"><code>signal</code></strong> to the request, and call <strong class=\"k\"><code>controller.abort()</code></strong>. The promise then rejects with a <code>DOMException</code> named <strong class=\"k\"><code>AbortError</code></strong>.</p> <p>It matters for two reasons: <strong class=\"k\">race conditions</strong> (a slow response for an old search term arrives after the new one and overwrites it) and <strong class=\"k\">wasted work</strong> (requests and state updates after a component has unmounted).</p> <pre><code>let controller;\n\nasync function search(q) {\n  controller?.abort();                 // cancel the previous request\n  controller = new AbortController();\n  try {\n    const res = await fetch(`/api/search?q=${q}`, { signal: controller.signal });\n    render(await res.json());\n  } catch (err) {\n    if (err.name === 'AbortError') return;   // expected, not a failure\n    showError(err);\n  }\n}</code></pre> <h5>In components</h5> <p>Create the controller <strong class=\"k\">inside the effect</strong> and abort in the cleanup (Câu 56):</p> <pre><code>useEffect(() =&gt; {\n  const c = new AbortController();\n  fetch(url, { signal: c.signal }).then(r =&gt; r.json()).then(setData).catch(() =&gt; {});\n  return () =&gt; c.abort();\n}, [url]);</code></pre> <p>Libraries like React Query and <code>$fetch</code> pass a signal for you.</p> <h5>Useful extras</h5> <ul><li><strong class=\"k\"><code>AbortSignal.timeout(ms)</code></strong> gives a signal that aborts after a timeout (rejects with <code>TimeoutError</code>); <code>AbortSignal.any([...])</code> combines several signals in modern browsers.</li><li>The same signal works with <code>addEventListener(type, fn, { signal })</code>, which removes many listeners at once, and with streams.</li></ul> <h5>Pitfalls</h5> <ul><li>Aborting only stops the <strong class=\"k\">client</strong>; the server may still process the request, so a non-idempotent call (a payment) needs idempotency keys (Câu 5).</li><li>Do not treat <code>AbortError</code> as an error to show to the user.</li><li>A controller is <strong class=\"k\">single-use</strong>: create a new one per request.</li></ul>",
+        "vi": "<p><code>fetch</code> không có <code>.cancel()</code>. Bạn tạo một <strong class=\"k\"><code>AbortController</code></strong>, truyền <strong class=\"k\"><code>signal</code></strong> của nó vào request, và gọi <strong class=\"k\"><code>controller.abort()</code></strong>. Promise khi đó bị reject với một <code>DOMException</code> tên <strong class=\"k\"><code>AbortError</code></strong>.</p> <p>Việc này quan trọng vì hai lý do: <strong class=\"k\">race condition</strong> (response chậm của từ khóa tìm kiếm cũ về sau response mới và ghi đè nó) và <strong class=\"k\">công việc thừa</strong> (request và cập nhật state sau khi component đã unmount).</p> <pre><code>let controller;\n\nasync function search(q) {\n  controller?.abort();                 // hủy request trước đó\n  controller = new AbortController();\n  try {\n    const res = await fetch(`/api/search?q=${q}`, { signal: controller.signal });\n    render(await res.json());\n  } catch (err) {\n    if (err.name === 'AbortError') return;   // dự kiến, không phải thất bại\n    showError(err);\n  }\n}</code></pre> <h5>Trong component</h5> <p>Tạo controller <strong class=\"k\">bên trong effect</strong> và abort ở hàm cleanup (Câu 56):</p> <pre><code>useEffect(() =&gt; {\n  const c = new AbortController();\n  fetch(url, { signal: c.signal }).then(r =&gt; r.json()).then(setData).catch(() =&gt; {});\n  return () =&gt; c.abort();\n}, [url]);</code></pre> <p>Các thư viện như React Query và <code>$fetch</code> tự truyền signal giúp bạn.</p> <h5>Tiện ích thêm</h5> <ul><li><strong class=\"k\"><code>AbortSignal.timeout(ms)</code></strong> cho một signal tự abort sau khi hết thời gian (reject với <code>TimeoutError</code>); <code>AbortSignal.any([...])</code> gộp nhiều signal trên trình duyệt hiện đại.</li><li>Cùng một signal dùng được với <code>addEventListener(type, fn, { signal })</code>, gỡ nhiều listener cùng lúc, và với stream.</li></ul> <h5>Các bẫy</h5> <ul><li>Abort chỉ dừng phía <strong class=\"k\">client</strong>; server vẫn có thể xử lý request, nên lời gọi không idempotent (thanh toán) cần idempotency key (Câu 5).</li><li>Đừng coi <code>AbortError</code> là lỗi để hiện cho người dùng.</li><li>Controller <strong class=\"k\">chỉ dùng một lần</strong>: tạo mới cho mỗi request.</li></ul>"
+      },
+      "terms": [
+        "AbortController",
+        "AbortSignal",
+        "AbortError",
+        "race condition",
+        "AbortSignal.timeout",
+        "effect cleanup"
+      ]
+    },
+    {
+      "id": "q156",
+      "number": 156,
+      "tag": "JavaScript · Lưu trữ phía client",
+      "title": "Compare <code>localStorage</code>, <code>sessionStorage</code>, cookies and IndexedDB. How do you choose, and what changes with SSR?",
+      "titleVi": "So sánh <code>localStorage</code>, <code>sessionStorage</code>, cookie và IndexedDB. Chọn thế nào, và SSR thay đổi điều gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Bảng so sánh: scope, dung lượng, vòng đời, gửi lên server",
+          "Bảo mật: XSS và CSRF",
+          "Chọn theo loại dữ liệu",
+          "SSR: server không đọc được localStorage",
+          "Ví dụ trong dự án"
+        ]
+      },
+      "answer": {
+        "en": "<p>Choose by <strong class=\"k\">who needs the data</strong> (server or only the browser), <strong class=\"k\">how sensitive</strong> it is, and <strong class=\"k\">how big</strong>.</p> <ul><li><strong class=\"k\"><code>localStorage</code>:</strong> key-value strings, about <strong class=\"k\">5 MB per origin</strong>, persists until cleared, shared by all tabs of the origin. <strong class=\"k\">Synchronous</strong>, so it blocks the main thread; never sent to the server.</li><li><strong class=\"k\"><code>sessionStorage</code>:</strong> the same API, but scoped to <strong class=\"k\">one tab</strong> and cleared when it closes.</li><li><strong class=\"k\">Cookies:</strong> about <strong class=\"k\">4 KB each</strong>, <strong class=\"k\">sent automatically with every matching request</strong>, readable on the server. Configurable with <code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>, <code>Domain</code>, <code>Expires</code>.</li><li><strong class=\"k\">IndexedDB:</strong> <strong class=\"k\">asynchronous</strong>, structured data (objects, blobs, files), large quota that depends on the browser and disk. Good for offline data and big caches, with a clunkier API (use <code>idb</code> or Dexie).</li></ul> <h5>Security</h5> <p>Anything JavaScript can read, an <strong class=\"k\">XSS</strong> attacker can read too (Câu 66). So <code>localStorage</code> is a poor place for <strong class=\"k\">auth tokens</strong>; an <code>HttpOnly</code> cookie hides it from scripts but needs <strong class=\"k\">CSRF</strong> defences (<code>SameSite</code>, tokens; see Câu 9 and Câu 67). Never store secrets or card data client-side.</p> <h5>Rules of thumb</h5> <ul><li>Server needs it (session, locale, consent) → <strong class=\"k\">cookie</strong>.</li><li>UI preferences, drafts, small feature flags → <strong class=\"k\">localStorage</strong> (wrap reads in try/catch, it can throw in private mode and when full).</li><li>Per-tab wizard step → <strong class=\"k\">sessionStorage</strong>.</li><li>Large or offline data → <strong class=\"k\">IndexedDB</strong>.</li></ul> <h5>SSR implications</h5> <p>The server has no <code>window</code>, so <code>localStorage.getItem</code> throws there, and reading it during render causes a <strong class=\"k\">hydration mismatch</strong> (Câu 50). Read it in an effect (<code>onMounted</code>), or store the value in a <strong class=\"k\">cookie</strong> so server and client agree on the first render, which is how you avoid a theme flash.</p> <p><strong class=\"k\">From your CV:</strong> the SSO cookie on <code>.oeg.vn</code> is shared across subdomains precisely because cookies, unlike storage, are scoped by domain and travel to the server.</p>",
+        "vi": "<p>Hãy chọn theo <strong class=\"k\">ai cần dữ liệu</strong> (server hay chỉ trình duyệt), dữ liệu <strong class=\"k\">nhạy cảm đến đâu</strong>, và <strong class=\"k\">lớn cỡ nào</strong>.</p> <ul><li><strong class=\"k\"><code>localStorage</code>:</strong> key-value dạng string, khoảng <strong class=\"k\">5 MB mỗi origin</strong>, tồn tại đến khi bị xóa, dùng chung cho mọi tab của origin. <strong class=\"k\">Đồng bộ</strong>, nên chặn main thread; không bao giờ tự gửi lên server.</li><li><strong class=\"k\"><code>sessionStorage</code>:</strong> cùng API, nhưng giới hạn trong <strong class=\"k\">một tab</strong> và bị xóa khi đóng tab.</li><li><strong class=\"k\">Cookie:</strong> khoảng <strong class=\"k\">4 KB mỗi cookie</strong>, <strong class=\"k\">tự động gửi kèm mọi request khớp</strong>, server đọc được. Cấu hình bằng <code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>, <code>Domain</code>, <code>Expires</code>.</li><li><strong class=\"k\">IndexedDB:</strong> <strong class=\"k\">bất đồng bộ</strong>, dữ liệu có cấu trúc (object, blob, file), quota lớn tùy trình duyệt và ổ đĩa. Hợp với dữ liệu offline và cache lớn, API khó dùng hơn (dùng <code>idb</code> hoặc Dexie).</li></ul> <h5>Bảo mật</h5> <p>Thứ gì JavaScript đọc được thì kẻ tấn công <strong class=\"k\">XSS</strong> cũng đọc được (Câu 66). Vì vậy <code>localStorage</code> là nơi tệ để lưu <strong class=\"k\">auth token</strong>; cookie <code>HttpOnly</code> giấu nó khỏi script nhưng cần phòng <strong class=\"k\">CSRF</strong> (<code>SameSite</code>, token; xem Câu 9 và Câu 67). Không bao giờ lưu secret hay dữ liệu thẻ ở phía client.</p> <h5>Quy tắc nhanh</h5> <ul><li>Server cần (session, locale, consent) → <strong class=\"k\">cookie</strong>.</li><li>Tùy chọn UI, bản nháp, feature flag nhỏ → <strong class=\"k\">localStorage</strong> (bọc việc đọc trong try/catch, nó có thể ném lỗi ở private mode hoặc khi đầy).</li><li>Bước wizard theo từng tab → <strong class=\"k\">sessionStorage</strong>.</li><li>Dữ liệu lớn hoặc offline → <strong class=\"k\">IndexedDB</strong>.</li></ul> <h5>Ảnh hưởng của SSR</h5> <p>Server không có <code>window</code>, nên <code>localStorage.getItem</code> ném lỗi ở đó, và đọc nó trong lúc render gây <strong class=\"k\">hydration mismatch</strong> (Câu 50). Hãy đọc trong effect (<code>onMounted</code>), hoặc lưu giá trị vào <strong class=\"k\">cookie</strong> để server và client thống nhất ngay lần render đầu, đó là cách tránh nháy theme.</p> <p><strong class=\"k\">Từ CV của bạn:</strong> SSO cookie trên <code>.oeg.vn</code> dùng chung được giữa các subdomain chính vì cookie, khác với storage, được giới hạn theo domain và đi kèm request lên server.</p>"
+      },
+      "terms": [
+        "localStorage",
+        "sessionStorage",
+        "cookie",
+        "IndexedDB",
+        "HttpOnly",
+        "SameSite",
+        "hydration mismatch"
+      ]
+    },
+    {
+      "id": "q157",
+      "number": 157,
+      "tag": "JavaScript · Trình duyệt",
+      "title": "Walk me through the browser rendering pipeline. What is the difference between reflow and repaint, and where does <code>requestAnimationFrame</code> fit?",
+      "titleVi": "Hãy mô tả rendering pipeline của trình duyệt. Reflow và repaint khác nhau thế nào, và <code>requestAnimationFrame</code> nằm ở đâu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Các bước: parse, style, layout, paint, composite",
+          "Thay đổi nào kích hoạt bước nào",
+          "Layout thrashing",
+          "rAF so với microtask và macrotask",
+          "Ứng dụng: animation mượt"
+        ]
+      },
+      "answer": {
+        "en": "<p>The browser turns code into pixels in stages:</p> <ol><li><strong class=\"k\">Parse</strong> HTML into the <strong class=\"k\">DOM</strong> and CSS into the <strong class=\"k\">CSSOM</strong>.</li><li><strong class=\"k\">Style:</strong> match rules and compute final styles for each element (the render tree).</li><li><strong class=\"k\">Layout (reflow):</strong> compute <strong class=\"k\">size and position</strong> of every box.</li><li><strong class=\"k\">Paint:</strong> draw the pixels of each layer (colours, text, borders, shadows).</li><li><strong class=\"k\">Composite:</strong> the GPU stacks the layers in order into the final frame.</li></ol> <h5>What triggers which step</h5> <ul><li>Changing <code>width</code>, <code>height</code>, <code>margin</code>, <code>top</code>, font size or adding and removing nodes → <strong class=\"k\">layout + paint + composite</strong> (the most expensive).</li><li>Changing <code>color</code>, <code>background</code>, <code>box-shadow</code> → <strong class=\"k\">paint + composite</strong> (a <strong class=\"k\">repaint</strong>, no layout).</li><li>Changing <strong class=\"k\"><code>transform</code></strong> and <strong class=\"k\"><code>opacity</code></strong> (on their own layer) → <strong class=\"k\">composite only</strong>, usually done off the main thread. That is why animations should use them.</li></ul> <p><strong class=\"k\">Layout thrashing:</strong> interleaving DOM reads (<code>offsetHeight</code>) and writes in a loop forces a <strong class=\"k\">synchronous layout</strong> every iteration (Câu 90). Batch all reads first, then all writes.</p> <h5><code>requestAnimationFrame</code></h5> <p><code>rAF(cb)</code> runs the callback <strong class=\"k\">right before the next paint</strong> (about every 16.7 ms at 60 Hz), so it is the place for visual updates. Ordering in one frame: a macrotask runs, then <strong class=\"k\">all microtasks</strong> drain, and rendering happens only if the browser decides it is time (<code>rAF</code> callbacks, style, layout, paint). Promises never wait for a frame, and a long task blocks the frame entirely (Câu 23).</p> <pre><code>function step() {\n  el.style.transform = `translateX(${x++}px)`;\n  if (x &lt; 300) requestAnimationFrame(step);\n}\nrequestAnimationFrame(step);</code></pre> <p>Compared with <code>setTimeout(..., 16)</code>, <code>rAF</code> is synced to the display, <strong class=\"k\">pauses in background tabs</strong>, and avoids dropped or doubled frames.</p>",
+        "vi": "<p>Trình duyệt biến code thành pixel qua các giai đoạn:</p> <ol><li><strong class=\"k\">Parse</strong> HTML thành <strong class=\"k\">DOM</strong> và CSS thành <strong class=\"k\">CSSOM</strong>.</li><li><strong class=\"k\">Style:</strong> khớp rule và tính style cuối cùng cho từng element (render tree).</li><li><strong class=\"k\">Layout (reflow):</strong> tính <strong class=\"k\">kích thước và vị trí</strong> của mọi box.</li><li><strong class=\"k\">Paint:</strong> vẽ pixel của từng layer (màu, chữ, viền, bóng).</li><li><strong class=\"k\">Composite:</strong> GPU xếp chồng các layer theo thứ tự thành frame cuối.</li></ol> <h5>Thay đổi nào kích hoạt bước nào</h5> <ul><li>Đổi <code>width</code>, <code>height</code>, <code>margin</code>, <code>top</code>, cỡ chữ hoặc thêm bớt node → <strong class=\"k\">layout + paint + composite</strong> (đắt nhất).</li><li>Đổi <code>color</code>, <code>background</code>, <code>box-shadow</code> → <strong class=\"k\">paint + composite</strong> (một lần <strong class=\"k\">repaint</strong>, không layout).</li><li>Đổi <strong class=\"k\"><code>transform</code></strong> và <strong class=\"k\"><code>opacity</code></strong> (trên layer riêng) → <strong class=\"k\">chỉ composite</strong>, thường chạy ngoài main thread. Vì vậy animation nên dùng chúng.</li></ul> <p><strong class=\"k\">Layout thrashing:</strong> xen kẽ đọc DOM (<code>offsetHeight</code>) và ghi trong vòng lặp ép <strong class=\"k\">layout đồng bộ</strong> ở mỗi vòng (Câu 90). Hãy gom hết các lần đọc trước, rồi mới ghi.</p> <h5><code>requestAnimationFrame</code></h5> <p><code>rAF(cb)</code> chạy callback <strong class=\"k\">ngay trước lần paint kế tiếp</strong> (khoảng 16,7 ms ở 60 Hz), nên là nơi cập nhật hình ảnh. Thứ tự trong một frame: một macrotask chạy, rồi <strong class=\"k\">toàn bộ microtask</strong> được xả, và rendering chỉ diễn ra khi trình duyệt thấy đến lúc (callback <code>rAF</code>, style, layout, paint). Promise không bao giờ chờ frame, và một long task chặn hoàn toàn frame (Câu 23).</p> <pre><code>function step() {\n  el.style.transform = `translateX(${x++}px)`;\n  if (x &lt; 300) requestAnimationFrame(step);\n}\nrequestAnimationFrame(step);</code></pre> <p>So với <code>setTimeout(..., 16)</code>, <code>rAF</code> đồng bộ với màn hình, <strong class=\"k\">tạm dừng ở tab nền</strong>, và tránh rớt hoặc nhân đôi frame.</p>"
+      },
+      "terms": [
+        "rendering pipeline",
+        "reflow",
+        "repaint",
+        "composite",
+        "requestAnimationFrame",
+        "layout thrashing",
+        "transform"
+      ]
+    },
+    {
+      "id": "q158",
+      "number": 158,
+      "tag": "JavaScript · Bộ nhớ",
+      "title": "How does garbage collection work in JavaScript? What causes memory leaks in browser apps, and how do you find them?",
+      "titleVi": "Garbage collection trong JavaScript hoạt động thế nào? Nguyên nhân memory leak trong ứng dụng trình duyệt và cách tìm ra chúng?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "GC dựa trên reachability (mark and sweep)",
+          "Leak = còn tham chiếu mà không còn dùng",
+          "Các nguyên nhân phổ biến",
+          "Cách tìm bằng DevTools",
+          "Cách phòng tránh"
+        ]
+      },
+      "answer": {
+        "en": "<p>JavaScript has <strong class=\"k\">automatic garbage collection</strong>. Modern engines (V8) use <strong class=\"k\">mark and sweep</strong>: starting from <strong class=\"k\">roots</strong> (global object, the current call stack), they mark everything <strong class=\"k\">reachable</strong> and free the rest. Reference counting is not used because it fails on cycles. A <strong class=\"k\">memory leak</strong> is therefore not \"memory never freed by GC\" but <strong class=\"k\">an object that is still reachable even though the app no longer needs it</strong>.</p> <h5>Common causes in browser apps</h5> <ul><li><strong class=\"k\">Event listeners</strong> never removed (<code>window.addEventListener('resize', …)</code> in a component that unmounts).</li><li><strong class=\"k\">Timers:</strong> <code>setInterval</code> or <code>setTimeout</code> that keeps running and holds its callback's scope.</li><li><strong class=\"k\">Detached DOM nodes:</strong> a node removed from the page but still referenced from a variable, array or cache.</li><li><strong class=\"k\">Closures</strong> capturing a large object (a whole response or component state) that outlives its use.</li><li><strong class=\"k\">Unbounded caches or global stores:</strong> a <code>Map</code> or array that only ever grows (use an LRU, or <code>WeakMap</code>, Câu 148).</li><li><strong class=\"k\">Subscriptions</strong> (WebSocket, observers, store listeners) not unsubscribed.</li></ul> <h5>Finding leaks in DevTools</h5> <ol><li><strong class=\"k\">Performance monitor</strong> or the Memory panel: JS heap size that keeps climbing after repeated navigation, even after forcing GC (trash can icon).</li><li><strong class=\"k\">Heap snapshots:</strong> take one, repeat the suspicious action several times, take another, and use <strong class=\"k\">Comparison</strong> to see objects that keep growing. Search <code>Detached</code> to find leaked DOM trees, and read the <strong class=\"k\">retainers</strong> path to see what holds them.</li><li><strong class=\"k\">Allocation timeline</strong> to see which code allocates what.</li></ol> <h5>Prevention</h5> <pre><code>useEffect(() =&gt; {\n  const c = new AbortController();\n  window.addEventListener('resize', onResize, { signal: c.signal });\n  const id = setInterval(poll, 5000);\n  return () =&gt; { c.abort(); clearInterval(id); };   // always clean up\n}, []);</code></pre> <p>In Vue use <code>onUnmounted</code>; in SPAs, leaks show up as the app slowly getting heavier over a long session.</p>",
+        "vi": "<p>JavaScript có <strong class=\"k\">garbage collection tự động</strong>. Các engine hiện đại (V8) dùng <strong class=\"k\">mark and sweep</strong>: bắt đầu từ các <strong class=\"k\">root</strong> (global object, call stack hiện tại), chúng đánh dấu mọi thứ <strong class=\"k\">còn truy cập được</strong> và giải phóng phần còn lại. Không dùng reference counting vì nó thất bại với tham chiếu vòng. Vì vậy <strong class=\"k\">memory leak</strong> không phải là \"bộ nhớ GC không bao giờ giải phóng\" mà là <strong class=\"k\">một object vẫn còn truy cập được dù app không cần nó nữa</strong>.</p> <h5>Nguyên nhân phổ biến trong ứng dụng trình duyệt</h5> <ul><li><strong class=\"k\">Event listener</strong> không được gỡ (<code>window.addEventListener('resize', …)</code> trong component đã unmount).</li><li><strong class=\"k\">Timer:</strong> <code>setInterval</code> hoặc <code>setTimeout</code> vẫn chạy và giữ scope của callback.</li><li><strong class=\"k\">Detached DOM node:</strong> node đã bị gỡ khỏi trang nhưng vẫn được tham chiếu bởi biến, array hay cache.</li><li><strong class=\"k\">Closure</strong> giữ một object lớn (cả response hay state của component) sống lâu hơn nhu cầu.</li><li><strong class=\"k\">Cache hoặc store toàn cục không giới hạn:</strong> một <code>Map</code> hay array chỉ ngày càng lớn (dùng LRU, hoặc <code>WeakMap</code>, Câu 148).</li><li><strong class=\"k\">Subscription</strong> (WebSocket, observer, listener của store) không được hủy đăng ký.</li></ul> <h5>Tìm leak bằng DevTools</h5> <ol><li><strong class=\"k\">Performance monitor</strong> hoặc panel Memory: JS heap cứ tăng sau khi điều hướng lặp lại, kể cả sau khi ép GC (biểu tượng thùng rác).</li><li><strong class=\"k\">Heap snapshot:</strong> chụp một lần, lặp lại thao tác đáng ngờ vài lần, chụp lần nữa, rồi dùng <strong class=\"k\">Comparison</strong> để xem object nào cứ tăng. Tìm <code>Detached</code> để thấy các cây DOM bị rò rỉ, và đọc đường <strong class=\"k\">retainers</strong> để biết cái gì đang giữ chúng.</li><li><strong class=\"k\">Allocation timeline</strong> để xem đoạn code nào cấp phát gì.</li></ol> <h5>Phòng tránh</h5> <pre><code>useEffect(() =&gt; {\n  const c = new AbortController();\n  window.addEventListener('resize', onResize, { signal: c.signal });\n  const id = setInterval(poll, 5000);\n  return () =&gt; { c.abort(); clearInterval(id); };   // luôn dọn dẹp\n}, []);</code></pre> <p>Trong Vue dùng <code>onUnmounted</code>; ở SPA, leak thể hiện ở việc app chậm dần và nặng dần trong một phiên dùng dài.</p>"
+      },
+      "terms": [
+        "garbage collection",
+        "mark and sweep",
+        "reachability",
+        "memory leak",
+        "detached DOM",
+        "heap snapshot",
+        "retainers"
+      ]
+    }
+  ]
+}

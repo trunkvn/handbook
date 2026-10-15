@@ -1,0 +1,241 @@
+{
+  "id": "part-26",
+  "slug": "typescript-nang-cao",
+  "roman": "XXVI",
+  "title": "TypeScript · Nâng cao",
+  "description": "satisfies và as const, conditional và mapped types, type guard, overload, cấu hình strict, branded type và file khai báo .d.ts.",
+  "questions": [
+    {
+      "id": "q159",
+      "number": 159,
+      "tag": "TypeScript · Biểu thức kiểu",
+      "title": "What is the difference between a type annotation, <code>as const</code> and <code>satisfies</code>? When do you use each?",
+      "titleVi": "Type annotation, <code>as const</code> và <code>satisfies</code> khác nhau thế nào? Khi nào dùng cái nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba cách gắn kiểu cho một giá trị",
+          "Annotation: kiểu rộng, mất thông tin cụ thể",
+          "as const: literal + readonly",
+          "satisfies: kiểm tra mà không đổi kiểu suy ra",
+          "Khác với <code>as</code> (assertion)"
+        ]
+      },
+      "answer": {
+        "en": "<p>They answer different questions: an <strong class=\"k\">annotation</strong> says \"this variable *is* type X\", <code>as const</code> says \"keep this value as narrow as possible\", and <strong class=\"k\"><code>satisfies</code></strong> (TypeScript 4.9) says \"check that this value *fits* type X, but keep what you inferred\".</p> <pre><code>type Route = { path: string; auth?: boolean };\n\n// 1. Annotation: checked, but the specific shape is forgotten\nconst a: Record&lt;string, Route&gt; = { home: { path: '/' } };\na.anything;            // allowed, type Route (no typo protection)\n\n// 2. satisfies: checked AND keeps the inferred type\nconst b = {\n  home: { path: '/' },\n  admin: { path: '/admin', auth: true },\n} satisfies Record&lt;string, Route&gt;;\nb.admin.auth;          // boolean\n// b.hme               // error: typo caught\n\n// 3. as const: readonly literals\nconst c = { home: '/', admin: '/admin' } as const;\ntype Path = (typeof c)[keyof typeof c];   // '/' | '/admin'</code></pre> <h5>When to use each</h5> <ul><li><strong class=\"k\">Annotation</strong> for function parameters, return types and public API: you want the declared contract.</li><li><strong class=\"k\"><code>as const</code></strong> for config objects, option lists and tuples where you need <strong class=\"k\">literal types</strong> (<code>'GET' | 'POST'</code> derived from an array, readonly data).</li><li><strong class=\"k\"><code>satisfies</code></strong> for config objects and lookup tables where you want <strong class=\"k\">validation against a type without widening</strong>: autocomplete on known keys, typos caught, and values keep precise types.</li><li>They combine: <code>{ ... } as const satisfies Config</code>.</li></ul> <h5>Do not confuse with <code>as</code></h5> <p><code>value as Type</code> is an <strong class=\"k\">assertion</strong>: it tells the compiler to trust you and can hide real errors. <code>satisfies</code> actually <strong class=\"k\">checks</strong>. Prefer <code>satisfies</code>, then annotation, and use <code>as</code> only at a verified boundary.</p>",
+        "vi": "<p>Chúng trả lời những câu hỏi khác nhau: <strong class=\"k\">annotation</strong> nói \"biến này *là* kiểu X\", <code>as const</code> nói \"giữ giá trị này hẹp nhất có thể\", còn <strong class=\"k\"><code>satisfies</code></strong> (TypeScript 4.9) nói \"kiểm tra giá trị này *khớp* kiểu X, nhưng giữ nguyên kiểu đã suy ra\".</p> <pre><code>type Route = { path: string; auth?: boolean };\n\n// 1. Annotation: được kiểm tra, nhưng hình dạng cụ thể bị quên\nconst a: Record&lt;string, Route&gt; = { home: { path: '/' } };\na.anything;            // vẫn cho phép, kiểu Route (không bắt lỗi gõ sai)\n\n// 2. satisfies: được kiểm tra VÀ giữ kiểu suy ra\nconst b = {\n  home: { path: '/' },\n  admin: { path: '/admin', auth: true },\n} satisfies Record&lt;string, Route&gt;;\nb.admin.auth;          // boolean\n// b.hme               // lỗi: bắt được gõ sai\n\n// 3. as const: literal và readonly\nconst c = { home: '/', admin: '/admin' } as const;\ntype Path = (typeof c)[keyof typeof c];   // '/' | '/admin'</code></pre> <h5>Khi nào dùng cái nào</h5> <ul><li><strong class=\"k\">Annotation</strong> cho tham số hàm, kiểu trả về và API công khai: bạn muốn hợp đồng được khai báo rõ.</li><li><strong class=\"k\"><code>as const</code></strong> cho object config, danh sách option và tuple khi cần <strong class=\"k\">literal type</strong> (<code>'GET' | 'POST'</code> suy ra từ một array, dữ liệu readonly).</li><li><strong class=\"k\"><code>satisfies</code></strong> cho object config và bảng tra cứu khi bạn muốn <strong class=\"k\">kiểm tra theo một kiểu mà không làm rộng kiểu</strong>: autocomplete trên các key đã biết, bắt lỗi gõ sai, và giá trị giữ kiểu chính xác.</li><li>Chúng kết hợp được: <code>{ ... } as const satisfies Config</code>.</li></ul> <h5>Đừng nhầm với <code>as</code></h5> <p><code>value as Type</code> là <strong class=\"k\">assertion</strong>: nó bảo compiler tin bạn và có thể che lỗi thật. <code>satisfies</code> thì thực sự <strong class=\"k\">kiểm tra</strong>. Ưu tiên <code>satisfies</code>, rồi đến annotation, và chỉ dùng <code>as</code> ở biên đã được xác minh.</p>"
+      },
+      "terms": [
+        "satisfies",
+        "as const",
+        "type annotation",
+        "literal types",
+        "type assertion",
+        "widening"
+      ]
+    },
+    {
+      "id": "q160",
+      "number": 160,
+      "tag": "TypeScript · Type guard",
+      "title": "How do you write custom type guards and assertion functions? What are the risks?",
+      "titleVi": "Viết type guard tùy chỉnh và assertion function thế nào? Rủi ro là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: narrowing có sẵn không đủ",
+          "Type predicate <code>x is T</code>",
+          "Assertion function <code>asserts x is T</code>",
+          "Rủi ro: compiler tin vào bạn",
+          "TS 5.5 suy luận predicate"
+        ]
+      },
+      "answer": {
+        "en": "<p>When built-in narrowing (<code>typeof</code>, <code>instanceof</code>, <code>in</code>, <code>===</code>) is not enough, for example for data from <code>unknown</code>, you write your own <strong class=\"k\">type guard</strong>: a function whose return type is a <strong class=\"k\">type predicate</strong> <code>x is T</code>. If it returns <code>true</code>, TypeScript narrows <code>x</code> to <code>T</code> in that branch, and to the rest in the <code>else</code>.</p> <pre><code>type ApiError = { code: string; message: string };\n\nfunction isApiError(e: unknown): e is ApiError {\n  return (\n    typeof e === 'object' &amp;&amp; e !== null &amp;&amp;\n    'code' in e &amp;&amp; typeof e.code === 'string' &amp;&amp;\n    'message' in e &amp;&amp; typeof e.message === 'string'\n  );\n}\n\ntry { await save(); }\ncatch (e) {                       // e is unknown\n  if (isApiError(e)) toast(e.message);\n  else throw e;\n}</code></pre> <p>An <strong class=\"k\">assertion function</strong> uses <code>asserts x is T</code> (or <code>asserts x</code>) and <strong class=\"k\">throws</strong> instead of returning a boolean; after the call, the narrowing applies to the rest of the scope:</p> <pre><code>function assertDefined&lt;T&gt;(v: T | null | undefined, name: string): asserts v is T {\n  if (v == null) throw new Error(`${name} is required`);\n}\n\nconst el = document.getElementById('root');\nassertDefined(el, 'root');\nel.append('ok');                  // el is HTMLElement here</code></pre> <h5>Risks</h5> <ul><li>A guard is a <strong class=\"k\">promise the compiler cannot verify</strong>. If the body is wrong (checks only <code>code</code>, not <code>message</code>), TypeScript still trusts it and you get a runtime crash with no type error. Keep guards small and test them.</li><li>Do not write guards that just <code>return true</code>; that is a disguised <code>as</code>.</li><li>For large or external payloads, prefer a <strong class=\"k\">schema validator</strong> like Zod to hand-written guards (Câu 35).</li></ul> <h5>Useful details</h5> <ul><li>Since <strong class=\"k\">TypeScript 5.5</strong> the compiler <strong class=\"k\">infers</strong> simple type predicates, so <code>arr.filter(x =&gt; x !== null)</code> now narrows to non-null without an explicit annotation.</li><li>Narrowing in discriminated unions (Câu 34) often removes the need for custom guards.</li></ul>",
+        "vi": "<p>Khi narrowing có sẵn (<code>typeof</code>, <code>instanceof</code>, <code>in</code>, <code>===</code>) không đủ, ví dụ với dữ liệu từ <code>unknown</code>, bạn viết <strong class=\"k\">type guard</strong> riêng: một hàm có kiểu trả về là <strong class=\"k\">type predicate</strong> <code>x is T</code>. Nếu trả <code>true</code>, TypeScript thu hẹp <code>x</code> thành <code>T</code> trong nhánh đó, và thành phần còn lại ở nhánh <code>else</code>.</p> <pre><code>type ApiError = { code: string; message: string };\n\nfunction isApiError(e: unknown): e is ApiError {\n  return (\n    typeof e === 'object' &amp;&amp; e !== null &amp;&amp;\n    'code' in e &amp;&amp; typeof e.code === 'string' &amp;&amp;\n    'message' in e &amp;&amp; typeof e.message === 'string'\n  );\n}\n\ntry { await save(); }\ncatch (e) {                       // e là unknown\n  if (isApiError(e)) toast(e.message);\n  else throw e;\n}</code></pre> <p><strong class=\"k\">Assertion function</strong> dùng <code>asserts x is T</code> (hoặc <code>asserts x</code>) và <strong class=\"k\">ném lỗi</strong> thay vì trả boolean; sau lời gọi, việc thu hẹp kiểu áp dụng cho phần còn lại của scope:</p> <pre><code>function assertDefined&lt;T&gt;(v: T | null | undefined, name: string): asserts v is T {\n  if (v == null) throw new Error(`${name} is required`);\n}\n\nconst el = document.getElementById('root');\nassertDefined(el, 'root');\nel.append('ok');                  // ở đây el là HTMLElement</code></pre> <h5>Rủi ro</h5> <ul><li>Guard là <strong class=\"k\">lời hứa mà compiler không kiểm chứng được</strong>. Nếu thân hàm sai (chỉ kiểm tra <code>code</code>, không kiểm tra <code>message</code>), TypeScript vẫn tin và bạn gặp crash lúc runtime mà không có lỗi kiểu. Giữ guard nhỏ và có test.</li><li>Đừng viết guard chỉ <code>return true</code>; đó là <code>as</code> trá hình.</li><li>Với payload lớn hoặc từ bên ngoài, ưu tiên <strong class=\"k\">schema validator</strong> như Zod hơn guard viết tay (Câu 35).</li></ul> <h5>Chi tiết hữu ích</h5> <ul><li>Từ <strong class=\"k\">TypeScript 5.5</strong>, compiler <strong class=\"k\">tự suy ra</strong> các type predicate đơn giản, nên <code>arr.filter(x =&gt; x !== null)</code> giờ thu hẹp thành non-null mà không cần annotation tường minh.</li><li>Narrowing với discriminated union (Câu 34) thường loại bỏ nhu cầu viết guard riêng.</li></ul>"
+      },
+      "terms": [
+        "type guard",
+        "type predicate",
+        "asserts",
+        "narrowing",
+        "unknown",
+        "runtime validation"
+      ]
+    },
+    {
+      "id": "q161",
+      "number": 161,
+      "tag": "TypeScript · Hàm",
+      "title": "When do you use function overloads, and when are union parameters or generics a better choice?",
+      "titleVi": "Khi nào dùng function overload, và khi nào union parameter hay generic là lựa chọn tốt hơn?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Overload: nhiều signature, một implementation",
+          "Quy tắc: signature implementation không được thấy từ ngoài",
+          "Khi nào overload là đúng",
+          "Khi nào dùng union hoặc generic",
+          "Bẫy: thứ tự và union arguments"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Overloads</strong> let one function have several call signatures with different return types, followed by a single <strong class=\"k\">implementation signature</strong> that is not visible to callers.</p> <pre><code>function toDate(ts: number): Date;\nfunction toDate(y: number, m: number, d: number): Date;\nfunction toDate(a: number, m?: number, d?: number): Date {\n  return m === undefined ? new Date(a) : new Date(a, m - 1, d);\n}\n\ntoDate(1700000000000);   // ok\ntoDate(2026, 10, 15);    // ok\n// toDate(2026, 10)      // error: no overload matches</code></pre> <h5>Pick the simplest tool</h5> <ul><li><strong class=\"k\">Same return type</strong> → use a <strong class=\"k\">union parameter</strong> or optional parameters, not overloads: <code>function len(x: string | unknown[]): number</code>.</li><li><strong class=\"k\">Output type depends on the input type</strong> → a <strong class=\"k\">generic</strong> is usually cleaner, for example a lookup: <code>function get&lt;K extends keyof Events&gt;(k: K): Events[K]</code>, or <code>function first&lt;T&gt;(a: readonly T[]): T | undefined</code>.</li><li><strong class=\"k\">Return type depends on the argument shape or a literal value</strong>, and a generic would need a complicated conditional type → <strong class=\"k\">overloads</strong> read best:</li></ul> <pre><code>function read(path: string): Promise&lt;string&gt;;\nfunction read(path: string, encoding: null): Promise&lt;Buffer&gt;;</code></pre> <ul><li>Overloads also describe APIs that came from plain JavaScript (<code>addEventListener</code>, <code>document.createElement</code>).</li></ul> <h5>Pitfalls</h5> <ul><li>TypeScript picks the <strong class=\"k\">first matching overload</strong>, so order from <strong class=\"k\">most specific to most general</strong>.</li><li>The implementation signature is <strong class=\"k\">not callable</strong> from outside, and it must be compatible with every overload.</li><li>A value of type <code>string | string[]</code> <strong class=\"k\">will not match</strong> separate <code>string</code> and <code>string[]</code> overloads; add a third overload or use a union parameter.</li><li>Too many overloads give unreadable error messages. If you have more than three or four, revisit the design.</li></ul>",
+        "vi": "<p><strong class=\"k\">Overload</strong> cho phép một hàm có nhiều call signature với kiểu trả về khác nhau, theo sau là một <strong class=\"k\">implementation signature</strong> duy nhất mà người gọi không nhìn thấy.</p> <pre><code>function toDate(ts: number): Date;\nfunction toDate(y: number, m: number, d: number): Date;\nfunction toDate(a: number, m?: number, d?: number): Date {\n  return m === undefined ? new Date(a) : new Date(a, m - 1, d);\n}\n\ntoDate(1700000000000);   // ok\ntoDate(2026, 10, 15);    // ok\n// toDate(2026, 10)      // lỗi: không overload nào khớp</code></pre> <h5>Chọn công cụ đơn giản nhất</h5> <ul><li><strong class=\"k\">Cùng kiểu trả về</strong> → dùng <strong class=\"k\">union parameter</strong> hoặc tham số tùy chọn, không dùng overload: <code>function len(x: string | unknown[]): number</code>.</li><li><strong class=\"k\">Kiểu output phụ thuộc kiểu input</strong> → <strong class=\"k\">generic</strong> thường gọn hơn, ví dụ tra cứu: <code>function get&lt;K extends keyof Events&gt;(k: K): Events[K]</code>, hoặc <code>function first&lt;T&gt;(a: readonly T[]): T | undefined</code>.</li><li><strong class=\"k\">Kiểu trả về phụ thuộc hình dạng tham số hoặc một giá trị literal</strong>, và generic cần conditional type phức tạp → <strong class=\"k\">overload</strong> dễ đọc nhất:</li></ul> <pre><code>function read(path: string): Promise&lt;string&gt;;\nfunction read(path: string, encoding: null): Promise&lt;Buffer&gt;;</code></pre> <ul><li>Overload cũng mô tả các API đến từ JavaScript thuần (<code>addEventListener</code>, <code>document.createElement</code>).</li></ul> <h5>Các bẫy</h5> <ul><li>TypeScript chọn <strong class=\"k\">overload khớp đầu tiên</strong>, nên sắp xếp từ <strong class=\"k\">cụ thể nhất đến chung nhất</strong>.</li><li>Implementation signature <strong class=\"k\">không gọi được</strong> từ bên ngoài, và phải tương thích với mọi overload.</li><li>Giá trị kiểu <code>string | string[]</code> <strong class=\"k\">không khớp</strong> với các overload riêng cho <code>string</code> và <code>string[]</code>; thêm overload thứ ba hoặc dùng union parameter.</li><li>Quá nhiều overload cho thông báo lỗi khó đọc. Nếu có hơn ba bốn cái, hãy xem lại thiết kế.</li></ul>"
+      },
+      "terms": [
+        "overloads",
+        "implementation signature",
+        "union parameter",
+        "generic",
+        "lookup type",
+        "overload resolution"
+      ]
+    },
+    {
+      "id": "q162",
+      "number": 162,
+      "tag": "TypeScript · Cấu hình",
+      "title": "What does <code>strict</code> include, and which extra compiler flags do you turn on in a large project?",
+      "titleVi": "<code>strict</code> bao gồm những gì, và bạn bật thêm cờ compiler nào trong dự án lớn?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "strict là nhóm cờ",
+          "Những cờ quan trọng nhất trong nhóm",
+          "Cờ không nằm trong strict nhưng đáng bật",
+          "Cách bật dần trên codebase cũ",
+          "Ví dụ code"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\"><code>strict: true</code></strong> is an umbrella that turns on a family of checks, and a new project should always enable it. The ones that matter most:</p> <ul><li><strong class=\"k\"><code>strictNullChecks</code>:</strong> <code>null</code> and <code>undefined</code> are not assignable to everything, so you must handle them (the biggest source of caught bugs).</li><li><strong class=\"k\"><code>noImplicitAny</code>:</strong> no silent <code>any</code> from missing annotations.</li><li><strong class=\"k\"><code>strictFunctionTypes</code></strong>, <strong class=\"k\"><code>strictBindCallApply</code></strong>, <strong class=\"k\"><code>strictPropertyInitialization</code></strong>, <strong class=\"k\"><code>noImplicitThis</code></strong>.</li><li><strong class=\"k\"><code>useUnknownInCatchVariables</code>:</strong> <code>catch (e)</code> gives <code>e: unknown</code>, so you must narrow before using <code>e.message</code>.</li></ul> <h5>Worth enabling on top of <code>strict</code></h5> <p><code>strict</code> does <strong class=\"k\">not</strong> include these:</p> <pre><code>{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true,\n    \"noImplicitOverride\": true,\n    \"noFallthroughCasesInSwitch\": true\n  }\n}</code></pre> <pre><code>const ids: string[] = [];\nconst first = ids[0];            // string | undefined (noUncheckedIndexedAccess)\nfirst.toUpperCase();             // error: handle undefined first\n\ninterface Opts { retries?: number }\nconst o: Opts = { retries: undefined };  // error with exactOptionalPropertyTypes</code></pre> <ul><li><strong class=\"k\"><code>noUncheckedIndexedAccess</code>:</strong> <code>arr[i]</code> and <code>record[key]</code> include <code>undefined</code>. Honest, but adds noise in loops; worth it for API data.</li><li><strong class=\"k\"><code>exactOptionalPropertyTypes</code>:</strong> \"missing\" and \"explicitly <code>undefined</code>\" become different things. It can be painful with some libraries, so adopt it deliberately.</li><li><strong class=\"k\"><code>noImplicitOverride</code></strong>, <strong class=\"k\"><code>noFallthroughCasesInSwitch</code>:</strong> cheap safety.</li></ul> <h5>Migrating a legacy codebase</h5> <p>Do not flip everything at once. Turn on one flag at a time (<code>noImplicitAny</code>, then <code>strictNullChecks</code>), fix by folder, and use <strong class=\"k\"><code>// @ts-expect-error</code></strong> (which fails when the error disappears) instead of <code>@ts-ignore</code>. Enforce it in CI with <code>tsc --noEmit</code>.</p>",
+        "vi": "<p><strong class=\"k\"><code>strict: true</code></strong> là một cờ \"ô dù\" bật cả họ các kiểm tra, và dự án mới nên luôn bật. Những cờ quan trọng nhất:</p> <ul><li><strong class=\"k\"><code>strictNullChecks</code>:</strong> <code>null</code> và <code>undefined</code> không gán được cho mọi thứ, nên bạn phải xử lý chúng (nguồn bắt lỗi lớn nhất).</li><li><strong class=\"k\"><code>noImplicitAny</code>:</strong> không có <code>any</code> ngầm do thiếu annotation.</li><li><strong class=\"k\"><code>strictFunctionTypes</code></strong>, <strong class=\"k\"><code>strictBindCallApply</code></strong>, <strong class=\"k\"><code>strictPropertyInitialization</code></strong>, <strong class=\"k\"><code>noImplicitThis</code></strong>.</li><li><strong class=\"k\"><code>useUnknownInCatchVariables</code>:</strong> <code>catch (e)</code> cho <code>e: unknown</code>, nên phải thu hẹp trước khi dùng <code>e.message</code>.</li></ul> <h5>Nên bật thêm ngoài <code>strict</code></h5> <p><code>strict</code> <strong class=\"k\">không</strong> bao gồm các cờ này:</p> <pre><code>{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true,\n    \"noImplicitOverride\": true,\n    \"noFallthroughCasesInSwitch\": true\n  }\n}</code></pre> <pre><code>const ids: string[] = [];\nconst first = ids[0];            // string | undefined (noUncheckedIndexedAccess)\nfirst.toUpperCase();             // lỗi: phải xử lý undefined trước\n\ninterface Opts { retries?: number }\nconst o: Opts = { retries: undefined };  // lỗi với exactOptionalPropertyTypes</code></pre> <ul><li><strong class=\"k\"><code>noUncheckedIndexedAccess</code>:</strong> <code>arr[i]</code> và <code>record[key]</code> bao gồm <code>undefined</code>. Trung thực, nhưng thêm nhiễu trong vòng lặp; đáng bật cho dữ liệu API.</li><li><strong class=\"k\"><code>exactOptionalPropertyTypes</code>:</strong> \"thiếu\" và \"có mặt nhưng là <code>undefined</code>\" trở thành hai thứ khác nhau. Có thể gây khó với một số thư viện, nên hãy bật có chủ đích.</li><li><strong class=\"k\"><code>noImplicitOverride</code></strong>, <strong class=\"k\"><code>noFallthroughCasesInSwitch</code>:</strong> an toàn thêm với chi phí thấp.</li></ul> <h5>Migrate codebase cũ</h5> <p>Đừng bật tất cả cùng lúc. Bật từng cờ một (<code>noImplicitAny</code>, rồi <code>strictNullChecks</code>), sửa theo từng thư mục, và dùng <strong class=\"k\"><code>// @ts-expect-error</code></strong> (báo lỗi khi lỗi gốc đã biến mất) thay cho <code>@ts-ignore</code>. Ép buộc trong CI bằng <code>tsc --noEmit</code>.</p>"
+      },
+      "terms": [
+        "strict",
+        "strictNullChecks",
+        "noUncheckedIndexedAccess",
+        "exactOptionalPropertyTypes",
+        "useUnknownInCatchVariables",
+        "ts-expect-error"
+      ]
+    },
+    {
+      "id": "q163",
+      "number": 163,
+      "tag": "TypeScript · Kiểu nâng cao",
+      "title": "What are conditional types and <code>infer</code>? How do <code>ReturnType</code> and <code>Awaited</code> work, and what is distribution?",
+      "titleVi": "Conditional type và <code>infer</code> là gì? <code>ReturnType</code> và <code>Awaited</code> hoạt động thế nào, và distribution là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Cú pháp <code>T extends U ? X : Y</code>",
+          "infer: bắt một phần của kiểu",
+          "Ví dụ ReturnType, Awaited, ElementOf",
+          "Distributive conditional types",
+          "Khi nào nên dùng, khi nào tránh"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\">conditional type</strong> is an <code>if</code> at the type level: <code>T extends U ? X : Y</code>. With <strong class=\"k\"><code>infer</code></strong> you can <strong class=\"k\">capture</strong> part of <code>T</code> while matching, which is how many built-in utility types work.</p> <pre><code>type ReturnTypeOf&lt;F&gt; = F extends (...args: any[]) =&gt; infer R ? R : never;\ntype ElementOf&lt;T&gt;    = T extends readonly (infer E)[] ? E : never;\ntype Unwrap&lt;T&gt;       = T extends Promise&lt;infer U&gt; ? Unwrap&lt;U&gt; : T;  // like Awaited\n\ntype A = ReturnTypeOf&lt;() =&gt; number&gt;;     // number\ntype B = ElementOf&lt;string[]&gt;;            // string\ntype C = Unwrap&lt;Promise&lt;Promise&lt;Date&gt;&gt;&gt;; // Date</code></pre> <p><code>ReturnType</code>, <code>Parameters</code>, <code>Awaited</code>, <code>Exclude</code>, <code>Extract</code> and <code>NonNullable</code> are all written this way.</p> <h5>Distribution</h5> <p>When the checked type is a <strong class=\"k\">naked type parameter</strong> and you pass a <strong class=\"k\">union</strong>, the condition is applied to <strong class=\"k\">each member</strong> and the results are unioned:</p> <pre><code>type ToArray&lt;T&gt; = T extends any ? T[] : never;\ntype X = ToArray&lt;string | number&gt;;      // string[] | number[]\n\ntype ToArray2&lt;T&gt; = [T] extends [any] ? T[] : never;\ntype Y = ToArray2&lt;string | number&gt;;     // (string | number)[]  (wrapped, no distribution)</code></pre> <p>This is why <code>Exclude&lt;'a' | 'b', 'a'&gt;</code> yields <code>'b'</code>. Note that <code>never</code> is an empty union, so <code>ToArray&lt;never&gt;</code> is <code>never</code>.</p> <h5>Trade-offs</h5> <ul><li>Great for <strong class=\"k\">library code and shared utilities</strong> that derive types from other types (API response types from functions, props from components).</li><li>Inside a <strong class=\"k\">generic function body</strong>, conditional types stay unresolved, so returning a value often needs a cast. An overload (Câu 161) may be clearer.</li><li>Deep recursion slows the compiler and produces cryptic errors. In app code, prefer simple types and name intermediate steps.</li></ul>",
+        "vi": "<p><strong class=\"k\">Conditional type</strong> là <code>if</code> ở mức kiểu: <code>T extends U ? X : Y</code>. Với <strong class=\"k\"><code>infer</code></strong> bạn có thể <strong class=\"k\">bắt</strong> một phần của <code>T</code> khi so khớp, và đó là cách nhiều utility type có sẵn hoạt động.</p> <pre><code>type ReturnTypeOf&lt;F&gt; = F extends (...args: any[]) =&gt; infer R ? R : never;\ntype ElementOf&lt;T&gt;    = T extends readonly (infer E)[] ? E : never;\ntype Unwrap&lt;T&gt;       = T extends Promise&lt;infer U&gt; ? Unwrap&lt;U&gt; : T;  // giống Awaited\n\ntype A = ReturnTypeOf&lt;() =&gt; number&gt;;     // number\ntype B = ElementOf&lt;string[]&gt;;            // string\ntype C = Unwrap&lt;Promise&lt;Promise&lt;Date&gt;&gt;&gt;; // Date</code></pre> <p><code>ReturnType</code>, <code>Parameters</code>, <code>Awaited</code>, <code>Exclude</code>, <code>Extract</code> và <code>NonNullable</code> đều được viết theo cách này.</p> <h5>Distribution</h5> <p>Khi kiểu được kiểm tra là một <strong class=\"k\">type parameter trần</strong> và bạn truyền vào một <strong class=\"k\">union</strong>, điều kiện được áp dụng cho <strong class=\"k\">từng thành viên</strong> rồi gộp kết quả lại thành union:</p> <pre><code>type ToArray&lt;T&gt; = T extends any ? T[] : never;\ntype X = ToArray&lt;string | number&gt;;      // string[] | number[]\n\ntype ToArray2&lt;T&gt; = [T] extends [any] ? T[] : never;\ntype Y = ToArray2&lt;string | number&gt;;     // (string | number)[]  (bọc lại, không distribute)</code></pre> <p>Đó là lý do <code>Exclude&lt;'a' | 'b', 'a'&gt;</code> ra <code>'b'</code>. Lưu ý <code>never</code> là union rỗng, nên <code>ToArray&lt;never&gt;</code> là <code>never</code>.</p> <h5>Đánh đổi</h5> <ul><li>Rất tốt cho <strong class=\"k\">code thư viện và utility dùng chung</strong> suy ra kiểu từ kiểu khác (kiểu response API từ hàm, props từ component).</li><li>Bên trong <strong class=\"k\">thân hàm generic</strong>, conditional type không được resolve, nên trả về giá trị thường cần ép kiểu. Overload (Câu 161) có thể rõ ràng hơn.</li><li>Đệ quy sâu làm compiler chậm và cho thông báo lỗi khó hiểu. Trong code ứng dụng, ưu tiên kiểu đơn giản và đặt tên cho các bước trung gian.</li></ul>"
+      },
+      "terms": [
+        "conditional types",
+        "infer",
+        "distributive",
+        "ReturnType",
+        "Awaited",
+        "never"
+      ]
+    },
+    {
+      "id": "q164",
+      "number": 164,
+      "tag": "TypeScript · Kiểu nâng cao",
+      "title": "What are mapped types, key remapping and template literal types? Give practical examples.",
+      "titleVi": "Mapped type, key remapping và template literal type là gì? Cho ví dụ thực tế.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mapped type: duyệt qua key của một kiểu",
+          "Modifier <code>readonly</code> và <code>?</code>",
+          "Key remapping với <code>as</code>",
+          "Template literal types",
+          "Ví dụ thực tế và chi phí"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\">mapped type</strong> builds a new object type by looping over keys: <code>{ [K in keyof T]: ... }</code>. <code>Partial</code>, <code>Required</code>, <code>Readonly</code>, <code>Pick</code> and <code>Record</code> are all mapped types. You can add or remove modifiers with <code>+</code>/<code>-</code> (<code>-readonly</code>, <code>-?</code>).</p> <p><strong class=\"k\">Key remapping</strong> (<code>as</code>) renames or filters keys, and <strong class=\"k\">template literal types</strong> build string types from other strings, like `<code> </code>get${Capitalize&lt;K&gt;}<code> </code>`.</p> <pre><code>type User = { id: number; name: string; email?: string };\n\ntype Mutable&lt;T&gt; = { -readonly [K in keyof T]-?: T[K] };\n\ntype Getters&lt;T&gt; = {\n  [K in keyof T &amp; string as `get${Capitalize&lt;K&gt;}`]: () =&gt; T[K];\n};\ntype UserGetters = Getters&lt;User&gt;;\n// { getId: () =&gt; number; getName: () =&gt; string; getEmail: () =&gt; string | undefined }\n\ntype OnlyStrings&lt;T&gt; = {\n  [K in keyof T as T[K] extends string ? K : never]: T[K];   // never drops the key\n};\n\ntype Side = 'top' | 'left';\ntype Margin = `margin-${Side}`;          // 'margin-top' | 'margin-left'</code></pre> <h5>Practical uses</h5> <ul><li>A <strong class=\"k\">typed event emitter</strong>: from <code>{ login: User; logout: void }</code> derive <code>on&lt;K extends keyof Events&gt;(name: K, cb: (payload: Events[K]) =&gt; void)</code>.</li><li><strong class=\"k\">Form state</strong>: map each field of a model to <code>{ value; error; touched }</code>.</li><li><strong class=\"k\">Route params</strong> from a path string: <code>'/users/:id'</code> becomes <code>{ id: string }</code> using template literal types plus <code>infer</code>. Frameworks such as typed routers rely on this.</li><li>Deriving <strong class=\"k\">CSS class or token names</strong> from a design token object.</li><li>Making all fields of a DTO <code>readonly</code> or nullable in one line.</li></ul> <h5>Cost</h5> <p>Template literal types over large unions multiply into a <strong class=\"k\">cartesian product</strong> (3 x 100 x 50 members is huge) and slow down the editor. Use them for small, closed sets, and keep mapped types shallow.</p>",
+        "vi": "<p><strong class=\"k\">Mapped type</strong> tạo một kiểu object mới bằng cách lặp qua các key: <code>{ [K in keyof T]: ... }</code>. <code>Partial</code>, <code>Required</code>, <code>Readonly</code>, <code>Pick</code> và <code>Record</code> đều là mapped type. Bạn thêm hoặc bỏ modifier bằng <code>+</code>/<code>-</code> (<code>-readonly</code>, <code>-?</code>).</p> <p><strong class=\"k\">Key remapping</strong> (<code>as</code>) đổi tên hoặc lọc key, còn <strong class=\"k\">template literal type</strong> tạo kiểu string từ các string khác, như `<code> </code>get${Capitalize&lt;K&gt;}<code> </code>`.</p> <pre><code>type User = { id: number; name: string; email?: string };\n\ntype Mutable&lt;T&gt; = { -readonly [K in keyof T]-?: T[K] };\n\ntype Getters&lt;T&gt; = {\n  [K in keyof T &amp; string as `get${Capitalize&lt;K&gt;}`]: () =&gt; T[K];\n};\ntype UserGetters = Getters&lt;User&gt;;\n// { getId: () =&gt; number; getName: () =&gt; string; getEmail: () =&gt; string | undefined }\n\ntype OnlyStrings&lt;T&gt; = {\n  [K in keyof T as T[K] extends string ? K : never]: T[K];   // never loại bỏ key\n};\n\ntype Side = 'top' | 'left';\ntype Margin = `margin-${Side}`;          // 'margin-top' | 'margin-left'</code></pre> <h5>Ứng dụng thực tế</h5> <ul><li><strong class=\"k\">Event emitter có kiểu</strong>: từ <code>{ login: User; logout: void }</code> suy ra <code>on&lt;K extends keyof Events&gt;(name: K, cb: (payload: Events[K]) =&gt; void)</code>.</li><li><strong class=\"k\">State của form</strong>: map mỗi field của model thành <code>{ value; error; touched }</code>.</li><li><strong class=\"k\">Route params</strong> từ chuỗi path: <code>'/users/:id'</code> thành <code>{ id: string }</code> bằng template literal type kết hợp <code>infer</code>. Các typed router dựa vào kỹ thuật này.</li><li>Suy ra <strong class=\"k\">tên class CSS hay token</strong> từ object design token.</li><li>Biến mọi field của một DTO thành <code>readonly</code> hoặc nullable chỉ trong một dòng.</li></ul> <h5>Chi phí</h5> <p>Template literal type trên các union lớn nhân lên thành <strong class=\"k\">tích Descartes</strong> (3 x 100 x 50 phần tử là rất lớn) và làm editor chậm. Dùng cho tập nhỏ và đóng, và giữ mapped type nông.</p>"
+      },
+      "terms": [
+        "mapped types",
+        "key remapping",
+        "template literal types",
+        "keyof",
+        "Partial",
+        "modifiers"
+      ]
+    },
+    {
+      "id": "q165",
+      "number": 165,
+      "tag": "TypeScript · An toàn kiểu",
+      "title": "What are branded (opaque) types, and why would you use them for IDs and money amounts?",
+      "titleVi": "Branded (opaque) type là gì, và vì sao dùng chúng cho ID và số tiền?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: structural typing coi mọi string là một",
+          "Brand: giao với một tag giả",
+          "Tạo giá trị qua hàm validate ở biên",
+          "Không tốn chi phí runtime",
+          "Hạn chế"
+        ]
+      },
+      "answer": {
+        "en": "<p>TypeScript is <strong class=\"k\">structurally typed</strong>: a <code>string</code> is a <code>string</code>, so a <code>UserId</code> can be passed where an <code>OrderId</code> is expected and the compiler is happy. A <strong class=\"k\">branded type</strong> adds a <strong class=\"k\">phantom tag</strong> so two structurally identical types become <strong class=\"k\">incompatible</strong>.</p> <pre><code>type Brand&lt;T, B extends string&gt; = T &amp; { readonly __brand: B };\n\ntype UserId  = Brand&lt;string, 'UserId'&gt;;\ntype OrderId = Brand&lt;string, 'OrderId'&gt;;\ntype Vnd     = Brand&lt;number, 'Vnd'&gt;;\n\nconst toUserId = (s: string) =&gt; s as UserId;\n\nfunction toVnd(n: number): Vnd {\n  if (!Number.isInteger(n) || n &lt; 0) throw new Error('Invalid VND amount');\n  return n as Vnd;                       // the only place we cast\n}\n\nfunction getOrder(id: OrderId) { /* ... */ }\ngetOrder(toUserId('u_1'));               // error: UserId is not OrderId</code></pre> <p>The brand exists <strong class=\"k\">only at compile time</strong>: no extra property is added at runtime, so there is zero cost.</p> <h5>How to use it well</h5> <ul><li>Create branded values <strong class=\"k\">only at the boundary</strong>: when parsing an API response, reading a route param or validating input. Everything inside the app then carries the stronger type. Zod supports this with <code>.brand&lt;'UserId'&gt;()</code>.</li><li>Use it where mixing values is <strong class=\"k\">expensive</strong>: IDs of different entities, <strong class=\"k\">currency or unit</strong> (VND vs USD, pixels vs rem, cents vs whole units), already-sanitised strings (<code>SafeHtml</code>), validated emails.</li><li>Good for payments: a function that takes <code>Vnd</code> cannot accidentally receive a raw user input string or a USD value (Câu 65).</li></ul> <h5>Limits</h5> <ul><li>The cast in the constructor is still a trust point, so <strong class=\"k\">validate there</strong>.</li><li>Arithmetic returns plain <code>number</code> (<code>a + b</code> is not <code>Vnd</code>), so wrap results again.</li><li>Brands do not appear in JSON, so re-brand after deserialising. Do not overuse: for a function with three string parameters, named object parameters often solve the same problem more cheaply.</li></ul>",
+        "vi": "<p>TypeScript dùng <strong class=\"k\">structural typing</strong>: <code>string</code> là <code>string</code>, nên có thể truyền <code>UserId</code> vào chỗ cần <code>OrderId</code> mà compiler vẫn chấp nhận. <strong class=\"k\">Branded type</strong> thêm một <strong class=\"k\">tag ảo</strong> để hai kiểu giống hệt nhau về cấu trúc trở nên <strong class=\"k\">không tương thích</strong>.</p> <pre><code>type Brand&lt;T, B extends string&gt; = T &amp; { readonly __brand: B };\n\ntype UserId  = Brand&lt;string, 'UserId'&gt;;\ntype OrderId = Brand&lt;string, 'OrderId'&gt;;\ntype Vnd     = Brand&lt;number, 'Vnd'&gt;;\n\nconst toUserId = (s: string) =&gt; s as UserId;\n\nfunction toVnd(n: number): Vnd {\n  if (!Number.isInteger(n) || n &lt; 0) throw new Error('Invalid VND amount');\n  return n as Vnd;                       // nơi duy nhất ta ép kiểu\n}\n\nfunction getOrder(id: OrderId) { /* ... */ }\ngetOrder(toUserId('u_1'));               // lỗi: UserId không phải OrderId</code></pre> <p>Brand chỉ tồn tại <strong class=\"k\">lúc compile</strong>: không có property nào được thêm vào lúc runtime, nên chi phí bằng không.</p> <h5>Dùng cho tốt</h5> <ul><li>Tạo giá trị branded <strong class=\"k\">chỉ ở biên</strong>: khi parse response API, đọc route param hoặc validate input. Mọi thứ bên trong app sau đó mang kiểu chặt hơn. Zod hỗ trợ việc này với <code>.brand&lt;'UserId'&gt;()</code>.</li><li>Dùng khi việc trộn lẫn giá trị <strong class=\"k\">gây hậu quả đắt</strong>: ID của các entity khác nhau, <strong class=\"k\">tiền tệ hoặc đơn vị</strong> (VND và USD, pixel và rem, cent và đơn vị nguyên), chuỗi đã được sanitize (<code>SafeHtml</code>), email đã validate.</li><li>Rất hợp với thanh toán: hàm nhận <code>Vnd</code> không thể vô tình nhận một chuỗi input thô hay một giá trị USD (Câu 65).</li></ul> <h5>Hạn chế</h5> <ul><li>Phép ép kiểu trong constructor vẫn là điểm tin tưởng, nên hãy <strong class=\"k\">validate ngay tại đó</strong>.</li><li>Phép tính trả về <code>number</code> thường (<code>a + b</code> không phải <code>Vnd</code>), nên phải bọc lại kết quả.</li><li>Brand không xuất hiện trong JSON, nên gắn lại brand sau khi deserialize. Đừng lạm dụng: với hàm có ba tham số string, dùng tham số dạng object có tên thường giải quyết cùng vấn đề rẻ hơn.</li></ul>"
+      },
+      "terms": [
+        "branded types",
+        "opaque types",
+        "structural typing",
+        "phantom type",
+        "validate at boundary",
+        "Zod brand"
+      ]
+    },
+    {
+      "id": "q166",
+      "number": 166,
+      "tag": "TypeScript · Khai báo kiểu",
+      "title": "What are <code>.d.ts</code> files, module augmentation and ambient declarations? How do you type an untyped library or extend a library's types?",
+      "titleVi": "File <code>.d.ts</code>, module augmentation và ambient declaration là gì? Làm sao gõ kiểu cho thư viện chưa có type hoặc mở rộng kiểu của thư viện?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>.d.ts</code> chỉ mô tả hình dạng, không có code runtime",
+          "@types và trường <code>types</code>",
+          "Ambient declaration: global, <code>declare module</code>",
+          "Module augmentation để mở rộng",
+          "Bẫy: file phải là module, include trong tsconfig"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\"><code>.d.ts</code></strong> file contains <strong class=\"k\">only type information</strong>, with no runtime code. It describes the shape of JavaScript that lives elsewhere. Libraries ship them via the <code>types</code> field in <code>package.json</code>; for others you install <strong class=\"k\"><code>@types/xxx</code></strong> from DefinitelyTyped.</p> <h5>Ambient declarations</h5> <p>Describe things that exist at runtime but are unknown to TypeScript:</p> <pre><code>// global.d.ts\ndeclare module '*.svg' {                 // asset imports\n  const src: string;\n  export default src;\n}\ndeclare module 'legacy-lib' {            // an untyped library\n  export function init(opts: { key: string }): void;\n}</code></pre> <p>For a quick start you can write <code>declare module 'legacy-lib';</code> (everything becomes <code>any</code>), then grow real types as you use them. Prefer a thin <strong class=\"k\">typed wrapper</strong> around the untyped library so <code>any</code> stays in one file.</p> <h5>Module augmentation</h5> <p><strong class=\"k\">Extend</strong> the types of an existing module by redeclaring its interfaces; they <strong class=\"k\">merge</strong> (declaration merging):</p> <pre><code>// types/vue.d.ts\nimport 'vue';\ndeclare module 'vue' {\n  interface ComponentCustomProperties {\n    $api: ApiClient;                     // now typed on every component\n  }\n}\n\n// types/global.d.ts\nexport {};\ndeclare global {\n  interface Window { dataLayer: unknown[] }\n}</code></pre> <p>The same pattern types extra fields on a session object or an Express <code>Request</code>, or custom Nuxt app config.</p> <h5>Pitfalls</h5> <ul><li>To <strong class=\"k\">augment</strong> (not replace) a module, the file must itself be a module, so it needs a top-level <code>import</code> or <code>export</code>. Without it, <code>declare module 'x'</code> declares a *new* ambient module instead.</li><li>The file must be <strong class=\"k\">included</strong> by <code>tsconfig</code> (<code>include</code>, <code>files</code>), or the editor and <code>tsc</code> will disagree.</li><li>Only <strong class=\"k\">interfaces merge</strong>; a <code>type</code> alias cannot be augmented, which is one practical reason library authors export interfaces (Câu 30).</li><li><code>skipLibCheck: true</code> speeds up builds by not checking <code>.d.ts</code> files in <code>node_modules</code>, at the price of missing errors inside them.</li></ul>",
+        "vi": "<p>File <strong class=\"k\"><code>.d.ts</code></strong> chỉ chứa <strong class=\"k\">thông tin kiểu</strong>, không có code runtime. Nó mô tả hình dạng của JavaScript nằm ở nơi khác. Thư viện phát hành chúng qua trường <code>types</code> trong <code>package.json</code>; với các thư viện khác bạn cài <strong class=\"k\"><code>@types/xxx</code></strong> từ DefinitelyTyped.</p> <h5>Ambient declaration</h5> <p>Mô tả những thứ tồn tại lúc runtime nhưng TypeScript không biết:</p> <pre><code>// global.d.ts\ndeclare module '*.svg' {                 // import asset\n  const src: string;\n  export default src;\n}\ndeclare module 'legacy-lib' {            // thư viện chưa có type\n  export function init(opts: { key: string }): void;\n}</code></pre> <p>Để bắt đầu nhanh có thể viết <code>declare module 'legacy-lib';</code> (mọi thứ thành <code>any</code>), rồi bổ sung kiểu thật dần theo nhu cầu. Ưu tiên một <strong class=\"k\">wrapper có kiểu</strong> mỏng quanh thư viện để <code>any</code> chỉ nằm trong một file.</p> <h5>Module augmentation</h5> <p><strong class=\"k\">Mở rộng</strong> kiểu của một module có sẵn bằng cách khai báo lại interface của nó; chúng được <strong class=\"k\">gộp</strong> (declaration merging):</p> <pre><code>// types/vue.d.ts\nimport 'vue';\ndeclare module 'vue' {\n  interface ComponentCustomProperties {\n    $api: ApiClient;                     // giờ có kiểu trên mọi component\n  }\n}\n\n// types/global.d.ts\nexport {};\ndeclare global {\n  interface Window { dataLayer: unknown[] }\n}</code></pre> <p>Cùng mẫu này dùng để gõ kiểu cho field thêm trên object session hay <code>Request</code> của Express, hoặc config tùy chỉnh của Nuxt app.</p> <h5>Các bẫy</h5> <ul><li>Để <strong class=\"k\">augment</strong> (chứ không thay thế) một module, bản thân file phải là module, tức cần <code>import</code> hoặc <code>export</code> ở top level. Thiếu nó, <code>declare module 'x'</code> sẽ khai báo một ambient module *mới*.</li><li>File phải được <strong class=\"k\">include</strong> trong <code>tsconfig</code> (<code>include</code>, <code>files</code>), nếu không editor và <code>tsc</code> sẽ bất đồng.</li><li>Chỉ <strong class=\"k\">interface mới merge</strong>; <code>type</code> alias không augment được, đó là một lý do thực tế để tác giả thư viện export interface (Câu 30).</li><li><code>skipLibCheck: true</code> giúp build nhanh hơn bằng cách không kiểm tra các file <code>.d.ts</code> trong <code>node_modules</code>, đổi lại là bỏ sót lỗi trong chúng.</li></ul>"
+      },
+      "terms": [
+        "declaration files",
+        "@types",
+        "ambient declaration",
+        "module augmentation",
+        "declaration merging",
+        "skipLibCheck"
+      ]
+    }
+  ]
+}

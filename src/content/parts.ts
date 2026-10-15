@@ -24,6 +24,8 @@ import part21 from "./parts/21-accessibility.json";
 import part22 from "./parts/22-design-system.json";
 import part23 from "./parts/23-git.json";
 import part24 from "./parts/24-agile-tdd.json";
+import part25 from "./parts/25-javascript-nang-cao.json";
+import part26 from "./parts/26-typescript-nang-cao.json";
 
 export const parts: Part[] = [
   part01,
@@ -50,4 +52,6 @@ export const parts: Part[] = [
   part22,
   part23,
   part24,
+  part25,
+  part26,
 ];
