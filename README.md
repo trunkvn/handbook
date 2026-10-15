@@ -90,3 +90,7 @@ Mỗi cột đáp án có nút loa "Nghe" cạnh nút Copy. Giọng đọc dùng
 - "Giọng đọc" trong sidebar chọn tốc độ và giọng cho tiếng Anh và tiếng Việt (có nút Nghe thử), lưu cùng các tuỳ chọn khác trong `localStorage`.
 - Máy chưa có giọng tiếng Việt thì nút báo rõ thay vì đọc sai; macOS và iOS có sẵn giọng Vietnamese, Windows và Android cần cài thêm.
 - Mã nằm ở `src/lib/speech.ts` (điều khiển phát), `src/lib/speech-text.ts` (làm sạch và cắt văn bản thành đoạn ngắn, vì Chrome tự dừng khi một lần đọc quá dài) và `src/components/handbook/speak-button.tsx`.
+
+## Xem lại các câu đã thuộc
+
+Trang `/da-thuoc` (liên kết "Xem lại các câu đã thuộc" dưới thanh tiến độ trong sidebar) gom mọi câu đã tick "Đã thuộc", nhóm theo chủ đề và lọc theo nhóm. Mỗi câu có "Xem nhanh" (đọc lại khung trả lời và đáp án song ngữ ngay tại chỗ), "Mở trong phần" (nhảy tới đúng câu) và "Bỏ đánh dấu" (có "Hoàn tác" trong lúc còn ở trang). Trang chỉ nhận danh sách tiêu đề từ server; nội dung đầy đủ chỉ được tải khi mở "Xem nhanh" lần đầu. Tiến độ lấy từ `localStorage`, nên trang này chỉ hiện nội dung sau khi trình duyệt đã đọc xong tiến độ.
