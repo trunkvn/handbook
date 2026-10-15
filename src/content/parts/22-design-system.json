@@ -1,0 +1,279 @@
+{
+  "id": "part-22",
+  "slug": "design-system",
+  "roman": "XXII",
+  "title": "Design system",
+  "description": "Design system là gì, design token, thiết kế API component, headless và styled, styling, versioning, tài liệu và kiểm thử, cách để các team chịu dùng.",
+  "questions": [
+    {
+      "id": "q120",
+      "number": 120,
+      "tag": "Design system · Nền tảng",
+      "title": "What is a design system? How is it different from a component library, and when is it worth building one?",
+      "titleVi": "Design system là gì? Khác component library thế nào, và khi nào đáng xây dựng?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Design system = nguyên tắc + token + component + tài liệu + quy trình",
+          "Component library chỉ là phần code",
+          "Khi nào đáng làm: nhiều sản phẩm hoặc team dùng chung UI",
+          "Chi phí: bảo trì, versioning, cần người sở hữu"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\">design system</strong> is the shared language between design and engineering: <strong class=\"k\">principles and guidelines</strong>, <strong class=\"k\">design tokens</strong> (colour, spacing, typography), <strong class=\"k\">reusable components</strong> with code, <strong class=\"k\">documentation</strong>, and the <strong class=\"k\">process</strong> for using and changing them.</p> <p>A <strong class=\"k\">component library</strong> (a React package of <code>Button</code>, <code>Modal</code>, <code>Select</code>) is only the code part. A <strong class=\"k\">style guide</strong> is only the visual part. Without guidelines, accessibility rules and a contribution process, a component library is a folder of widgets rather than a system.</p> <h5>What it gives you</h5> <ul><li><strong class=\"k\">Consistency:</strong> the product feels the same across pages and teams.</li><li><strong class=\"k\">Speed:</strong> teams stop rebuilding buttons and dropdowns, and designers and developers work with the same parts.</li><li><strong class=\"k\">Quality by default:</strong> accessibility, responsive behavior and states are solved once.</li><li><strong class=\"k\">Easier change:</strong> a rebrand or dark mode means changing tokens, not hundreds of files.</li></ul> <h5>When it is worth it</h5> <p>When <strong class=\"k\">several products or teams</strong> share UI, or one large product keeps re-implementing the same patterns. For one small app, a few shared components and a style guide are enough; a full system there is overhead.</p> <h5>The cost</h5> <p>It is a <strong class=\"k\">product with users</strong> (the other developers): it needs an owner, documentation, versioning, support and a way to handle requests. A neglected design system is worse than none, because teams fork it.</p> <p><strong class=\"k\">From your CV:</strong> <code>gnoud-ui</code> is a React UI component library. Be ready to say which problems it solved, who used it, and what you would add to turn it into a full system.</p>",
+        "vi": "<p><strong class=\"k\">Design system</strong> là ngôn ngữ chung giữa design và engineering: <strong class=\"k\">nguyên tắc và hướng dẫn</strong>, <strong class=\"k\">design token</strong> (màu, khoảng cách, typography), <strong class=\"k\">component tái sử dụng</strong> kèm code, <strong class=\"k\">tài liệu</strong>, và <strong class=\"k\">quy trình</strong> sử dụng cũng như thay đổi chúng.</p> <p><strong class=\"k\">Component library</strong> (một package React gồm <code>Button</code>, <code>Modal</code>, <code>Select</code>) chỉ là phần code. <strong class=\"k\">Style guide</strong> chỉ là phần hình ảnh. Thiếu hướng dẫn, quy tắc accessibility và quy trình đóng góp thì component library chỉ là một thư mục các widget chứ không phải một hệ thống.</p> <h5>Nó mang lại gì</h5> <ul><li><strong class=\"k\">Nhất quán:</strong> sản phẩm có cảm giác giống nhau giữa các trang và các team.</li><li><strong class=\"k\">Tốc độ:</strong> các team không phải dựng lại button, dropdown, và designer lẫn developer làm việc với cùng các thành phần.</li><li><strong class=\"k\">Chất lượng mặc định:</strong> accessibility, responsive và các trạng thái được giải quyết một lần.</li><li><strong class=\"k\">Dễ thay đổi:</strong> đổi thương hiệu hay thêm dark mode nghĩa là sửa token chứ không phải hàng trăm file.</li></ul> <h5>Khi nào đáng làm</h5> <p>Khi <strong class=\"k\">nhiều sản phẩm hoặc team</strong> dùng chung UI, hoặc một sản phẩm lớn cứ phải làm lại cùng các pattern. Với một app nhỏ, vài component dùng chung và một style guide là đủ; làm cả hệ thống ở đó là tốn công.</p> <h5>Chi phí</h5> <p>Nó là một <strong class=\"k\">sản phẩm có người dùng</strong> (các lập trình viên khác): cần người sở hữu, tài liệu, versioning, hỗ trợ và cách xử lý yêu cầu. Một design system bị bỏ bê còn tệ hơn không có, vì các team sẽ fork nó.</p> <p><strong class=\"k\">Liên hệ CV:</strong> <code>gnoud-ui</code> là một thư viện UI component bằng React. Hãy sẵn sàng nói nó giải quyết vấn đề gì, ai dùng, và bạn sẽ bổ sung gì để biến nó thành một hệ thống đầy đủ.</p>"
+      },
+      "terms": [
+        "design system",
+        "component library",
+        "style guide",
+        "consistency",
+        "governance"
+      ]
+    },
+    {
+      "id": "q121",
+      "number": 121,
+      "tag": "Design system · Token",
+      "title": "What are design tokens? Explain primitive vs semantic tokens and how you support themes like dark mode.",
+      "titleVi": "Design token là gì? Giải thích token primitive và semantic, và cách hỗ trợ theme như dark mode.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Token = giá trị thiết kế có tên, nguồn sự thật duy nhất",
+          "Primitive (blue-500) và semantic (color-text-primary)",
+          "Component chỉ đọc token semantic, theme chỉ đổi ánh xạ",
+          "Triển khai bằng CSS variables, đồng bộ từ Figma bằng Style Dictionary"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Design tokens</strong> are named design decisions: colours, spacing, font sizes, radii, shadows, durations. Instead of writing <code>#2563eb</code> in 200 places, you write <code>color-action</code>. Tokens are the <strong class=\"k\">single source of truth</strong> shared by design tools and code.</p> <h5>Two layers</h5> <ul><li><strong class=\"k\">Primitive (global) tokens:</strong> the raw palette and scale: <code>blue-500: #2563eb</code>, <code>space-4: 16px</code>. They say <strong class=\"k\">what</strong> the value is.</li><li><strong class=\"k\">Semantic (alias) tokens:</strong> meaning and use: <code>color-action</code>, <code>color-text-muted</code>, <code>color-surface</code>. They say <strong class=\"k\">what it is for</strong>.</li><li>Optionally <strong class=\"k\">component tokens</strong>: <code>button-bg</code> points to <code>color-action</code>.</li></ul> <p>Components use <strong class=\"k\">only semantic tokens</strong>. A theme is then just a different mapping of the same semantic names to primitives:</p> <pre><code>:root {\n  --blue-500: #2563eb;\n  --gray-900: #111827;\n  --gray-50: #f9fafb;\n\n  --color-surface: var(--gray-50);\n  --color-text: var(--gray-900);\n  --color-action: var(--blue-500);\n}\n[data-theme='dark'] {\n  --color-surface: var(--gray-900);\n  --color-text: var(--gray-50);\n  --color-action: #60a5fa;      /* lighter blue for contrast on dark */\n}\n.button { background: var(--color-action); color: var(--color-surface); }</code></pre> <p>Switching theme changes one attribute; no component code changes, and the page can follow <code>prefers-color-scheme</code> too.</p> <h5>Practical points</h5> <ul><li><strong class=\"k\">Name by role, not by value</strong> (<code>color-danger</code>, not <code>color-red</code>), so the value can change.</li><li>Keep tokens in a format tools understand (the W3C design tokens JSON) and generate CSS variables, JS and native platform files from it with <strong class=\"k\">Style Dictionary</strong>.</li><li>Check <strong class=\"k\">contrast</strong> for each theme's pairs once, in the token layer.</li><li>Avoid too many tokens: every token is something to maintain.</li></ul>",
+        "vi": "<p><strong class=\"k\">Design token</strong> là các quyết định thiết kế có tên: màu, khoảng cách, cỡ chữ, bo góc, đổ bóng, thời lượng. Thay vì viết <code>#2563eb</code> ở 200 chỗ, bạn viết <code>color-action</code>. Token là <strong class=\"k\">nguồn sự thật duy nhất</strong> dùng chung giữa công cụ thiết kế và code.</p> <h5>Hai lớp</h5> <ul><li><strong class=\"k\">Token primitive (toàn cục):</strong> bảng màu và thang đo thô: <code>blue-500: #2563eb</code>, <code>space-4: 16px</code>. Chúng nói giá trị <strong class=\"k\">là gì</strong>.</li><li><strong class=\"k\">Token semantic (alias):</strong> ý nghĩa và mục đích sử dụng: <code>color-action</code>, <code>color-text-muted</code>, <code>color-surface</code>. Chúng nói nó <strong class=\"k\">dùng để làm gì</strong>.</li><li>Có thể thêm <strong class=\"k\">token cho component</strong>: <code>button-bg</code> trỏ tới <code>color-action</code>.</li></ul> <p>Component chỉ dùng <strong class=\"k\">token semantic</strong>. Khi đó một theme chỉ là một cách ánh xạ khác của cùng các tên semantic tới các primitive:</p> <pre><code>:root {\n  --blue-500: #2563eb;\n  --gray-900: #111827;\n  --gray-50: #f9fafb;\n\n  --color-surface: var(--gray-50);\n  --color-text: var(--gray-900);\n  --color-action: var(--blue-500);\n}\n[data-theme='dark'] {\n  --color-surface: var(--gray-900);\n  --color-text: var(--gray-50);\n  --color-action: #60a5fa;      /* lighter blue for contrast on dark */\n}\n.button { background: var(--color-action); color: var(--color-surface); }</code></pre> <p>Đổi theme chỉ là đổi một thuộc tính; không phải sửa code component, và trang cũng có thể theo <code>prefers-color-scheme</code>.</p> <h5>Điểm thực tế</h5> <ul><li><strong class=\"k\">Đặt tên theo vai trò, không theo giá trị</strong> (<code>color-danger</code>, không phải <code>color-red</code>), để giá trị có thể thay đổi.</li><li>Giữ token ở định dạng công cụ hiểu được (JSON design tokens của W3C) và sinh CSS variables, JS và file cho nền tảng native từ đó bằng <strong class=\"k\">Style Dictionary</strong>.</li><li>Kiểm tra <strong class=\"k\">contrast</strong> cho các cặp màu của từng theme một lần, ngay ở lớp token.</li><li>Tránh có quá nhiều token: mỗi token là một thứ phải bảo trì.</li></ul>"
+      },
+      "terms": [
+        "design tokens",
+        "semantic tokens",
+        "CSS variables",
+        "Style Dictionary",
+        "theming"
+      ]
+    },
+    {
+      "id": "q122",
+      "number": 122,
+      "tag": "Design system · API",
+      "title": "How do you design the API of a reusable component? Props explosion vs composition.",
+      "titleVi": "Bạn thiết kế API của một component tái sử dụng thế nào? Props explosion và composition.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Bắt đầu từ use case thật, API nhỏ và mặc định hợp lý",
+          "Composition (children, compound component) thay vì thêm prop cho mọi trường hợp",
+          "Controlled/uncontrolled, forward ref, truyền tiếp props",
+          "Giữ API ổn định, kiểu TypeScript chặt"
+        ]
+      },
+      "answer": {
+        "en": "<p>A good component API is <strong class=\"k\">small, predictable and hard to misuse</strong>. I start from the real use cases (not imagined ones), give <strong class=\"k\">sensible defaults</strong>, and add options only when a second real case needs them.</p> <h5>Composition over configuration</h5> <p>A prop for every variation leads to a <strong class=\"k\">props explosion</strong> that nobody understands:</p> <pre><code>// Props explosion\n&lt;Card title=\"...\" subtitle=\"...\" image=\"...\" imagePosition=\"left\" footerText=\"...\"\n      showDivider hasActions actionsAlign=\"right\" /&gt;\n\n// Composition: flexible and readable\n&lt;Card&gt;\n  &lt;Card.Image src=\"...\" /&gt;\n  &lt;Card.Header&gt;\n    &lt;Card.Title&gt;Plan&lt;/Card.Title&gt;\n  &lt;/Card.Header&gt;\n  &lt;Card.Body&gt;...&lt;/Card.Body&gt;\n  &lt;Card.Footer&gt;&lt;Button&gt;Buy&lt;/Button&gt;&lt;/Card.Footer&gt;\n&lt;/Card&gt;</code></pre> <p><strong class=\"k\">Compound components</strong> share state through context (<code>Tabs</code>, <code>Tabs.List</code>, <code>Tabs.Panel</code>) and let users arrange the parts.</p> <h5>Other points that matter</h5> <ul><li><strong class=\"k\">Controlled and uncontrolled:</strong> support <code>value</code> + <code>onChange</code> and <code>defaultValue</code>, like a native input.</li><li><strong class=\"k\">Forward refs and spread the rest props</strong> (<code>...props</code>) onto the root element, so users can add <code>aria-*</code>, <code>data-*</code>, <code>className</code> and a ref. In React 19 <code>ref</code> is a normal prop.</li><li><strong class=\"k\">Polymorphism:</strong> an <code>as</code> prop or <code>asChild</code> (Radix) so a <code>Button</code> can render as a link while keeping its style.</li><li><strong class=\"k\">Accessibility inside the component</strong>, not left to the caller: roles, keyboard, focus.</li><li><strong class=\"k\">Strict TypeScript:</strong> a discriminated union to forbid invalid combinations (<code>variant=\"link\"</code> requires <code>href</code>), and generics for lists and selects.</li><li><strong class=\"k\">Stability:</strong> a public API is a promise; changing it is a breaking change (Câu 125).</li></ul> <p><strong class=\"k\">From your CV:</strong> this is the same trade-off as in Câu 17: reusable, but not over-engineered.</p>",
+        "vi": "<p>Một API component tốt thì <strong class=\"k\">nhỏ, dễ đoán và khó dùng sai</strong>. Tôi bắt đầu từ các use case thật (không phải tưởng tượng), đặt <strong class=\"k\">mặc định hợp lý</strong>, và chỉ thêm tùy chọn khi có ca thật thứ hai cần đến.</p> <h5>Composition hơn configuration</h5> <p>Một prop cho mỗi biến thể dẫn tới <strong class=\"k\">props explosion</strong> mà không ai hiểu nổi:</p> <pre><code>// Props explosion\n&lt;Card title=\"...\" subtitle=\"...\" image=\"...\" imagePosition=\"left\" footerText=\"...\"\n      showDivider hasActions actionsAlign=\"right\" /&gt;\n\n// Composition: flexible and readable\n&lt;Card&gt;\n  &lt;Card.Image src=\"...\" /&gt;\n  &lt;Card.Header&gt;\n    &lt;Card.Title&gt;Plan&lt;/Card.Title&gt;\n  &lt;/Card.Header&gt;\n  &lt;Card.Body&gt;...&lt;/Card.Body&gt;\n  &lt;Card.Footer&gt;&lt;Button&gt;Buy&lt;/Button&gt;&lt;/Card.Footer&gt;\n&lt;/Card&gt;</code></pre> <p><strong class=\"k\">Compound component</strong> chia sẻ state qua context (<code>Tabs</code>, <code>Tabs.List</code>, <code>Tabs.Panel</code>) và để người dùng tự sắp xếp các phần.</p> <h5>Các điểm quan trọng khác</h5> <ul><li><strong class=\"k\">Controlled và uncontrolled:</strong> hỗ trợ <code>value</code> + <code>onChange</code> và <code>defaultValue</code>, như input native.</li><li><strong class=\"k\">Forward ref và truyền tiếp các props còn lại</strong> (<code>...props</code>) vào phần tử gốc, để người dùng thêm được <code>aria-*</code>, <code>data-*</code>, <code>className</code> và ref. Trong React 19, <code>ref</code> là một prop bình thường.</li><li><strong class=\"k\">Đa hình (polymorphism):</strong> prop <code>as</code> hoặc <code>asChild</code> (Radix) để <code>Button</code> có thể render thành link mà vẫn giữ kiểu dáng.</li><li><strong class=\"k\">Accessibility nằm trong component</strong>, không đẩy cho người gọi: role, bàn phím, focus.</li><li><strong class=\"k\">TypeScript chặt:</strong> discriminated union để cấm tổ hợp không hợp lệ (<code>variant=\"link\"</code> bắt buộc có <code>href</code>), và generics cho list và select.</li><li><strong class=\"k\">Ổn định:</strong> API công khai là một lời hứa; đổi nó là breaking change (Câu 125).</li></ul> <p><strong class=\"k\">Liên hệ CV:</strong> đây là cùng đánh đổi như ở Câu 17: tái sử dụng được, nhưng không over-engineering.</p>"
+      },
+      "terms": [
+        "props explosion",
+        "composition",
+        "compound components",
+        "controlled vs uncontrolled",
+        "asChild"
+      ]
+    },
+    {
+      "id": "q123",
+      "number": 123,
+      "tag": "Design system · Kiến trúc",
+      "title": "Headless vs styled component libraries: what are the trade-offs, and would you build your own or use an existing one?",
+      "titleVi": "Thư viện component headless và styled: đánh đổi là gì, bạn tự xây hay dùng thư viện có sẵn?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Styled (MUI, Ant): nhanh nhưng khó tùy biến; headless (Radix, React Aria): có hành vi và a11y, tự style",
+          "Vì sao hành vi và accessibility mới là phần khó",
+          "Khi nào tự làm, khi nào dùng sẵn",
+          "Cách phổ biến: headless + Tailwind (shadcn/ui)"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Styled libraries</strong> (MUI, Ant Design, Chakra) ship finished components with their own look. They are the fastest to start, but a custom brand fights the defaults, overrides get messy, and the bundle can be large.</li><li><strong class=\"k\">Headless libraries</strong> (Radix UI, React Aria, Headless UI, Ark UI) provide the <strong class=\"k\">behavior and accessibility</strong> (focus management, keyboard, ARIA, state) with <strong class=\"k\">no styles</strong>. You bring your own design, so the result looks like your brand, and the hard part is already done.</li><li><strong class=\"k\">Copy-in kits</strong> such as <strong class=\"k\">shadcn/ui</strong> put the component source in your repo (headless primitives plus Tailwind classes), so you own and can change every line.</li></ul> <h5>Why headless is attractive</h5> <p>The visual part of a dropdown, a dialog or a combobox is easy. The <strong class=\"k\">hard part is behavior</strong>: keyboard navigation, focus trapping, screen reader announcements, typeahead, touch, and edge cases. That is where hand-written components usually fail accessibility (Câu 112).</p> <h5>Decision</h5> <ul><li><strong class=\"k\">Use an existing library</strong> for complex widgets (select, combobox, dialog, menu, date picker, tabs). Do not rewrite them.</li><li><strong class=\"k\">Build your own</strong> for simple, brand-specific components (button, badge, card, layout), and as a <strong class=\"k\">thin styled layer on top of headless primitives</strong>, so you control the look and the public API but not the accessibility details.</li><li><strong class=\"k\">Build everything from scratch</strong> only with a strong reason (very specific needs, a very small bundle) and the people to maintain it.</li></ul> <p>Whichever you pick, wrap it in <strong class=\"k\">your own components</strong>, so the underlying library can be replaced without touching every product.</p>",
+        "vi": "<ul><li><strong class=\"k\">Thư viện styled</strong> (MUI, Ant Design, Chakra) cung cấp component hoàn chỉnh với giao diện riêng. Bắt đầu nhanh nhất, nhưng thương hiệu riêng sẽ “chọi” với mặc định, override trở nên lộn xộn, và bundle có thể lớn.</li><li><strong class=\"k\">Thư viện headless</strong> (Radix UI, React Aria, Headless UI, Ark UI) cung cấp <strong class=\"k\">hành vi và accessibility</strong> (quản lý focus, bàn phím, ARIA, state) mà <strong class=\"k\">không có style</strong>. Bạn tự thiết kế, nên kết quả đúng thương hiệu của bạn, còn phần khó đã được làm sẵn.</li><li><strong class=\"k\">Bộ copy-vào-repo</strong> như <strong class=\"k\">shadcn/ui</strong> đặt mã nguồn component vào repo của bạn (primitive headless cộng class Tailwind), nên bạn sở hữu và sửa được từng dòng.</li></ul> <h5>Vì sao headless hấp dẫn</h5> <p>Phần hình ảnh của dropdown, dialog hay combobox thì dễ. <strong class=\"k\">Phần khó là hành vi</strong>: điều hướng bàn phím, giữ focus, thông báo cho screen reader, typeahead, cảm ứng và các trường hợp biên. Đó chính là chỗ component tự viết thường trượt accessibility (Câu 112).</p> <h5>Quyết định</h5> <ul><li><strong class=\"k\">Dùng thư viện có sẵn</strong> cho widget phức tạp (select, combobox, dialog, menu, date picker, tabs). Đừng viết lại.</li><li><strong class=\"k\">Tự xây</strong> cho component đơn giản mang tính thương hiệu (button, badge, card, layout), và làm <strong class=\"k\">lớp styled mỏng bọc trên primitive headless</strong>, để bạn kiểm soát giao diện và API công khai nhưng không phải lo chi tiết accessibility.</li><li><strong class=\"k\">Tự xây toàn bộ từ đầu</strong> chỉ khi có lý do mạnh (nhu cầu rất đặc thù, bundle rất nhỏ) và có người bảo trì.</li></ul> <p>Dù chọn gì, hãy bọc nó trong <strong class=\"k\">component của chính bạn</strong>, để thay được thư viện bên dưới mà không phải sửa mọi sản phẩm.</p>"
+      },
+      "terms": [
+        "headless UI",
+        "Radix",
+        "React Aria",
+        "shadcn/ui",
+        "build vs buy"
+      ]
+    },
+    {
+      "id": "q124",
+      "number": 124,
+      "tag": "Design system · Styling",
+      "title": "How do you style a design system: CSS Modules, Tailwind or CSS-in-JS? How do you handle variants?",
+      "titleVi": "Bạn style một design system thế nào: CSS Modules, Tailwind hay CSS-in-JS? Xử lý các biến thể (variant) ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Các lựa chọn và đánh đổi",
+          "CSS-in-JS runtime: chi phí và vấn đề với Server Components",
+          "Variant bằng cva và classNames, token qua CSS variables",
+          "Cho phép override có kiểm soát"
+        ]
+      },
+      "answer": {
+        "en": "<p>The choice is about <strong class=\"k\">runtime cost, theming, tooling and how users customize</strong>.</p> <ul><li><strong class=\"k\">CSS Modules / vanilla CSS (with CSS variables):</strong> scoped class names, zero runtime, works everywhere including Server Components. Theming through CSS variables. Variants need discipline.</li><li><strong class=\"k\">Tailwind CSS:</strong> utility classes generated at build time, zero runtime, great consistency when tokens live in the config, very fast to write. Long class lists need a helper for variants, and consumers need Tailwind too (or you ship compiled CSS).</li><li><strong class=\"k\">Runtime CSS-in-JS (styled-components, Emotion):</strong> dynamic styles in JS and nice co-location, but <strong class=\"k\">it generates styles while rendering</strong>, which costs performance and is awkward with <strong class=\"k\">React Server Components</strong> and streaming. Build-time or zero-runtime options (vanilla-extract, Panda CSS, Linaria) keep the authoring style without the runtime.</li></ul> <h5>Variants</h5> <p>Describe the variants once and compute the class names. With <code>cva</code> (class-variance-authority) and a <code>classNames</code> / <code>clsx</code> helper (Câu 128):</p> <pre><code>const button = cva('btn', {\n  variants: {\n    intent: { primary: 'btn-primary', danger: 'btn-danger' },\n    size: { sm: 'btn-sm', md: 'btn-md' },\n  },\n  defaultVariants: { intent: 'primary', size: 'md' },\n});\n\n&lt;button className={button({ intent: 'danger', size: 'sm' })}&gt;Delete&lt;/button&gt;</code></pre> <h5>Rules I follow</h5> <ul><li>Colours, spacing and radii come from <strong class=\"k\">tokens</strong> (CSS variables), never hard-coded values.</li><li>Give consumers a <strong class=\"k\">controlled way to override</strong>: a <code>className</code> prop on the root, and CSS variables for the parts that are meant to change, instead of <code>!important</code> battles.</li><li>Mind the <strong class=\"k\">CSS order and specificity</strong> between the library and the app (use <code>@layer</code>).</li><li>Ship only the CSS that is used, and keep it tree-shakeable.</li></ul>",
+        "vi": "<p>Lựa chọn phụ thuộc vào <strong class=\"k\">chi phí runtime, theming, công cụ và cách người dùng tùy biến</strong>.</p> <ul><li><strong class=\"k\">CSS Modules / CSS thuần (kèm CSS variables):</strong> tên class có scope, không tốn runtime, chạy ở mọi nơi kể cả Server Components. Theming qua CSS variables. Variant cần kỷ luật.</li><li><strong class=\"k\">Tailwind CSS:</strong> class tiện ích sinh lúc build, không tốn runtime, rất nhất quán khi token nằm trong config, viết rất nhanh. Danh sách class dài cần một helper cho variant, và bên dùng cũng cần Tailwind (hoặc bạn phát hành CSS đã biên dịch).</li><li><strong class=\"k\">CSS-in-JS runtime (styled-components, Emotion):</strong> style động trong JS và co-location dễ chịu, nhưng <strong class=\"k\">nó sinh style trong lúc render</strong>, tốn hiệu năng và vướng với <strong class=\"k\">React Server Components</strong> cùng streaming. Các lựa chọn build-time hoặc zero-runtime (vanilla-extract, Panda CSS, Linaria) giữ được cách viết mà không có runtime.</li></ul> <h5>Variant</h5> <p>Mô tả các variant một lần rồi tính ra tên class. Với <code>cva</code> (class-variance-authority) và helper <code>classNames</code> / <code>clsx</code> (Câu 128):</p> <pre><code>const button = cva('btn', {\n  variants: {\n    intent: { primary: 'btn-primary', danger: 'btn-danger' },\n    size: { sm: 'btn-sm', md: 'btn-md' },\n  },\n  defaultVariants: { intent: 'primary', size: 'md' },\n});\n\n&lt;button className={button({ intent: 'danger', size: 'sm' })}&gt;Delete&lt;/button&gt;</code></pre> <h5>Quy tắc tôi theo</h5> <ul><li>Màu, khoảng cách, bo góc lấy từ <strong class=\"k\">token</strong> (CSS variables), không bao giờ viết cứng giá trị.</li><li>Cho người dùng một <strong class=\"k\">cách override có kiểm soát</strong>: prop <code>className</code> ở phần tử gốc, và CSS variables cho những phần được phép đổi, thay vì cuộc chiến <code>!important</code>.</li><li>Chú ý <strong class=\"k\">thứ tự CSS và độ ưu tiên (specificity)</strong> giữa thư viện và app (dùng <code>@layer</code>).</li><li>Chỉ phát hành CSS được dùng tới, và để nó tree-shake được.</li></ul>"
+      },
+      "terms": [
+        "CSS Modules",
+        "Tailwind",
+        "CSS-in-JS",
+        "cva",
+        "variants"
+      ]
+    },
+    {
+      "id": "q125",
+      "number": 125,
+      "tag": "Design system · Phiên bản",
+      "title": "How do you version, publish and evolve a shared component library without breaking the products that use it?",
+      "titleVi": "Bạn đánh phiên bản, phát hành và phát triển một thư viện component dùng chung thế nào mà không làm hỏng các sản phẩm đang dùng?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Semantic versioning, changelog tự động (changesets)",
+          "Breaking change: deprecate trước, codemod, thời gian chuyển tiếp",
+          "Phân phối: ESM, tree-shaking, sideEffects, peerDependencies, types",
+          "Monorepo cùng bản canary/preview để thử trước"
+        ]
+      },
+      "answer": {
+        "en": "<p>A shared library is a <strong class=\"k\">contract</strong> with every product that uses it, so changes must be predictable.</p> <ul><li><strong class=\"k\">Semantic versioning:</strong> patch for fixes, minor for backward-compatible features, <strong class=\"k\">major for breaking changes</strong>. Tools like <strong class=\"k\">Changesets</strong> generate the version bumps and changelog from small notes in each pull request.</li><li><strong class=\"k\">Deprecate before you remove.</strong> Mark the old API as deprecated (a development warning and a <code>@deprecated</code> JSDoc tag), keep it for at least one major version, and document the migration. For large changes provide a <strong class=\"k\">codemod</strong> (a script that rewrites usages automatically).</li><li><strong class=\"k\">Define what is public API.</strong> Only what is exported from the package entry is covered by semver; internals can change freely. Treat visual changes and renamed class names as breaking if consumers depend on them.</li><li><strong class=\"k\">Package it correctly:</strong> ship <strong class=\"k\">ESM</strong> and types, set <code>\"sideEffects\": false</code> so bundlers can <strong class=\"k\">tree-shake</strong>, support importing single components, and declare React as a <strong class=\"k\">peerDependency</strong> to avoid two copies.</li><li><strong class=\"k\">Release flow:</strong> a monorepo (pnpm and Turborepo) with the docs site and the packages together; <strong class=\"k\">canary or preview releases</strong> for each pull request so a product team can try a change before it is merged; CI runs tests, type checks, visual tests and the accessibility checks.</li><li><strong class=\"k\">Communicate:</strong> a changelog, migration guides and a channel for announcements.</li></ul> <p>The cheapest breaking change is the one you did not need to make: keep the API small (Câu 122) and prefer adding over changing.</p>",
+        "vi": "<p>Thư viện dùng chung là một <strong class=\"k\">hợp đồng</strong> với mọi sản phẩm đang dùng nó, nên thay đổi phải dễ dự đoán.</p> <ul><li><strong class=\"k\">Semantic versioning:</strong> patch cho bản sửa lỗi, minor cho tính năng tương thích ngược, <strong class=\"k\">major cho breaking change</strong>. Công cụ như <strong class=\"k\">Changesets</strong> sinh việc tăng phiên bản và changelog từ các ghi chú nhỏ trong mỗi pull request.</li><li><strong class=\"k\">Deprecate trước khi xóa.</strong> Đánh dấu API cũ là deprecated (cảnh báo ở môi trường dev và tag JSDoc <code>@deprecated</code>), giữ ít nhất một phiên bản major, và ghi tài liệu cách chuyển đổi. Với thay đổi lớn, cung cấp <strong class=\"k\">codemod</strong> (script tự viết lại các chỗ dùng).</li><li><strong class=\"k\">Xác định đâu là API công khai.</strong> Chỉ những gì được export từ entry của package mới thuộc phạm vi semver; phần nội bộ đổi tự do. Coi thay đổi giao diện và đổi tên class là breaking nếu bên dùng phụ thuộc vào chúng.</li><li><strong class=\"k\">Đóng gói đúng cách:</strong> phát hành <strong class=\"k\">ESM</strong> và types, đặt <code>\"sideEffects\": false</code> để bundler <strong class=\"k\">tree-shake</strong> được, hỗ trợ import từng component, và khai báo React là <strong class=\"k\">peerDependency</strong> để tránh có hai bản.</li><li><strong class=\"k\">Quy trình release:</strong> monorepo (pnpm và Turborepo) gồm site tài liệu và các package; <strong class=\"k\">bản canary hoặc preview</strong> cho mỗi pull request để team sản phẩm thử trước khi merge; CI chạy test, kiểm tra kiểu, visual test và kiểm tra accessibility.</li><li><strong class=\"k\">Truyền thông:</strong> changelog, hướng dẫn migration và một kênh thông báo.</li></ul> <p>Breaking change rẻ nhất là cái bạn không cần làm: giữ API nhỏ (Câu 122) và ưu tiên thêm hơn là sửa.</p>"
+      },
+      "terms": [
+        "semantic versioning",
+        "Changesets",
+        "codemod",
+        "tree-shaking",
+        "peerDependencies"
+      ]
+    },
+    {
+      "id": "q126",
+      "number": 126,
+      "tag": "Design system · Chất lượng",
+      "title": "How do you document and test a design system (Storybook, visual regression, accessibility)?",
+      "titleVi": "Bạn viết tài liệu và kiểm thử một design system thế nào (Storybook, visual regression, accessibility)?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Storybook: mỗi component một bộ story cho mọi trạng thái",
+          "Test hành vi bằng unit/interaction, test giao diện bằng visual regression",
+          "Chạy a11y tự động trên mỗi story",
+          "Tài liệu: khi nào dùng, khi nào không, do/don't"
+        ]
+      },
+      "answer": {
+        "en": "<h5>Documentation</h5> <p>A component nobody can find or understand will be rebuilt. I use <strong class=\"k\">Storybook</strong> as the living documentation and workshop:</p> <ul><li>One <strong class=\"k\">story per state</strong> (default, hover, disabled, loading, error, long text, RTL, dark theme), so every state can be seen and tested in isolation.</li><li><strong class=\"k\">Autodocs</strong> from the TypeScript props, plus short guidance written by people: when to use it, when <strong class=\"k\">not</strong> to, accessibility notes, and Do/Don't examples.</li><li>Documentation of <strong class=\"k\">tokens and guidelines</strong>, not only components.</li></ul> <h5>Testing layers</h5> <ul><li><strong class=\"k\">Unit and interaction tests</strong> for behavior: Testing Library tests, or Storybook <code>play</code> functions that click and type and then assert (Câu 101).</li><li><strong class=\"k\">Visual regression tests</strong> (Chromatic, or Playwright screenshots) compare each story with an approved baseline and show the diff in the pull request. They catch what no assertion would: a wrong padding, a colour change, a broken dark theme.</li><li><strong class=\"k\">Accessibility tests</strong> with axe on each story (the Storybook a11y addon or <code>jest-axe</code>), plus the manual keyboard and screen reader checks for complex widgets (Câu 117).</li><li><strong class=\"k\">Type tests</strong> for the public API, and a <strong class=\"k\">bundle-size check</strong> so that a new dependency does not quietly double the package.</li></ul> <pre><code>export const Disabled = {\n  args: { children: 'Save', disabled: true },\n  play: async ({ canvasElement }) =&gt; {\n    const button = within(canvasElement).getByRole('button', { name: 'Save' });\n    await expect(button).toBeDisabled();\n  },\n};</code></pre> <p>Run all of this in CI on each pull request, and publish the Storybook as a preview link so designers can review.</p>",
+        "vi": "<h5>Tài liệu</h5> <p>Một component mà không ai tìm thấy hay hiểu sẽ bị làm lại. Tôi dùng <strong class=\"k\">Storybook</strong> làm tài liệu sống kiêm xưởng làm việc:</p> <ul><li><strong class=\"k\">Mỗi trạng thái một story</strong> (mặc định, hover, disabled, loading, lỗi, chữ dài, RTL, dark theme), để mọi trạng thái đều xem và test riêng được.</li><li><strong class=\"k\">Autodocs</strong> sinh từ props TypeScript, cộng phần hướng dẫn ngắn do con người viết: khi nào dùng, khi nào <strong class=\"k\">không</strong> dùng, ghi chú accessibility, và ví dụ Do/Don't.</li><li>Tài liệu về <strong class=\"k\">token và hướng dẫn</strong>, không chỉ về component.</li></ul> <h5>Các tầng kiểm thử</h5> <ul><li><strong class=\"k\">Unit và interaction test</strong> cho hành vi: test Testing Library, hoặc hàm <code>play</code> của Storybook click và gõ rồi assert (Câu 101).</li><li><strong class=\"k\">Visual regression test</strong> (Chromatic, hoặc screenshot của Playwright) so từng story với baseline đã duyệt và hiện phần khác biệt ngay trong pull request. Chúng bắt được thứ mà assert nào cũng bỏ sót: padding sai, đổi màu, dark theme bị vỡ.</li><li><strong class=\"k\">Test accessibility</strong> bằng axe trên từng story (addon a11y của Storybook hoặc <code>jest-axe</code>), cộng kiểm tra bàn phím và screen reader thủ công cho widget phức tạp (Câu 117).</li><li><strong class=\"k\">Test kiểu</strong> cho API công khai, và <strong class=\"k\">kiểm tra kích thước bundle</strong> để một dependency mới không âm thầm làm package phình gấp đôi.</li></ul> <pre><code>export const Disabled = {\n  args: { children: 'Save', disabled: true },\n  play: async ({ canvasElement }) =&gt; {\n    const button = within(canvasElement).getByRole('button', { name: 'Save' });\n    await expect(button).toBeDisabled();\n  },\n};</code></pre> <p>Chạy tất cả những thứ này trong CI ở mỗi pull request, và phát hành Storybook thành link preview để designer review.</p>"
+      },
+      "terms": [
+        "Storybook",
+        "visual regression",
+        "Chromatic",
+        "play function",
+        "autodocs"
+      ]
+    },
+    {
+      "id": "q127",
+      "number": 127,
+      "tag": "Design system · Quy trình",
+      "title": "How do you get teams to adopt a design system and keep it healthy over time?",
+      "titleVi": "Làm sao để các team chịu dùng design system và giữ nó khỏe mạnh theo thời gian?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Coi design system là sản phẩm có người dùng",
+          "Giảm ma sát: dễ dùng, tài liệu tốt, hỗ trợ nhanh",
+          "Cho phép đóng góp và có lối thoát (escape hatch)",
+          "Đo mức độ dùng và chất lượng, không ép cứng nhắc"
+        ]
+      },
+      "answer": {
+        "en": "<p>Adoption is mostly a <strong class=\"k\">people and product problem</strong>, not a technical one.</p> <ul><li><strong class=\"k\">Treat it as a product.</strong> Its users are developers and designers. Talk to them, find out what blocks them, and publish a roadmap.</li><li><strong class=\"k\">Make the right thing the easy thing.</strong> Good docs, copy-paste examples, a quick start, TypeScript types and a fast way to ask questions. Teams adopt what saves them time.</li><li><strong class=\"k\">Start small and prove value.</strong> Begin with the most used components (button, input, modal, layout) and migrate one product or page first; share the numbers (hours saved, bugs fixed, accessibility issues removed).</li><li><strong class=\"k\">Provide escape hatches.</strong> A design system that cannot be extended gets forked. Allow <code>className</code>, slots and tokens for customization, and a clear path to propose a new component or a change.</li><li><strong class=\"k\">A contribution model:</strong> a core team owns standards and review, but product teams can contribute with a template, guidelines and a review SLA, so the core team is not a bottleneck.</li><li><strong class=\"k\">Communicate changes:</strong> a changelog, migration guides and codemods (Câu 125), and no surprise breaking changes.</li><li><strong class=\"k\">Measure:</strong> adoption (the share of UI built from system components, found by code analysis), the number of overrides and one-off components, open requests and their age, and the accessibility and visual test results.</li><li><strong class=\"k\">Keep governance light.</strong> A mandate without usefulness creates resentment; usefulness without a clear owner decays. You need both an owner and a product that earns its place.</li></ul> <p><strong class=\"k\">From your CV (Câu 43):</strong> when you introduced shared architecture and conventions, the convincing part was communication and demonstrated benefit, not only the technology.</p>",
+        "vi": "<p>Việc được dùng chủ yếu là <strong class=\"k\">vấn đề con người và sản phẩm</strong>, không phải vấn đề kỹ thuật.</p> <ul><li><strong class=\"k\">Coi nó là một sản phẩm.</strong> Người dùng của nó là developer và designer. Hãy trò chuyện với họ, tìm hiểu điều gì cản trở họ, và công bố roadmap.</li><li><strong class=\"k\">Làm cho việc đúng trở thành việc dễ.</strong> Tài liệu tốt, ví dụ copy-paste được, hướng dẫn bắt đầu nhanh, kiểu TypeScript và cách hỏi đáp nhanh. Các team dùng thứ giúp họ tiết kiệm thời gian.</li><li><strong class=\"k\">Bắt đầu nhỏ và chứng minh giá trị.</strong> Bắt đầu với các component dùng nhiều nhất (button, input, modal, layout) và migrate một sản phẩm hoặc một trang trước; chia sẻ con số (giờ công tiết kiệm, lỗi đã sửa, vấn đề accessibility đã loại bỏ).</li><li><strong class=\"k\">Có lối thoát (escape hatch).</strong> Design system không mở rộng được sẽ bị fork. Cho phép <code>className</code>, slot và token để tùy biến, và có đường rõ ràng để đề xuất component hay thay đổi mới.</li><li><strong class=\"k\">Mô hình đóng góp:</strong> team lõi sở hữu tiêu chuẩn và review, nhưng team sản phẩm cũng đóng góp được với template, hướng dẫn và cam kết thời gian review, để team lõi không thành điểm nghẽn.</li><li><strong class=\"k\">Truyền thông thay đổi:</strong> changelog, hướng dẫn migration và codemod (Câu 125), không có breaking change bất ngờ.</li><li><strong class=\"k\">Đo lường:</strong> mức độ dùng (tỷ lệ UI dựng từ component của hệ thống, tìm ra bằng phân tích code), số lần override và component dùng một lần, yêu cầu còn mở và tuổi của chúng, cùng kết quả test accessibility và visual.</li><li><strong class=\"k\">Giữ quản trị nhẹ nhàng.</strong> Mệnh lệnh mà không hữu ích tạo ra bực bội; hữu ích mà không có người sở hữu rõ ràng thì mục nát. Cần cả người sở hữu và một sản phẩm xứng đáng được dùng.</li></ul> <p><strong class=\"k\">Liên hệ CV (Câu 43):</strong> khi bạn đưa kiến trúc và quy ước dùng chung vào, phần thuyết phục là giao tiếp và lợi ích chứng minh được, không chỉ công nghệ.</p>"
+      },
+      "terms": [
+        "design system adoption",
+        "contribution model",
+        "escape hatch",
+        "governance",
+        "metrics"
+      ]
+    },
+    {
+      "id": "q128",
+      "number": 128,
+      "tag": "Viết code · Design system",
+      "title": "Implement <code>classNames(...args)</code> (like <code>clsx</code>): build a class string from strings, objects and arrays, ignoring falsy values.",
+      "titleVi": "Hãy tự viết <code>classNames(...args)</code> (giống <code>clsx</code>): tạo chuỗi class từ chuỗi, object và mảng, bỏ qua các giá trị falsy.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Duyệt từng đối số, bỏ giá trị falsy",
+          "Chuỗi/số: thêm trực tiếp",
+          "Mảng: đệ quy",
+          "Object: thêm các key có giá trị truthy"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function classNames(...args) {\n  const out = [];\n  for (const arg of args) {\n    if (!arg) continue;                                   // false, null, undefined, 0, ''\n    if (typeof arg === 'string' || typeof arg === 'number') out.push(arg);\n    else if (Array.isArray(arg)) {\n      const inner = classNames(...arg);                   // nested arrays\n      if (inner) out.push(inner);\n    } else if (typeof arg === 'object') {\n      for (const key of Object.keys(arg)) if (arg[key]) out.push(key);\n    }\n  }\n  return out.join(' ');\n}\n\nclassNames('btn', { 'btn-primary': true, 'btn-disabled': false }, ['a', ['b']], null);\n// 'btn btn-primary a b'</code></pre> <p>This is the helper behind almost every variant system (Câu 124). Each argument is handled by its type: strings and numbers are added as they are, arrays are flattened by <strong class=\"k\">recursion</strong>, and objects contribute their keys whose value is <strong class=\"k\">truthy</strong>. Falsy values (<code>false</code>, <code>null</code>, <code>undefined</code>, <code>0</code>, <code>''</code>) are skipped, which is what makes conditional classes like <code>isActive &amp;&amp; 'active'</code> safe to pass.</p> <p>Details to mention:</p> <ul><li>Join with a single space and never output empty strings, so there are no double spaces.</li><li><code>0</code> is falsy and is skipped.</li><li>If you also need to <strong class=\"k\">resolve Tailwind conflicts</strong> (<code>px-2 px-4</code>), combine it with <code>tailwind-merge</code>: that is the common <code>cn()</code> helper.</li></ul>",
+        "vi": "<pre><code>function classNames(...args) {\n  const out = [];\n  for (const arg of args) {\n    if (!arg) continue;                                   // false, null, undefined, 0, ''\n    if (typeof arg === 'string' || typeof arg === 'number') out.push(arg);\n    else if (Array.isArray(arg)) {\n      const inner = classNames(...arg);                   // nested arrays\n      if (inner) out.push(inner);\n    } else if (typeof arg === 'object') {\n      for (const key of Object.keys(arg)) if (arg[key]) out.push(key);\n    }\n  }\n  return out.join(' ');\n}\n\nclassNames('btn', { 'btn-primary': true, 'btn-disabled': false }, ['a', ['b']], null);\n// 'btn btn-primary a b'</code></pre> <p>Đây là helper nằm sau hầu hết các hệ thống variant (Câu 124). Mỗi đối số được xử lý theo kiểu của nó: chuỗi và số được thêm nguyên trạng, mảng được làm phẳng bằng <strong class=\"k\">đệ quy</strong>, còn object đóng góp các key có giá trị <strong class=\"k\">truthy</strong>. Các giá trị falsy (<code>false</code>, <code>null</code>, <code>undefined</code>, <code>0</code>, <code>''</code>) bị bỏ qua, nhờ đó truyền class có điều kiện như <code>isActive &amp;&amp; 'active'</code> là an toàn.</p> <p>Chi tiết nên nhắc:</p> <ul><li>Nối bằng đúng một dấu cách và không bao giờ xuất chuỗi rỗng, để không có hai dấu cách liền nhau.</li><li><code>0</code> là falsy nên bị bỏ qua.</li><li>Nếu còn cần <strong class=\"k\">giải quyết xung đột của Tailwind</strong> (<code>px-2 px-4</code>), hãy kết hợp với <code>tailwind-merge</code>: đó là helper <code>cn()</code> quen thuộc.</li></ul>"
+      },
+      "terms": [
+        "classNames",
+        "clsx",
+        "recursion",
+        "truthy/falsy",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "id": "q129",
+      "number": 129,
+      "tag": "Viết code · Design system",
+      "title": "Implement <code>resolveTokens(tokens)</code>: flatten nested design tokens and resolve <code>{alias}</code> references, detecting unknown and circular references.",
+      "titleVi": "Hãy tự viết <code>resolveTokens(tokens)</code>: làm phẳng design token lồng nhau và resolve các tham chiếu <code>{alias}</code>, phát hiện tham chiếu không tồn tại và tham chiếu vòng.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Làm phẳng object lồng nhau thành đường dẫn dạng a.b.c",
+          "Thay {path} bằng giá trị đã resolve (đệ quy)",
+          "Phát hiện vòng tham chiếu bằng stack đường đi",
+          "Cache kết quả, báo lỗi rõ ràng"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function resolveTokens(tokens) {\n  const flat = {};\n  (function walk(node, path) {\n    for (const [key, value] of Object.entries(node)) {\n      const name = path ? path + '.' + key : key;\n      if (value !== null &amp;&amp; typeof value === 'object') walk(value, name);\n      else flat[name] = String(value);\n    }\n  })(tokens, '');\n\n  const resolved = {};\n  const resolve = (name, stack = []) =&gt; {\n    if (name in resolved) return resolved[name];                       // cache\n    if (stack.includes(name)) throw new Error('Circular reference: ' + [...stack, name].join(' -&gt; '));\n    if (!(name in flat)) throw new Error('Unknown token: ' + name);\n    const value = flat[name].replace(/\\{([^}]+)\\}/g, (_, ref) =&gt; resolve(ref, [...stack, name]));\n    return (resolved[name] = value);\n  };\n\n  for (const name of Object.keys(flat)) resolve(name);\n  return resolved;\n}\n\nresolveTokens({\n  color: { blue: { 500: '#2563eb' }, primary: '{color.blue.500}' },\n  border: '1px solid {color.primary}',\n});\n// { 'color.blue.500': '#2563eb', 'color.primary': '#2563eb', border: '1px solid #2563eb' }</code></pre> <p>This is the core of a token build step (Câu 121). Two passes: <strong class=\"k\">flatten</strong> the nested object into dot paths, then <strong class=\"k\">resolve</strong> every value by replacing each <code>{path}</code> with the resolved value of that token, recursively. Aliases can sit inside a larger string such as <code>1px solid {color.primary}</code>.</p> <p>Details to mention:</p> <ul><li><strong class=\"k\">Cycles:</strong> keep the path currently being resolved in a <code>stack</code>; meeting a name already in it means <code>a -&gt; b -&gt; a</code>, and a clear error is better than a stack overflow.</li><li><strong class=\"k\">Unknown reference:</strong> fail the build with the token's name, instead of shipping <code>{color.nope}</code> to production.</li><li><strong class=\"k\">Memoize</strong> resolved tokens so a token used a hundred times is computed once.</li><li>Real tools (Style Dictionary) add transforms per platform, token types and <code>$value</code>/<code>$type</code> from the W3C format.</li></ul>",
+        "vi": "<pre><code>function resolveTokens(tokens) {\n  const flat = {};\n  (function walk(node, path) {\n    for (const [key, value] of Object.entries(node)) {\n      const name = path ? path + '.' + key : key;\n      if (value !== null &amp;&amp; typeof value === 'object') walk(value, name);\n      else flat[name] = String(value);\n    }\n  })(tokens, '');\n\n  const resolved = {};\n  const resolve = (name, stack = []) =&gt; {\n    if (name in resolved) return resolved[name];                       // cache\n    if (stack.includes(name)) throw new Error('Circular reference: ' + [...stack, name].join(' -&gt; '));\n    if (!(name in flat)) throw new Error('Unknown token: ' + name);\n    const value = flat[name].replace(/\\{([^}]+)\\}/g, (_, ref) =&gt; resolve(ref, [...stack, name]));\n    return (resolved[name] = value);\n  };\n\n  for (const name of Object.keys(flat)) resolve(name);\n  return resolved;\n}\n\nresolveTokens({\n  color: { blue: { 500: '#2563eb' }, primary: '{color.blue.500}' },\n  border: '1px solid {color.primary}',\n});\n// { 'color.blue.500': '#2563eb', 'color.primary': '#2563eb', border: '1px solid #2563eb' }</code></pre> <p>Đây là lõi của bước build token (Câu 121). Hai lượt: <strong class=\"k\">làm phẳng</strong> object lồng nhau thành đường dẫn có dấu chấm, rồi <strong class=\"k\">resolve</strong> từng giá trị bằng cách thay mỗi <code>{path}</code> bằng giá trị đã resolve của token đó, một cách đệ quy. Alias có thể nằm trong một chuỗi dài hơn như <code>1px solid {color.primary}</code>.</p> <p>Chi tiết nên nhắc:</p> <ul><li><strong class=\"k\">Vòng tham chiếu:</strong> giữ đường đang resolve trong một <code>stack</code>; gặp lại một tên đã có trong đó nghĩa là <code>a -&gt; b -&gt; a</code>, và một lỗi rõ ràng tốt hơn là tràn stack.</li><li><strong class=\"k\">Tham chiếu không tồn tại:</strong> làm build thất bại kèm tên token, thay vì đưa <code>{color.nope}</code> lên production.</li><li><strong class=\"k\">Memoize</strong> các token đã resolve để token dùng cả trăm lần chỉ tính một lần.</li><li>Các công cụ thật (Style Dictionary) bổ sung transform theo từng nền tảng, kiểu token và <code>$value</code>/<code>$type</code> theo định dạng của W3C.</li></ul>"
+      },
+      "terms": [
+        "design tokens",
+        "alias",
+        "circular reference",
+        "recursion",
+        "memoization"
+      ]
+    }
+  ]
+}

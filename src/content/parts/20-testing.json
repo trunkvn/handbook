@@ -1,0 +1,250 @@
+{
+  "id": "part-20",
+  "slug": "testing",
+  "roman": "XX",
+  "title": "Testing",
+  "description": "Chiến lược test, Testing Library, mock, bất đồng bộ, E2E với Playwright, test flaky, coverage và cách test luồng thanh toán.",
+  "questions": [
+    {
+      "id": "q100",
+      "number": 100,
+      "tag": "Testing · Chiến lược",
+      "title": "What is the testing pyramid? How would you split unit, integration and end-to-end tests in a frontend app?",
+      "titleVi": "Testing pyramid là gì? Bạn chia unit, integration và end-to-end test thế nào trong ứng dụng frontend?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba tầng: unit / integration / E2E",
+          "Đánh đổi: tốc độ, độ tin cậy, chi phí bảo trì",
+          "Frontend: “trophy” nghiêng về integration",
+          "Ví dụ phân bổ cho một app thật"
+        ]
+      },
+      "answer": {
+        "en": "<p>The <strong class=\"k\">testing pyramid</strong> says: many fast, cheap tests at the bottom and a few slow, expensive ones at the top.</p> <ul><li><strong class=\"k\">Unit tests:</strong> one function or module in isolation (a price formatter, a reducer, a validation rule). Milliseconds and very stable, but they say little about whether the pieces work together.</li><li><strong class=\"k\">Integration tests:</strong> several units together, for example a component with its hooks, state and a mocked network. Slower, but they catch the bugs that really happen: wiring, props, data flow.</li><li><strong class=\"k\">End-to-end (E2E) tests:</strong> a real browser against a real (or staging) app. They give the most confidence but are the slowest and the most prone to flakiness, so keep them for critical journeys.</li></ul> <p>For frontend work many teams prefer the <strong class=\"k\">testing trophy</strong>: a base of static checks (TypeScript, ESLint), some unit tests, <strong class=\"k\">mostly integration tests of components</strong>, and a thin layer of E2E on top. The reason is that users interact with a screen, not with a function, so a test that renders the component and clicks like a user protects more behavior per line of test code.</p> <h5>A reasonable split</h5> <ul><li>Pure logic with many edge cases (money, dates, validation, state machines) → unit tests.</li><li>Pages and widgets (forms, filters, checkout steps) → integration tests with Testing Library and a mocked API.</li><li>Only the money-making paths (sign-in, add to cart, pay) → a handful of E2E tests.</li><li>TypeScript and ESLint run on every commit: they are the cheapest tests there are.</li></ul> <p>The goal is <strong class=\"k\">confidence per minute of CI time</strong>, not a perfect pyramid shape.</p>",
+        "vi": "<p><strong class=\"k\">Testing pyramid</strong> nói rằng: nhiều test nhanh và rẻ ở đáy, ít test chậm và đắt ở đỉnh.</p> <ul><li><strong class=\"k\">Unit test:</strong> một hàm hoặc module tách riêng (hàm format giá, reducer, rule validate). Chạy trong mili-giây và rất ổn định, nhưng không cho biết các phần ghép lại có chạy đúng không.</li><li><strong class=\"k\">Integration test:</strong> nhiều đơn vị chạy cùng nhau, ví dụ một component cùng hook, state và network giả. Chậm hơn, nhưng bắt được những lỗi hay xảy ra thật: nối dây, props, luồng dữ liệu.</li><li><strong class=\"k\">End-to-end (E2E) test:</strong> trình duyệt thật chạy trên app thật (hoặc staging). Cho độ tin cậy cao nhất nhưng chậm nhất và dễ flaky nhất, nên chỉ dành cho các hành trình quan trọng.</li></ul> <p>Với frontend, nhiều team thích <strong class=\"k\">testing trophy</strong>: nền là kiểm tra tĩnh (TypeScript, ESLint), một ít unit test, <strong class=\"k\">phần lớn là integration test cho component</strong>, và một lớp E2E mỏng ở trên cùng. Lý do là người dùng tương tác với một màn hình chứ không phải một hàm, nên test render component và click như người dùng bảo vệ được nhiều hành vi hơn trên mỗi dòng code test.</p> <h5>Một cách chia hợp lý</h5> <ul><li>Logic thuần có nhiều trường hợp biên (tiền, ngày, validate, state machine) → unit test.</li><li>Trang và widget (form, bộ lọc, các bước checkout) → integration test với Testing Library và API giả.</li><li>Chỉ những luồng ra tiền (đăng nhập, thêm vào giỏ, thanh toán) → vài test E2E.</li><li>TypeScript và ESLint chạy mỗi commit: đây là loại test rẻ nhất.</li></ul> <p>Mục tiêu là <strong class=\"k\">độ tin cậy trên mỗi phút chạy CI</strong>, không phải hình dáng kim tự tháp hoàn hảo.</p>"
+      },
+      "terms": [
+        "testing pyramid",
+        "testing trophy",
+        "unit test",
+        "integration test",
+        "E2E"
+      ]
+    },
+    {
+      "id": "q101",
+      "number": 101,
+      "tag": "Testing · Component",
+      "title": "How do you test a React (or Vue) component? Why test behavior instead of implementation?",
+      "titleVi": "Bạn test một component React (hoặc Vue) như thế nào? Vì sao nên test hành vi thay vì cách cài đặt?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Render như người dùng thấy",
+          "Tìm phần tử theo role/label, không theo class hay state nội bộ",
+          "Tương tác bằng user-event, kiểm tra kết quả nhìn thấy được",
+          "Refactor không làm test vỡ"
+        ]
+      },
+      "answer": {
+        "en": "<p>Test what the <strong class=\"k\">user can see and do</strong>, not how the component is built inside. I use <strong class=\"k\">Testing Library</strong>: render the component, find elements the way a user or a screen reader would (by role, label or text), interact with <code>user-event</code>, and assert on what appears on screen.</p> <pre><code>import { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { LoginForm } from './LoginForm';\n\ntest('shows an error when the password is too short', async () =&gt; {\n  const user = userEvent.setup();\n  render(&lt;LoginForm onSubmit={jest.fn()} /&gt;);\n\n  await user.type(screen.getByLabelText(/password/i), '123');\n  await user.click(screen.getByRole('button', { name: /sign in/i }));\n\n  expect(await screen.findByRole('alert')).toHaveTextContent(/at least 8 characters/i);\n});</code></pre> <h5>Why not test implementation</h5> <ul><li>Tests that read internal state, call instance methods or check CSS class names <strong class=\"k\">break on every refactor</strong> even though nothing changed for the user, so people stop trusting them.</li><li>Tests that follow the user (<code>getByRole</code>, <code>getByLabelText</code>) keep passing when you rename a state variable, switch from <code>useState</code> to a reducer, or swap a library, and they fail when the feature is really broken.</li><li>Querying by role also <strong class=\"k\">checks accessibility for free</strong>: if you cannot find the button by its role and name, a screen reader user cannot either.</li></ul> <p>Query priority: <code>getByRole</code> → <code>getByLabelText</code> → <code>getByText</code> → <code>getByTestId</code> as a last resort. Use <code>findBy…</code> for things that appear asynchronously.</p>",
+        "vi": "<p>Hãy test những gì <strong class=\"k\">người dùng nhìn thấy và làm được</strong>, không phải bên trong component được xây thế nào. Tôi dùng <strong class=\"k\">Testing Library</strong>: render component, tìm phần tử theo cách người dùng hoặc screen reader sẽ tìm (theo role, label hoặc text), tương tác bằng <code>user-event</code>, rồi kiểm tra những gì hiện ra trên màn hình.</p> <pre><code>import { render, screen } from '@testing-library/react';\nimport userEvent from '@testing-library/user-event';\nimport { LoginForm } from './LoginForm';\n\ntest('shows an error when the password is too short', async () =&gt; {\n  const user = userEvent.setup();\n  render(&lt;LoginForm onSubmit={jest.fn()} /&gt;);\n\n  await user.type(screen.getByLabelText(/password/i), '123');\n  await user.click(screen.getByRole('button', { name: /sign in/i }));\n\n  expect(await screen.findByRole('alert')).toHaveTextContent(/at least 8 characters/i);\n});</code></pre> <h5>Vì sao không test cách cài đặt</h5> <ul><li>Test đọc state nội bộ, gọi method của instance hoặc kiểm tra tên class CSS sẽ <strong class=\"k\">vỡ mỗi lần refactor</strong> dù người dùng không thấy gì đổi, nên mọi người dần không tin test nữa.</li><li>Test đi theo người dùng (<code>getByRole</code>, <code>getByLabelText</code>) vẫn pass khi bạn đổi tên biến state, chuyển từ <code>useState</code> sang reducer hay thay thư viện, và chỉ fail khi tính năng hỏng thật.</li><li>Truy vấn theo role còn <strong class=\"k\">kiểm tra accessibility miễn phí</strong>: nếu không tìm được nút theo role và tên, người dùng screen reader cũng không tìm được.</li></ul> <p>Thứ tự ưu tiên khi truy vấn: <code>getByRole</code> → <code>getByLabelText</code> → <code>getByText</code> → <code>getByTestId</code> là phương án cuối. Dùng <code>findBy…</code> cho thứ xuất hiện bất đồng bộ.</p>"
+      },
+      "terms": [
+        "Testing Library",
+        "getByRole",
+        "user-event",
+        "implementation details"
+      ]
+    },
+    {
+      "id": "q102",
+      "number": 102,
+      "tag": "Testing · Mock",
+      "title": "What is the difference between a mock, a stub, a spy and a fake? When do you mock, and how do you mock the network?",
+      "titleVi": "Mock, stub, spy và fake khác nhau thế nào? Khi nào nên mock, và mock network ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Bốn khái niệm, mỗi cái một câu",
+          "Mock ở biên hệ thống, không mock thứ mình đang test",
+          "Network: MSW thay vì mock fetch",
+          "Mock quá nhiều thì test vô nghĩa"
+        ]
+      },
+      "answer": {
+        "en": "<p>They are all <strong class=\"k\">test doubles</strong>: stand-ins for a real dependency.</p> <ul><li><strong class=\"k\">Stub:</strong> returns canned answers (<code>getUser</code> always returns <code>{ id: 1 }</code>). You do not check how it was called.</li><li><strong class=\"k\">Spy:</strong> wraps the real function and records calls so you can assert on them (<code>jest.spyOn(analytics, 'track')</code>).</li><li><strong class=\"k\">Mock:</strong> a fake with expectations about how it must be called. In Jest, <code>jest.fn()</code> serves as both stub and mock, which is why people mix the words.</li><li><strong class=\"k\">Fake:</strong> a lightweight working implementation (an in-memory database, a fake clock).</li></ul> <h5>When to mock</h5> <p>Mock at the <strong class=\"k\">boundaries you do not control</strong>: network, time, randomness, browser APIs, third-party SDKs. Do <strong class=\"k\">not</strong> mock the module you are testing or your own small helpers, otherwise the test only checks the mock.</p> <h5>Mocking the network</h5> <p>Instead of mocking <code>fetch</code> or <code>axios</code> call by call, use <strong class=\"k\">MSW (Mock Service Worker)</strong>. It intercepts requests at the network level, so your real fetch code, error handling and parsing all run:</p> <pre><code>import { http, HttpResponse } from 'msw';\nimport { setupServer } from 'msw/node';\n\nconst server = setupServer(\n  http.get('/api/orders/:id', () =&gt; HttpResponse.json({ id: 'A1', status: 'paid' })),\n);\nbeforeAll(() =&gt; server.listen());\nafterEach(() =&gt; server.resetHandlers());\nafterAll(() =&gt; server.close());\n\ntest('shows an error when the API fails', async () =&gt; {\n  server.use(http.get('/api/orders/:id', () =&gt; new HttpResponse(null, { status: 500 })));\n  // render and assert the error UI\n});</code></pre> <p>The same handlers can be reused in Storybook and in the browser during development.</p> <p>Watch out: a test where <strong class=\"k\">everything is mocked</strong> passes even when the app is broken. If you need more than two or three mocks, the unit is probably too big, or the test should be an integration test.</p>",
+        "vi": "<p>Tất cả đều là <strong class=\"k\">test double</strong>: vật thế chỗ cho một dependency thật.</p> <ul><li><strong class=\"k\">Stub:</strong> trả về câu trả lời có sẵn (<code>getUser</code> luôn trả <code>{ id: 1 }</code>). Bạn không kiểm tra nó được gọi thế nào.</li><li><strong class=\"k\">Spy:</strong> bọc hàm thật và ghi lại các lần gọi để bạn assert (<code>jest.spyOn(analytics, 'track')</code>).</li><li><strong class=\"k\">Mock:</strong> đối tượng giả có kỳ vọng về cách nó phải được gọi. Trong Jest, <code>jest.fn()</code> vừa làm stub vừa làm mock, nên mọi người hay dùng lẫn các từ này.</li><li><strong class=\"k\">Fake:</strong> bản cài đặt nhẹ nhưng chạy thật (database trong bộ nhớ, đồng hồ giả).</li></ul> <h5>Khi nào nên mock</h5> <p>Mock ở <strong class=\"k\">các biên mà bạn không kiểm soát</strong>: network, thời gian, số ngẫu nhiên, API của trình duyệt, SDK bên thứ ba. <strong class=\"k\">Không</strong> mock module đang được test hay các helper nhỏ của chính mình, nếu không test chỉ đang kiểm tra cái mock.</p> <h5>Mock network</h5> <p>Thay vì mock <code>fetch</code> hay <code>axios</code> từng lời gọi, hãy dùng <strong class=\"k\">MSW (Mock Service Worker)</strong>. Nó chặn request ở mức network, nên code fetch thật, xử lý lỗi và parse dữ liệu của bạn đều chạy:</p> <pre><code>import { http, HttpResponse } from 'msw';\nimport { setupServer } from 'msw/node';\n\nconst server = setupServer(\n  http.get('/api/orders/:id', () =&gt; HttpResponse.json({ id: 'A1', status: 'paid' })),\n);\nbeforeAll(() =&gt; server.listen());\nafterEach(() =&gt; server.resetHandlers());\nafterAll(() =&gt; server.close());\n\ntest('shows an error when the API fails', async () =&gt; {\n  server.use(http.get('/api/orders/:id', () =&gt; new HttpResponse(null, { status: 500 })));\n  // render and assert the error UI\n});</code></pre> <p>Các handler này dùng lại được trong Storybook và trong trình duyệt khi phát triển.</p> <p>Lưu ý: test mà <strong class=\"k\">mọi thứ đều bị mock</strong> vẫn pass dù app hỏng. Nếu cần hơn hai, ba mock thì đơn vị đang test có lẽ quá lớn, hoặc đáng ra nên là integration test.</p>"
+      },
+      "terms": [
+        "test double",
+        "stub",
+        "spy",
+        "MSW",
+        "jest.fn"
+      ]
+    },
+    {
+      "id": "q103",
+      "number": 103,
+      "tag": "Testing · Bất đồng bộ",
+      "title": "How do you test asynchronous code and timers (debounce, polling, loading states) without flaky tests?",
+      "titleVi": "Bạn test code bất đồng bộ và timer (debounce, polling, trạng thái loading) thế nào để không bị flaky?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Không dùng sleep cố định",
+          "Chờ theo điều kiện: findBy / waitFor",
+          "Fake timers cho setTimeout, debounce, polling",
+          "Dọn dẹp để test sau không bị ảnh hưởng"
+        ]
+      },
+      "answer": {
+        "en": "<p>Never wait for a fixed time (<code>await sleep(500)</code>): it is either too slow or too short, which is the classic source of flaky tests. Wait for a <strong class=\"k\">condition</strong> instead.</p> <ul><li><strong class=\"k\">UI that appears later:</strong> <code>await screen.findByText(...)</code> or <code>await waitFor(() =&gt; expect(...))</code>. They retry until the assertion passes or a timeout hits.</li><li><strong class=\"k\">Timers:</strong> use <strong class=\"k\">fake timers</strong> so the test controls the clock. Debounce, throttle, polling and <code>setTimeout</code> can then be tested instantly.</li></ul> <pre><code>test('searches only after the user stops typing for 300ms', async () =&gt; {\n  jest.useFakeTimers();\n  const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });\n  const onSearch = jest.fn();\n  render(&lt;SearchBox onSearch={onSearch} /&gt;);\n\n  await user.type(screen.getByRole('searchbox'), 'react');\n  expect(onSearch).not.toHaveBeenCalled();\n\n  jest.advanceTimersByTime(300);\n  expect(onSearch).toHaveBeenCalledTimes(1);\n  expect(onSearch).toHaveBeenCalledWith('react');\n  jest.useRealTimers();\n});</code></pre> <h5>Other things that cause trouble</h5> <ul><li><strong class=\"k\">\"not wrapped in act(...)\" warnings</strong> mean state changed after the test stopped waiting. Fix the test (await the result with <code>findBy</code>) instead of silencing the warning.</li><li><strong class=\"k\">Unfinished requests</strong> leaking into the next test: reset handlers and clean up in <code>afterEach</code>.</li><li><strong class=\"k\">Race conditions</strong> in the code itself (an old request finishing last): write a test where the first response is slower than the second and assert that the newest one wins (see Câu 56).</li></ul>",
+        "vi": "<p>Đừng bao giờ chờ một khoảng thời gian cố định (<code>await sleep(500)</code>): nó hoặc quá chậm hoặc quá ngắn, đây là nguồn gốc kinh điển của test flaky. Hãy chờ một <strong class=\"k\">điều kiện</strong>.</p> <ul><li><strong class=\"k\">UI xuất hiện muộn:</strong> <code>await screen.findByText(...)</code> hoặc <code>await waitFor(() =&gt; expect(...))</code>. Chúng thử lại cho đến khi assert đúng hoặc hết thời gian.</li><li><strong class=\"k\">Timer:</strong> dùng <strong class=\"k\">fake timers</strong> để test tự điều khiển đồng hồ. Khi đó debounce, throttle, polling và <code>setTimeout</code> được test tức thì.</li></ul> <pre><code>test('searches only after the user stops typing for 300ms', async () =&gt; {\n  jest.useFakeTimers();\n  const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });\n  const onSearch = jest.fn();\n  render(&lt;SearchBox onSearch={onSearch} /&gt;);\n\n  await user.type(screen.getByRole('searchbox'), 'react');\n  expect(onSearch).not.toHaveBeenCalled();\n\n  jest.advanceTimersByTime(300);\n  expect(onSearch).toHaveBeenCalledTimes(1);\n  expect(onSearch).toHaveBeenCalledWith('react');\n  jest.useRealTimers();\n});</code></pre> <h5>Những thứ khác hay gây rắc rối</h5> <ul><li><strong class=\"k\">Cảnh báo \"not wrapped in act(...)\"</strong> nghĩa là state đổi sau khi test đã ngừng chờ. Hãy sửa test (await kết quả bằng <code>findBy</code>) thay vì tắt cảnh báo.</li><li><strong class=\"k\">Request chưa xong</strong> rò sang test kế tiếp: reset handler và dọn dẹp trong <code>afterEach</code>.</li><li><strong class=\"k\">Race condition</strong> trong chính code (request cũ xong sau cùng): viết test mà response đầu chậm hơn response sau, rồi kiểm tra kết quả mới nhất thắng (xem Câu 56).</li></ul>"
+      },
+      "terms": [
+        "findBy",
+        "waitFor",
+        "fake timers",
+        "act",
+        "flaky"
+      ]
+    },
+    {
+      "id": "q104",
+      "number": 104,
+      "tag": "Testing · E2E",
+      "title": "How do you write reliable E2E tests with Playwright? What do you test end to end?",
+      "titleVi": "Bạn viết E2E test ổn định với Playwright thế nào? Nên test gì ở mức end-to-end?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Chỉ test các hành trình quan trọng",
+          "Locator theo role/text, auto-waiting, không sleep",
+          "Mỗi test độc lập: dữ liệu và đăng nhập riêng",
+          "Trace, retry và chạy song song trong CI"
+        ]
+      },
+      "answer": {
+        "en": "<p>E2E tests are the most realistic and the most expensive, so I keep them for <strong class=\"k\">critical user journeys</strong>: sign in, search and open an item, checkout and payment, anything that loses money or users if it breaks. Edge cases belong in unit and integration tests.</p> <h5>Habits that keep them reliable</h5> <ul><li><strong class=\"k\">Locators like a user:</strong> <code>page.getByRole('button', { name: 'Pay' })</code>, <code>getByLabel</code>, <code>getByText</code>. Avoid long CSS or XPath chains that break on a redesign.</li><li><strong class=\"k\">Rely on auto-waiting and web-first assertions.</strong> <code>await expect(locator).toBeVisible()</code> retries until it is true. No <code>waitForTimeout</code>.</li><li><strong class=\"k\">Independent tests:</strong> each test sets up its own data and can run alone and in parallel. Reuse a signed-in session with <code>storageState</code> instead of logging in through the UI every time.</li><li><strong class=\"k\">Control what you cannot control:</strong> mock third-party calls (a payment gateway, analytics, email) with <code>page.route</code>, or use the gateway's sandbox, and pin the time or random data when needed.</li><li><strong class=\"k\">Make failures easy to debug:</strong> keep traces and screenshots on the first retry (<code>trace: 'on-first-retry'</code>), and run in CI with a small number of retries.</li></ul> <pre><code>test('guest can pay with a QR code', async ({ page }) =&gt; {\n  await page.route('**/api/payments', (route) =&gt;\n    route.fulfill({ json: { orderCode: 'A1', qr: 'data:image/png;base64,...' } }),\n  );\n  await page.goto('/top-up');\n  await page.getByLabel('Player ID').fill('12345');\n  await page.getByRole('button', { name: '100,000 ₫' }).click();\n  await page.getByRole('button', { name: 'Pay' }).click();\n  await expect(page.getByAltText('Payment QR code')).toBeVisible();\n});</code></pre> <p>Run the critical-path tests on every pull request, and the larger set nightly.</p>",
+        "vi": "<p>E2E test thực tế nhất nhưng cũng đắt nhất, nên tôi chỉ dùng cho <strong class=\"k\">các hành trình quan trọng</strong>: đăng nhập, tìm và mở một mục, checkout và thanh toán, mọi thứ mà hỏng là mất tiền hoặc mất người dùng. Các trường hợp biên thuộc về unit và integration test.</p> <h5>Thói quen giúp test ổn định</h5> <ul><li><strong class=\"k\">Locator như người dùng:</strong> <code>page.getByRole('button', { name: 'Pay' })</code>, <code>getByLabel</code>, <code>getByText</code>. Tránh chuỗi CSS hay XPath dài sẽ vỡ khi đổi giao diện.</li><li><strong class=\"k\">Dựa vào auto-waiting và web-first assertion.</strong> <code>await expect(locator).toBeVisible()</code> tự thử lại đến khi đúng. Không dùng <code>waitForTimeout</code>.</li><li><strong class=\"k\">Test độc lập:</strong> mỗi test tự chuẩn bị dữ liệu và chạy được riêng lẻ lẫn song song. Dùng lại phiên đã đăng nhập bằng <code>storageState</code> thay vì đăng nhập qua giao diện mỗi lần.</li><li><strong class=\"k\">Kiểm soát thứ mình không kiểm soát được:</strong> mock các lời gọi bên thứ ba (cổng thanh toán, analytics, email) bằng <code>page.route</code>, hoặc dùng sandbox của cổng, và cố định thời gian hay dữ liệu ngẫu nhiên khi cần.</li><li><strong class=\"k\">Dễ debug khi hỏng:</strong> giữ trace và screenshot ở lần retry đầu (<code>trace: 'on-first-retry'</code>), và chạy trong CI với số lần retry nhỏ.</li></ul> <pre><code>test('guest can pay with a QR code', async ({ page }) =&gt; {\n  await page.route('**/api/payments', (route) =&gt;\n    route.fulfill({ json: { orderCode: 'A1', qr: 'data:image/png;base64,...' } }),\n  );\n  await page.goto('/top-up');\n  await page.getByLabel('Player ID').fill('12345');\n  await page.getByRole('button', { name: '100,000 ₫' }).click();\n  await page.getByRole('button', { name: 'Pay' }).click();\n  await expect(page.getByAltText('Payment QR code')).toBeVisible();\n});</code></pre> <p>Chạy test của các luồng quan trọng ở mỗi pull request, còn bộ lớn hơn thì chạy hằng đêm.</p>"
+      },
+      "terms": [
+        "Playwright",
+        "auto-waiting",
+        "storageState",
+        "page.route",
+        "trace"
+      ]
+    },
+    {
+      "id": "q105",
+      "number": 105,
+      "tag": "Testing · Độ ổn định",
+      "title": "What is a flaky test? What usually causes flakiness and how do you deal with it?",
+      "titleVi": "Flaky test là gì? Nguyên nhân thường gặp và cách xử lý?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa: lúc pass lúc fail dù không đổi code",
+          "Nguyên nhân phổ biến",
+          "Tìm nguyên nhân thật, không retry cho qua",
+          "Quy trình: cô lập, sửa, theo dõi"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\">flaky test</strong> passes and fails on the same code. It is dangerous because the team learns to ignore red builds, and then a real failure gets ignored too.</p> <h5>Common causes</h5> <ul><li><strong class=\"k\">Timing:</strong> fixed sleeps, animations, or asserting before the UI has updated.</li><li><strong class=\"k\">Shared state between tests:</strong> leftover data, <code>localStorage</code>, a mock that was not reset, tests that only pass in a certain order.</li><li><strong class=\"k\">External dependencies:</strong> a real network, a third-party service, a slow CI machine.</li><li><strong class=\"k\">Non-determinism:</strong> <code>Date.now()</code>, <code>Math.random()</code>, time zones, locale, unordered results.</li><li><strong class=\"k\">Race conditions in the app</strong> itself: the test is only exposing a real bug.</li><li><strong class=\"k\">Environment:</strong> resource limits in CI, parallel tests fighting for the same port or database.</li></ul> <h5>What I do</h5> <ol><li><strong class=\"k\">Reproduce it:</strong> run the test in a loop (<code>--repeat-each</code>), in CI-like conditions, and with the same seed or order.</li><li><strong class=\"k\">Find the cause</strong> and fix it: wait for a condition instead of time, isolate data per test, freeze time, mock the network.</li><li><strong class=\"k\">Retries are a safety net, not a fix.</strong> Allow a retry or two in CI, but report the tests that needed one so they get fixed.</li><li>If it cannot be fixed quickly, <strong class=\"k\">quarantine it</strong> (skip it with a ticket and an owner) so it does not block everyone, and never leave it silently ignored.</li><li>Track the flake rate: a healthy suite should be boringly stable.</li></ol>",
+        "vi": "<p><strong class=\"k\">Flaky test</strong> là test lúc pass lúc fail trên cùng một đoạn code. Nó nguy hiểm vì cả team quen với việc bỏ qua build đỏ, và rồi một lỗi thật cũng bị bỏ qua.</p> <h5>Nguyên nhân thường gặp</h5> <ul><li><strong class=\"k\">Thời gian:</strong> sleep cố định, animation, hoặc assert trước khi UI kịp cập nhật.</li><li><strong class=\"k\">State dùng chung giữa các test:</strong> dữ liệu còn sót, <code>localStorage</code>, mock chưa reset, test chỉ pass khi chạy theo một thứ tự nhất định.</li><li><strong class=\"k\">Phụ thuộc bên ngoài:</strong> network thật, dịch vụ bên thứ ba, máy CI chậm.</li><li><strong class=\"k\">Không xác định (non-determinism):</strong> <code>Date.now()</code>, <code>Math.random()</code>, múi giờ, locale, kết quả không có thứ tự.</li><li><strong class=\"k\">Race condition ngay trong app:</strong> test chỉ đang phơi bày một lỗi thật.</li><li><strong class=\"k\">Môi trường:</strong> giới hạn tài nguyên của CI, các test song song tranh nhau cùng một port hay database.</li></ul> <h5>Tôi làm gì</h5> <ol><li><strong class=\"k\">Tái hiện:</strong> chạy test trong vòng lặp (<code>--repeat-each</code>), trong điều kiện giống CI, và cùng seed hoặc thứ tự.</li><li><strong class=\"k\">Tìm nguyên nhân</strong> và sửa: chờ điều kiện thay vì chờ thời gian, cô lập dữ liệu cho từng test, cố định thời gian, mock network.</li><li><strong class=\"k\">Retry là lưới an toàn, không phải cách sửa.</strong> Cho phép retry một hai lần trong CI, nhưng báo cáo những test cần retry để chúng được sửa.</li><li>Nếu chưa sửa nhanh được thì <strong class=\"k\">cách ly nó</strong> (skip kèm ticket và người phụ trách) để không chặn cả team, và đừng bao giờ để nó bị bỏ qua trong im lặng.</li><li>Theo dõi tỷ lệ flaky: một bộ test khỏe phải “nhàm chán” vì ổn định.</li></ol>"
+      },
+      "terms": [
+        "flaky test",
+        "non-determinism",
+        "quarantine",
+        "retries",
+        "test isolation"
+      ]
+    },
+    {
+      "id": "q106",
+      "number": 106,
+      "tag": "Testing · Coverage",
+      "title": "Is 80% code coverage a good target? What does coverage not tell you?",
+      "titleVi": "Coverage 80% có phải mục tiêu tốt không? Coverage không cho bạn biết điều gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Coverage đo dòng được chạy, không đo chất lượng assert",
+          "Ví dụ test không assert vẫn tăng coverage",
+          "Dùng làm tín hiệu, không phải mục tiêu",
+          "Đo tốt hơn: mutation testing, nhánh quan trọng"
+        ]
+      },
+      "answer": {
+        "en": "<p>Coverage tells you <strong class=\"k\">which lines ran</strong> during the tests. It does not tell you whether the tests would notice a bug.</p> <pre><code>function applyDiscount(price, percent) {\n  return price - price * percent;      // bug: should be percent / 100\n}\n\ntest('runs applyDiscount', () =&gt; {\n  applyDiscount(100, 10);              // 100% line coverage, no assertion\n});</code></pre> <p>Here coverage is 100% and the bug is not caught.</p> <h5>How I use it</h5> <ul><li><strong class=\"k\">As a signal, not a target.</strong> A threshold like 80% on new code is a reasonable guard against untested code, but chasing a number leads to useless tests written only to turn the report green.</li><li><strong class=\"k\">Look at what is uncovered</strong>, not only the percentage: is the payment error branch covered? Token refresh? Those matter more than getters and config files.</li><li><strong class=\"k\">Prefer branch coverage</strong> over line coverage to see untested <code>if</code> paths.</li><li><strong class=\"k\">Exclude</strong> generated code and trivial files, so the number means something.</li><li>For a stronger check, <strong class=\"k\">mutation testing</strong> (for example Stryker) changes your code on purpose (<code>&gt;</code> becomes <code>&gt;=</code>) and reports whether any test fails. Surviving mutants show weak assertions.</li></ul> <p><strong class=\"k\">From your CV:</strong> if you say you reached 80% coverage, be ready to explain that it was a guard, which areas you prioritised (critical flows first), and one real bug a test caught.</p>",
+        "vi": "<p>Coverage cho biết <strong class=\"k\">những dòng nào đã chạy</strong> trong lúc test. Nó không cho biết test có phát hiện được lỗi hay không.</p> <pre><code>function applyDiscount(price, percent) {\n  return price - price * percent;      // bug: should be percent / 100\n}\n\ntest('runs applyDiscount', () =&gt; {\n  applyDiscount(100, 10);              // 100% line coverage, no assertion\n});</code></pre> <p>Ở đây coverage là 100% mà lỗi vẫn không bị bắt.</p> <h5>Tôi dùng coverage thế nào</h5> <ul><li><strong class=\"k\">Là tín hiệu, không phải mục tiêu.</strong> Ngưỡng như 80% cho code mới là hàng rào hợp lý chống code chưa được test, nhưng chạy theo con số sẽ dẫn tới những test vô dụng chỉ để báo cáo xanh.</li><li><strong class=\"k\">Nhìn vào phần chưa được phủ</strong>, không chỉ phần trăm: nhánh lỗi thanh toán đã được phủ chưa? Refresh token? Những chỗ này quan trọng hơn getter hay file cấu hình.</li><li><strong class=\"k\">Ưu tiên branch coverage</strong> hơn line coverage để thấy các nhánh <code>if</code> chưa được test.</li><li><strong class=\"k\">Loại trừ</strong> code sinh tự động và file tầm thường để con số có ý nghĩa.</li><li>Để kiểm tra chắc hơn, <strong class=\"k\">mutation testing</strong> (ví dụ Stryker) cố ý sửa code (<code>&gt;</code> thành <code>&gt;=</code>) rồi báo xem có test nào fail không. Mutant còn sống cho thấy assert yếu.</li></ul> <p><strong class=\"k\">Liên hệ CV:</strong> nếu bạn nói đã đạt coverage 80%, hãy sẵn sàng giải thích đó là hàng rào, bạn ưu tiên khu vực nào (luồng quan trọng trước), và một lỗi thật mà test đã bắt được.</p>"
+      },
+      "terms": [
+        "code coverage",
+        "branch coverage",
+        "mutation testing",
+        "Stryker"
+      ]
+    },
+    {
+      "id": "q107",
+      "number": 107,
+      "tag": "Testing · Thanh toán",
+      "title": "How would you test a checkout and payment flow, including double clicks, slow gateways and failures?",
+      "titleVi": "Bạn test luồng checkout và thanh toán thế nào, gồm bấm đúp, cổng thanh toán chậm và lỗi?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Tách logic ra để unit test (state machine)",
+          "Integration test với API giả: chậm, lỗi, trùng",
+          "E2E: luồng thành công, gateway mock hoặc sandbox",
+          "Phần nào backend phải tự test"
+        ]
+      },
+      "answer": {
+        "en": "<p>I test it in layers, matching the risks from Câu 05 and Câu 64.</p> <ol><li><strong class=\"k\">Unit tests for the logic.</strong> Model the payment as a state machine (<code>idle → pending → success | failed</code>) and test the transitions and the money maths (rounding, totals). These are fast and cover most edge cases.</li><li><strong class=\"k\">Integration tests of the checkout UI with a fake API (MSW).</strong> Each risk becomes a test:<ul><li><strong class=\"k\">Double click:</strong> click Pay twice quickly and assert that <strong class=\"k\">one</strong> request was sent and the button was disabled.</li><li><strong class=\"k\">Slow gateway:</strong> delay the response (fake timers or a delayed handler) and assert that a loading state is shown, not an error.</li><li><strong class=\"k\">Failure and timeout:</strong> return a 500 or a network error and assert a clear message and that the user can retry without creating a duplicate order.</li><li><strong class=\"k\">Unconfirmed result:</strong> the return page shows \"pending\" until the backend confirms, and never \"success\" based only on URL parameters.</li></ul></li><li><strong class=\"k\">A few E2E tests</strong> for the critical journeys with the gateway mocked or in sandbox mode: the happy path, a cancelled payment (for example ZaloPay <code>-49</code> triggering the cancel-order call), and a refresh in the middle of payment.</li><li><strong class=\"k\">Know the boundaries.</strong> Duplicate protection and signature checks live in the backend, so they need backend tests. The frontend test only proves that the UI behaves correctly <strong class=\"k\">given</strong> those responses. Contract tests (for example with a shared schema) help keep both sides in sync.</li></ol> <p>Never run these tests against a real gateway with real money.</p>",
+        "vi": "<p>Tôi test theo từng tầng, khớp với các rủi ro ở Câu 05 và Câu 64.</p> <ol><li><strong class=\"k\">Unit test cho logic.</strong> Mô hình hóa thanh toán thành state machine (<code>idle → pending → success | failed</code>) và test các chuyển trạng thái cùng phép tính tiền (làm tròn, tổng). Nhanh và phủ được hầu hết trường hợp biên.</li><li><strong class=\"k\">Integration test giao diện checkout với API giả (MSW).</strong> Mỗi rủi ro thành một test:<ul><li><strong class=\"k\">Bấm đúp:</strong> bấm Thanh toán hai lần liên tiếp và kiểm tra chỉ có <strong class=\"k\">một</strong> request được gửi và nút đã bị vô hiệu hóa.</li><li><strong class=\"k\">Cổng chậm:</strong> làm chậm response (fake timers hoặc handler có độ trễ) và kiểm tra hiển thị trạng thái loading chứ không phải lỗi.</li><li><strong class=\"k\">Lỗi và timeout:</strong> trả về 500 hoặc lỗi mạng, kiểm tra thông báo rõ ràng và người dùng thử lại được mà không tạo đơn trùng.</li><li><strong class=\"k\">Kết quả chưa xác nhận:</strong> trang return hiển thị “đang xử lý” cho đến khi backend xác nhận, và không bao giờ hiện “thành công” chỉ dựa vào tham số trên URL.</li></ul></li><li><strong class=\"k\">Vài E2E test</strong> cho các hành trình quan trọng với cổng được mock hoặc ở chế độ sandbox: luồng thành công, thanh toán bị hủy (ví dụ ZaloPay <code>-49</code> kích hoạt gọi API hủy đơn), và refresh giữa chừng khi đang thanh toán.</li><li><strong class=\"k\">Biết ranh giới.</strong> Chống trùng giao dịch và kiểm tra chữ ký nằm ở backend, nên cần test ở backend. Test frontend chỉ chứng minh giao diện hành xử đúng <strong class=\"k\">khi nhận</strong> các response đó. Contract test (ví dụ dùng chung schema) giúp hai phía luôn khớp nhau.</li></ol> <p>Không bao giờ chạy các test này với cổng thanh toán thật và tiền thật.</p>"
+      },
+      "terms": [
+        "state machine",
+        "double submit",
+        "MSW",
+        "contract test",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "q108",
+      "number": 108,
+      "tag": "Viết code · Testing",
+      "title": "Implement a tiny mock function (<code>mockFn</code>) like <code>jest.fn()</code>: it records calls and results, and supports <code>mockImplementation</code>, <code>mockReturnValue</code> and <code>mockReturnValueOnce</code>.",
+      "titleVi": "Hãy tự viết một mock function nhỏ (<code>mockFn</code>) giống <code>jest.fn()</code>: ghi lại các lần gọi và kết quả, hỗ trợ <code>mockImplementation</code>, <code>mockReturnValue</code> và <code>mockReturnValueOnce</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hàm bọc ghi lại đối số mỗi lần gọi",
+          "<code>mock.calls</code> và <code>mock.results</code> (return hoặc throw)",
+          "<code>mockImplementation</code>, <code>mockReturnValue</code>, <code>mockReturnValueOnce</code> (có thể gọi nối)",
+          "<code>mockClear</code> và giữ đúng <code>this</code>"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function mockFn(impl) {\n  let implementation = impl;\n  const onceQueue = [];\n\n  const fn = function (...args) {\n    fn.mock.calls.push(args);\n    try {\n      let value;\n      if (onceQueue.length) value = onceQueue.shift();\n      else if (implementation) value = implementation.apply(this, args);\n      fn.mock.results.push({ type: 'return', value });\n      return value;\n    } catch (error) {\n      fn.mock.results.push({ type: 'throw', value: error });\n      throw error;\n    }\n  };\n\n  fn.mock = { calls: [], results: [] };\n  fn.mockImplementation = (f) =&gt; { implementation = f; return fn; };\n  fn.mockReturnValue = (v) =&gt; fn.mockImplementation(() =&gt; v);\n  fn.mockReturnValueOnce = (v) =&gt; { onceQueue.push(v); return fn; };\n  fn.mockClear = () =&gt; { fn.mock.calls = []; fn.mock.results = []; return fn; };\n  return fn;\n}\n\nconst send = mockFn().mockReturnValueOnce('first').mockReturnValue('rest');\nsend(1); send(2);\nsend.mock.calls;   // [[1], [2]]</code></pre> <p>The returned function is a <strong class=\"k\">closure</strong> over its private state: the current implementation and a queue of one-time return values. Every call records its arguments <strong class=\"k\">before</strong> running, then records the result, or the error <strong class=\"k\">and rethrows it</strong> so the code under test still sees the exception.</p> <p>Details worth saying out loud:</p> <ul><li><strong class=\"k\">Priority:</strong> a queued <code>mockReturnValueOnce</code> wins over the default implementation, then the function falls back to the default.</li><li>The setters return <code>fn</code>, so calls <strong class=\"k\">chain</strong> (<code>mockFn().mockReturnValueOnce(1).mockReturnValue(2)</code>).</li><li><code>implementation.apply(this, args)</code> <strong class=\"k\">keeps <code>this</code></strong>, so the mock works as an object method.</li><li><code>mockClear</code> resets the history but keeps the behavior; real Jest also has <code>mockReset</code> (clears behavior too) and <code>mockRestore</code> (for spies).</li><li>This is the idea behind spies (Câu 102): wrap a function, record, delegate.</li></ul>",
+        "vi": "<pre><code>function mockFn(impl) {\n  let implementation = impl;\n  const onceQueue = [];\n\n  const fn = function (...args) {\n    fn.mock.calls.push(args);\n    try {\n      let value;\n      if (onceQueue.length) value = onceQueue.shift();\n      else if (implementation) value = implementation.apply(this, args);\n      fn.mock.results.push({ type: 'return', value });\n      return value;\n    } catch (error) {\n      fn.mock.results.push({ type: 'throw', value: error });\n      throw error;\n    }\n  };\n\n  fn.mock = { calls: [], results: [] };\n  fn.mockImplementation = (f) =&gt; { implementation = f; return fn; };\n  fn.mockReturnValue = (v) =&gt; fn.mockImplementation(() =&gt; v);\n  fn.mockReturnValueOnce = (v) =&gt; { onceQueue.push(v); return fn; };\n  fn.mockClear = () =&gt; { fn.mock.calls = []; fn.mock.results = []; return fn; };\n  return fn;\n}\n\nconst send = mockFn().mockReturnValueOnce('first').mockReturnValue('rest');\nsend(1); send(2);\nsend.mock.calls;   // [[1], [2]]</code></pre> <p>Hàm trả về là một <strong class=\"k\">closure</strong> giữ trạng thái riêng: cài đặt hiện tại và một hàng đợi các giá trị trả về dùng một lần. Mỗi lần gọi ghi lại đối số <strong class=\"k\">trước khi</strong> chạy, rồi ghi kết quả, hoặc ghi lỗi <strong class=\"k\">và ném lại nó</strong> để code đang được test vẫn thấy exception.</p> <p>Những chi tiết nên nói ra:</p> <ul><li><strong class=\"k\">Độ ưu tiên:</strong> giá trị trong hàng đợi của <code>mockReturnValueOnce</code> thắng cài đặt mặc định, sau đó hàm quay lại cài đặt mặc định.</li><li>Các hàm setter trả về <code>fn</code> nên có thể <strong class=\"k\">gọi nối</strong> (<code>mockFn().mockReturnValueOnce(1).mockReturnValue(2)</code>).</li><li><code>implementation.apply(this, args)</code> <strong class=\"k\">giữ đúng <code>this</code></strong>, nên mock dùng được như method của object.</li><li><code>mockClear</code> xóa lịch sử nhưng giữ hành vi; Jest thật còn có <code>mockReset</code> (xóa cả hành vi) và <code>mockRestore</code> (cho spy).</li><li>Đây là ý tưởng đằng sau spy (Câu 102): bọc một hàm, ghi lại, rồi ủy quyền.</li></ul>"
+      },
+      "terms": [
+        "jest.fn",
+        "closure",
+        "spy",
+        "mockReturnValueOnce",
+        "chaining"
+      ]
+    }
+  ]
+}

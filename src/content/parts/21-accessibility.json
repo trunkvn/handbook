@@ -1,0 +1,307 @@
+{
+  "id": "part-21",
+  "slug": "accessibility",
+  "roman": "XXI",
+  "title": "Accessibility",
+  "description": "WCAG và POUR, WCAG 2.2, HTML ngữ nghĩa so với ARIA, bàn phím và focus, dialog, form, contrast, screen reader, SPA và cách kiểm thử.",
+  "questions": [
+    {
+      "id": "q109",
+      "number": 109,
+      "tag": "Accessibility · Nền tảng",
+      "title": "What is web accessibility? Explain WCAG and the POUR principles, and which level you aim for.",
+      "titleVi": "Web accessibility là gì? Giải thích WCAG, các nguyên tắc POUR và mức bạn nhắm tới.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Accessibility = ai cũng dùng được, kể cả khi có khuyết tật hoặc điều kiện hạn chế",
+          "POUR: Perceivable, Operable, Understandable, Robust",
+          "WCAG có mức A / AA / AAA, mục tiêu thường là AA",
+          "Lợi ích: UX, SEO, pháp lý"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Web accessibility (a11y)</strong> means people can use your site whatever their abilities or situation: someone who is blind and uses a screen reader, someone with low vision or colour blindness, someone who cannot use a mouse, someone with hearing loss, or just someone on a phone in bright sunlight with one hand. It also covers temporary and situational limits, so it helps everyone.</p> <p><strong class=\"k\">WCAG</strong> (Web Content Accessibility Guidelines) is the standard. Its four principles are <strong class=\"k\">POUR</strong>:</p> <ul><li><strong class=\"k\">Perceivable:</strong> information can be perceived: text alternatives for images, captions for video, enough colour contrast, content that does not rely on colour alone.</li><li><strong class=\"k\">Operable:</strong> everything works with a keyboard, there is enough time, nothing flashes dangerously, navigation and focus are clear.</li><li><strong class=\"k\">Understandable:</strong> readable and predictable text, clear labels and instructions, helpful error messages.</li><li><strong class=\"k\">Robust:</strong> works with different browsers and assistive technology, which mostly means valid, <strong class=\"k\">semantic HTML</strong> and correct ARIA.</li></ul> <h5>Levels</h5> <p><strong class=\"k\">A</strong> is the minimum, <strong class=\"k\">AA</strong> is the usual target and the level most laws and contracts refer to, <strong class=\"k\">AAA</strong> is the strictest and is not required for whole sites. I aim for <strong class=\"k\">WCAG 2.2 AA</strong>.</p> <p>Accessible sites also tend to have better <strong class=\"k\">SEO</strong> (semantic structure, text alternatives), work better on mobile and with voice control, and reduce legal risk.</p>",
+        "vi": "<p><strong class=\"k\">Web accessibility (a11y)</strong> nghĩa là mọi người đều dùng được trang của bạn dù khả năng hay hoàn cảnh khác nhau: người khiếm thị dùng screen reader, người nhìn kém hoặc mù màu, người không dùng được chuột, người khiếm thính, hay đơn giản là người dùng điện thoại bằng một tay dưới nắng gắt. Nó cũng bao gồm các giới hạn tạm thời và theo tình huống, nên có lợi cho tất cả mọi người.</p> <p><strong class=\"k\">WCAG</strong> (Web Content Accessibility Guidelines) là tiêu chuẩn. Bốn nguyên tắc của nó là <strong class=\"k\">POUR</strong>:</p> <ul><li><strong class=\"k\">Perceivable (nhận biết được):</strong> thông tin phải cảm nhận được: có văn bản thay thế cho ảnh, phụ đề cho video, đủ độ tương phản màu, nội dung không chỉ dựa vào màu sắc.</li><li><strong class=\"k\">Operable (thao tác được):</strong> mọi thứ dùng được bằng bàn phím, đủ thời gian, không có nội dung nhấp nháy nguy hiểm, điều hướng và focus rõ ràng.</li><li><strong class=\"k\">Understandable (hiểu được):</strong> văn bản dễ đọc và dễ đoán, nhãn và hướng dẫn rõ ràng, thông báo lỗi hữu ích.</li><li><strong class=\"k\">Robust (đáng tin cậy):</strong> chạy tốt với nhiều trình duyệt và công nghệ hỗ trợ, nghĩa là chủ yếu dùng <strong class=\"k\">HTML ngữ nghĩa</strong> hợp lệ và ARIA đúng.</li></ul> <h5>Các mức</h5> <p><strong class=\"k\">A</strong> là mức tối thiểu, <strong class=\"k\">AA</strong> là mục tiêu thông thường và là mức mà phần lớn luật và hợp đồng nhắc tới, <strong class=\"k\">AAA</strong> nghiêm ngặt nhất và không bắt buộc cho cả website. Tôi nhắm tới <strong class=\"k\">WCAG 2.2 AA</strong>.</p> <p>Website dễ tiếp cận thường cũng có <strong class=\"k\">SEO</strong> tốt hơn (cấu trúc ngữ nghĩa, văn bản thay thế), dùng tốt hơn trên mobile và với điều khiển bằng giọng nói, và giảm rủi ro pháp lý.</p>"
+      },
+      "terms": [
+        "a11y",
+        "WCAG",
+        "POUR",
+        "WCAG 2.2 AA",
+        "assistive technology"
+      ]
+    },
+    {
+      "id": "q110",
+      "number": 110,
+      "tag": "Accessibility · HTML",
+      "title": "Why is semantic HTML better than ARIA? What is the first rule of ARIA?",
+      "titleVi": "Vì sao HTML ngữ nghĩa tốt hơn ARIA? Luật số một của ARIA là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Thẻ native có sẵn role, trạng thái và bàn phím",
+          "Luật số 1 của ARIA: có thẻ native thì dùng nó",
+          "ARIA chỉ bổ sung ngữ nghĩa, không thêm hành vi",
+          "Ví dụ div onClick và button"
+        ]
+      },
+      "answer": {
+        "en": "<p>Native elements come with <strong class=\"k\">role, name, state and keyboard behavior built in</strong>. A <code>&lt;button&gt;</code> is focusable, activates with Enter and Space, and is announced as a \"button\". A <code>&lt;div onClick&gt;</code> has none of that.</p> <pre><code>&lt;!-- Bad: not focusable, no keyboard, no role --&gt;\n&lt;div class=\"btn\" onclick=\"save()\"&gt;Save&lt;/div&gt;\n\n&lt;!-- Better, with ARIA: still needs key handlers written by hand --&gt;\n&lt;div role=\"button\" tabindex=\"0\" onclick=\"save()\" onkeydown=\"/* Enter and Space */\"&gt;Save&lt;/div&gt;\n\n&lt;!-- Best: native --&gt;\n&lt;button type=\"button\" onclick=\"save()\"&gt;Save&lt;/button&gt;</code></pre> <h5>First rule of ARIA</h5> <p>\"If you can use a native HTML element or attribute with the semantics and behavior you need, <strong class=\"k\">use it instead of re-purposing an element and adding ARIA</strong>.\" ARIA changes only what assistive technology is <strong class=\"k\">told</strong>; it adds no behavior. A <code>role=\"button\"</code> still needs focus handling and key events written by you, and wrong ARIA is worse than no ARIA.</p> <h5>Use semantic structure everywhere</h5> <ul><li>Landmarks: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;aside&gt;</code> let screen reader users jump around.</li><li>One <code>&lt;h1&gt;</code> and headings in order (<code>h2</code> under <code>h1</code>), chosen for structure, not for size.</li><li><code>&lt;a href&gt;</code> for navigation, <code>&lt;button&gt;</code> for actions, <code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code> for lists, <code>&lt;table&gt;</code> with <code>&lt;th scope&gt;</code> for data.</li><li>Form controls with a <code>&lt;label&gt;</code>.</li></ul> <p>Use ARIA for what HTML cannot express: <code>aria-expanded</code> on a disclosure button, <code>aria-current=\"page\"</code>, <code>aria-live</code> regions, and widgets like tabs or comboboxes (preferably from a tested library).</p>",
+        "vi": "<p>Thẻ native có sẵn <strong class=\"k\">role, tên, trạng thái và hành vi bàn phím</strong>. <code>&lt;button&gt;</code> focus được, kích hoạt bằng Enter và Space, và được đọc là “button”. <code>&lt;div onClick&gt;</code> thì không có gì trong số đó.</p> <pre><code>&lt;!-- Bad: not focusable, no keyboard, no role --&gt;\n&lt;div class=\"btn\" onclick=\"save()\"&gt;Save&lt;/div&gt;\n\n&lt;!-- Better, with ARIA: still needs key handlers written by hand --&gt;\n&lt;div role=\"button\" tabindex=\"0\" onclick=\"save()\" onkeydown=\"/* Enter and Space */\"&gt;Save&lt;/div&gt;\n\n&lt;!-- Best: native --&gt;\n&lt;button type=\"button\" onclick=\"save()\"&gt;Save&lt;/button&gt;</code></pre> <h5>Luật số một của ARIA</h5> <p>“Nếu bạn có thể dùng thẻ hoặc thuộc tính HTML native với đúng ngữ nghĩa và hành vi cần thiết, hãy <strong class=\"k\">dùng nó thay vì dùng lại một thẻ khác rồi thêm ARIA</strong>.” ARIA chỉ thay đổi điều mà công nghệ hỗ trợ <strong class=\"k\">được báo cho biết</strong>; nó không thêm hành vi. <code>role=\"button\"</code> vẫn cần bạn tự xử lý focus và sự kiện phím, và ARIA sai còn tệ hơn không có ARIA.</p> <h5>Dùng cấu trúc ngữ nghĩa ở mọi nơi</h5> <ul><li>Landmark: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;aside&gt;</code> cho phép người dùng screen reader nhảy qua lại.</li><li>Một <code>&lt;h1&gt;</code> duy nhất và các heading theo thứ tự (<code>h2</code> dưới <code>h1</code>), chọn theo cấu trúc chứ không theo kích thước.</li><li><code>&lt;a href&gt;</code> để điều hướng, <code>&lt;button&gt;</code> cho hành động, <code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code> cho danh sách, <code>&lt;table&gt;</code> với <code>&lt;th scope&gt;</code> cho dữ liệu.</li><li>Control của form có <code>&lt;label&gt;</code>.</li></ul> <p>Dùng ARIA cho những gì HTML không diễn đạt được: <code>aria-expanded</code> trên nút mở rộng, <code>aria-current=\"page\"</code>, vùng <code>aria-live</code>, và các widget như tabs hay combobox (nên lấy từ thư viện đã được kiểm chứng).</p>"
+      },
+      "terms": [
+        "semantic HTML",
+        "ARIA",
+        "landmark",
+        "button vs div",
+        "first rule of ARIA"
+      ]
+    },
+    {
+      "id": "q111",
+      "number": 111,
+      "tag": "Accessibility · Bàn phím",
+      "title": "How do you make an interface fully keyboard accessible? How do you manage focus?",
+      "titleVi": "Làm sao để giao diện dùng được hoàn toàn bằng bàn phím? Bạn quản lý focus thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mọi thứ tương tác được bằng phím, thứ tự hợp lý",
+          "Focus nhìn thấy rõ, không xóa outline",
+          "tabindex 0 / -1, không dùng giá trị dương",
+          "Skip link, roving tabindex, trả focus sau khi đóng"
+        ]
+      },
+      "answer": {
+        "en": "<p>Anyone must be able to reach and operate every control using only the keyboard: <strong class=\"k\">Tab / Shift+Tab</strong> to move, <strong class=\"k\">Enter / Space</strong> to activate, <strong class=\"k\">arrow keys</strong> inside composite widgets (tabs, menus, radio groups), <strong class=\"k\">Esc</strong> to close.</p> <ul><li><strong class=\"k\">Use native controls</strong>: they are keyboard-ready. That solves most of the problem.</li><li><strong class=\"k\">Logical tab order</strong> that follows the visual order: keep the DOM order sensible and avoid CSS tricks (<code>order</code>, absolute positioning) that make the two differ.</li><li><strong class=\"k\">Visible focus.</strong> Never <code>outline: none</code> without a replacement. Use <code>:focus-visible</code> for a clear ring (WCAG 2.2 also requires that the focused element is not hidden behind sticky headers).</li><li><strong class=\"k\"><code>tabindex</code>:</strong> <code>0</code> puts a custom element in the tab order, <code>-1</code> makes it focusable by script only (for example to move focus to a heading). <strong class=\"k\">Never use positive values</strong>; they break the natural order.</li><li><strong class=\"k\">Skip link:</strong> a first link \"Skip to main content\" so keyboard users can bypass the navigation.</li><li><strong class=\"k\">Roving tabindex</strong> for composite widgets: the whole widget is a single Tab stop, and the arrow keys move between items (only the active item has <code>tabindex=\"0\"</code>, the others <code>-1</code>).</li><li><strong class=\"k\">No keyboard traps:</strong> the user can always leave a component with the keyboard.</li></ul> <h5>Managing focus</h5> <p>When content changes without a page load, you move focus on purpose: opening a dialog moves focus <strong class=\"k\">into</strong> it, closing returns focus to the button that opened it, deleting an item moves focus to a sensible neighbor, and after a client-side route change focus goes to the new page's heading. Otherwise keyboard and screen reader users are left on an element that no longer exists.</p>",
+        "vi": "<p>Ai cũng phải tiếp cận và thao tác được mọi control chỉ bằng bàn phím: <strong class=\"k\">Tab / Shift+Tab</strong> để di chuyển, <strong class=\"k\">Enter / Space</strong> để kích hoạt, <strong class=\"k\">phím mũi tên</strong> bên trong các widget phức hợp (tabs, menu, nhóm radio), <strong class=\"k\">Esc</strong> để đóng.</p> <ul><li><strong class=\"k\">Dùng control native</strong>: chúng đã sẵn sàng cho bàn phím. Việc này giải quyết phần lớn vấn đề.</li><li><strong class=\"k\">Thứ tự Tab hợp lý</strong> khớp với thứ tự nhìn thấy: giữ thứ tự DOM hợp lý và tránh các mẹo CSS (<code>order</code>, định vị tuyệt đối) làm hai thứ này khác nhau.</li><li><strong class=\"k\">Focus nhìn thấy rõ.</strong> Không bao giờ <code>outline: none</code> mà không có thứ thay thế. Dùng <code>:focus-visible</code> để có viền rõ ràng (WCAG 2.2 còn yêu cầu phần tử đang focus không bị che bởi header dính).</li><li><strong class=\"k\"><code>tabindex</code>:</strong> <code>0</code> đưa một phần tử tùy chỉnh vào thứ tự Tab, <code>-1</code> chỉ cho phép focus bằng script (ví dụ để chuyển focus tới một heading). <strong class=\"k\">Không bao giờ dùng giá trị dương</strong>; chúng phá thứ tự tự nhiên.</li><li><strong class=\"k\">Skip link:</strong> liên kết đầu tiên “Bỏ qua tới nội dung chính” để người dùng bàn phím bỏ qua phần điều hướng.</li><li><strong class=\"k\">Roving tabindex</strong> cho widget phức hợp: cả widget là một điểm dừng Tab duy nhất, phím mũi tên di chuyển giữa các mục (chỉ mục đang active có <code>tabindex=\"0\"</code>, các mục còn lại <code>-1</code>).</li><li><strong class=\"k\">Không có bẫy bàn phím:</strong> người dùng luôn rời khỏi được một component bằng bàn phím.</li></ul> <h5>Quản lý focus</h5> <p>Khi nội dung thay đổi mà không tải lại trang, bạn chủ động chuyển focus: mở dialog thì chuyển focus <strong class=\"k\">vào</strong> trong nó, đóng thì trả focus về nút đã mở nó, xóa một mục thì chuyển focus tới phần tử lân cận hợp lý, và sau khi đổi route phía client thì focus đến heading của trang mới. Nếu không, người dùng bàn phím và screen reader bị bỏ lại trên một phần tử không còn tồn tại.</p>"
+      },
+      "terms": [
+        "keyboard",
+        "focus-visible",
+        "tabindex",
+        "skip link",
+        "roving tabindex"
+      ]
+    },
+    {
+      "id": "q112",
+      "number": 112,
+      "tag": "Accessibility · Dialog",
+      "title": "How do you build an accessible modal dialog?",
+      "titleVi": "Làm sao để xây dựng một modal dialog dễ tiếp cận?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Dùng thẻ <code>&lt;dialog&gt;</code> hoặc role=\"dialog\" + aria-modal + tên",
+          "Chuyển focus vào trong khi mở",
+          "Giữ focus trong dialog, Esc để đóng",
+          "Trả focus về nút đã mở, nền phía sau không tương tác được"
+        ]
+      },
+      "answer": {
+        "en": "<p>The easiest correct option is the native <strong class=\"k\"><code>&lt;dialog&gt;</code></strong> element opened with <code>showModal()</code>: the browser makes the rest of the page inert, traps focus, closes on Esc and gives it the dialog role.</p> <pre><code>&lt;button id=\"open\"&gt;Delete account&lt;/button&gt;\n\n&lt;dialog id=\"confirm\" aria-labelledby=\"confirm-title\"&gt;\n  &lt;h2 id=\"confirm-title\"&gt;Delete your account?&lt;/h2&gt;\n  &lt;p&gt;This cannot be undone.&lt;/p&gt;\n  &lt;button id=\"cancel\"&gt;Cancel&lt;/button&gt;\n  &lt;button id=\"ok\"&gt;Delete&lt;/button&gt;\n&lt;/dialog&gt;\n\n&lt;script&gt;\n  open.onclick = () =&gt; confirm.showModal();   // focus moves inside, Esc closes, background is inert\n  cancel.onclick = () =&gt; confirm.close();     // focus returns to the opener\n&lt;/script&gt;</code></pre> <p>If you build it yourself (or use a headless library such as Radix or React Aria), these are the requirements:</p> <ol><li><code>role=\"dialog\"</code> (or <code>alertdialog</code> for urgent confirmations), <code>aria-modal=\"true\"</code>, and an accessible name with <code>aria-labelledby</code> pointing to the title.</li><li><strong class=\"k\">Move focus into the dialog</strong> when it opens: the first focusable element, or the heading/dialog itself when there is a lot of content before the controls.</li><li><strong class=\"k\">Trap focus:</strong> Tab and Shift+Tab cycle inside the dialog.</li><li><strong class=\"k\">Esc closes it</strong>, and there is a visible close or cancel button.</li><li><strong class=\"k\">Return focus</strong> to the element that opened it.</li><li><strong class=\"k\">Make the background inert</strong> (the <code>inert</code> attribute, or <code>aria-hidden</code> on the rest of the page) and lock page scroll.</li></ol> <p>Rendering it in a portal at the end of <code>&lt;body&gt;</code> avoids z-index and aria-hidden problems. This is a good example of a component that is worth taking from a tested library instead of writing again in every project.</p>",
+        "vi": "<p>Cách đúng và dễ nhất là dùng thẻ native <strong class=\"k\"><code>&lt;dialog&gt;</code></strong> mở bằng <code>showModal()</code>: trình duyệt làm phần còn lại của trang không tương tác được (inert), giữ focus trong dialog, đóng bằng Esc và gán role dialog cho nó.</p> <pre><code>&lt;button id=\"open\"&gt;Delete account&lt;/button&gt;\n\n&lt;dialog id=\"confirm\" aria-labelledby=\"confirm-title\"&gt;\n  &lt;h2 id=\"confirm-title\"&gt;Delete your account?&lt;/h2&gt;\n  &lt;p&gt;This cannot be undone.&lt;/p&gt;\n  &lt;button id=\"cancel\"&gt;Cancel&lt;/button&gt;\n  &lt;button id=\"ok\"&gt;Delete&lt;/button&gt;\n&lt;/dialog&gt;\n\n&lt;script&gt;\n  open.onclick = () =&gt; confirm.showModal();   // focus moves inside, Esc closes, background is inert\n  cancel.onclick = () =&gt; confirm.close();     // focus returns to the opener\n&lt;/script&gt;</code></pre> <p>Nếu tự xây (hoặc dùng thư viện headless như Radix hay React Aria), đây là các yêu cầu:</p> <ol><li><code>role=\"dialog\"</code> (hoặc <code>alertdialog</code> cho xác nhận khẩn cấp), <code>aria-modal=\"true\"</code>, và tên truy cập qua <code>aria-labelledby</code> trỏ tới tiêu đề.</li><li><strong class=\"k\">Chuyển focus vào dialog</strong> khi mở: phần tử focus được đầu tiên, hoặc chính heading/dialog khi có nhiều nội dung trước các control.</li><li><strong class=\"k\">Giữ focus trong dialog:</strong> Tab và Shift+Tab xoay vòng bên trong.</li><li><strong class=\"k\">Esc đóng dialog</strong>, và có nút đóng hoặc hủy nhìn thấy được.</li><li><strong class=\"k\">Trả focus</strong> về phần tử đã mở nó.</li><li><strong class=\"k\">Làm nền phía sau inert</strong> (thuộc tính <code>inert</code>, hoặc <code>aria-hidden</code> cho phần còn lại của trang) và khóa cuộn trang.</li></ol> <p>Render dialog trong một portal ở cuối <code>&lt;body&gt;</code> giúp tránh vấn đề z-index và aria-hidden. Đây là ví dụ điển hình cho một component đáng lấy từ thư viện đã kiểm chứng thay vì viết lại ở mọi dự án.</p>"
+      },
+      "terms": [
+        "dialog",
+        "aria-modal",
+        "focus trap",
+        "inert",
+        "showModal"
+      ]
+    },
+    {
+      "id": "q113",
+      "number": 113,
+      "tag": "Accessibility · Form",
+      "title": "How do you make forms accessible, including validation errors?",
+      "titleVi": "Làm sao để form dễ tiếp cận, kể cả thông báo lỗi validate?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi input có label thật",
+          "Mô tả và lỗi gắn bằng aria-describedby, aria-invalid",
+          "Thông báo lỗi cho screen reader, chuyển focus tới lỗi đầu tiên",
+          "type và autocomplete đúng, không dùng placeholder thay label"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Every control has a real <code>&lt;label&gt;</code></strong>, linked with <code>for</code>/<code>id</code> (or wrapping the input). A placeholder is <strong class=\"k\">not</strong> a label: it disappears when the user types and often has poor contrast.</li><li><strong class=\"k\">Use the right <code>type</code>, <code>autocomplete</code> and <code>inputmode</code></strong> (<code>type=\"email\"</code>, <code>autocomplete=\"one-time-code\"</code>, <code>inputmode=\"numeric\"</code>). It helps everyone, and WCAG requires <code>autocomplete</code> for common personal data.</li><li><strong class=\"k\">Group related controls</strong> with <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code> (a radio group, an address).</li><li><strong class=\"k\">Mark required fields</strong> in text, not only with a red asterisk or colour, and use <code>required</code> or <code>aria-required</code>.</li></ul> <h5>Errors</h5> <ul><li>Say <strong class=\"k\">what went wrong and how to fix it</strong>, in text, next to the field. Do not rely on a red border alone.</li><li>Connect the message to the input: <code>aria-invalid=\"true\"</code> and <code>aria-describedby</code> pointing to the error element, so a screen reader reads it when the field gets focus.</li><li>Tell the user that errors exist: on submit, <strong class=\"k\">move focus to the first invalid field</strong> (or to an error summary at the top with links to each field), or announce through a live region (<code>role=\"alert\"</code>).</li><li>Do not clear what the user typed, and do not validate aggressively while they are still typing.</li></ul> <pre><code>&lt;label for=\"email\"&gt;Email&lt;/label&gt;\n&lt;input id=\"email\" type=\"email\" autocomplete=\"email\" required\n       aria-invalid=\"true\" aria-describedby=\"email-error\" /&gt;\n&lt;p id=\"email-error\"&gt;Enter an email address like name@example.com.&lt;/p&gt;</code></pre> <p>Test it by completing the whole form with the keyboard only.</p>",
+        "vi": "<ul><li><strong class=\"k\">Mỗi control có một <code>&lt;label&gt;</code> thật</strong>, liên kết bằng <code>for</code>/<code>id</code> (hoặc bọc quanh input). Placeholder <strong class=\"k\">không phải</strong> label: nó biến mất khi người dùng gõ và thường có độ tương phản kém.</li><li><strong class=\"k\">Dùng đúng <code>type</code>, <code>autocomplete</code> và <code>inputmode</code></strong> (<code>type=\"email\"</code>, <code>autocomplete=\"one-time-code\"</code>, <code>inputmode=\"numeric\"</code>). Điều này giúp tất cả mọi người, và WCAG yêu cầu <code>autocomplete</code> cho các dữ liệu cá nhân phổ biến.</li><li><strong class=\"k\">Nhóm các control liên quan</strong> bằng <code>&lt;fieldset&gt;</code> và <code>&lt;legend&gt;</code> (nhóm radio, địa chỉ).</li><li><strong class=\"k\">Đánh dấu trường bắt buộc</strong> bằng chữ, không chỉ bằng dấu sao đỏ hay màu, và dùng <code>required</code> hoặc <code>aria-required</code>.</li></ul> <h5>Lỗi</h5> <ul><li>Nói rõ <strong class=\"k\">sai ở đâu và cách sửa</strong>, bằng chữ, ngay cạnh trường. Đừng chỉ dựa vào viền đỏ.</li><li>Gắn thông báo với input: <code>aria-invalid=\"true\"</code> và <code>aria-describedby</code> trỏ tới phần tử lỗi, để screen reader đọc nó khi trường được focus.</li><li>Cho người dùng biết là có lỗi: khi submit, <strong class=\"k\">chuyển focus tới trường sai đầu tiên</strong> (hoặc tới phần tóm tắt lỗi ở đầu trang với liên kết tới từng trường), hoặc thông báo qua live region (<code>role=\"alert\"</code>).</li><li>Không xóa những gì người dùng đã gõ, và không validate gắt gao khi họ còn đang gõ.</li></ul> <pre><code>&lt;label for=\"email\"&gt;Email&lt;/label&gt;\n&lt;input id=\"email\" type=\"email\" autocomplete=\"email\" required\n       aria-invalid=\"true\" aria-describedby=\"email-error\" /&gt;\n&lt;p id=\"email-error\"&gt;Enter an email address like name@example.com.&lt;/p&gt;</code></pre> <p>Hãy kiểm tra bằng cách điền trọn vẹn cả form chỉ với bàn phím.</p>"
+      },
+      "terms": [
+        "label",
+        "aria-describedby",
+        "aria-invalid",
+        "autocomplete",
+        "fieldset"
+      ]
+    },
+    {
+      "id": "q114",
+      "number": 114,
+      "tag": "Accessibility · Thị giác",
+      "title": "What are the accessibility requirements for colour contrast, motion and zoom?",
+      "titleVi": "Yêu cầu accessibility về độ tương phản màu, chuyển động và phóng to là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Contrast: 4.5:1 cho chữ thường, 3:1 cho chữ lớn và thành phần UI",
+          "Không chỉ dùng màu để truyền thông tin",
+          "Zoom 200% và reflow ở 320px, không khóa zoom",
+          "prefers-reduced-motion, kích thước vùng bấm, không nhấp nháy"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Contrast (WCAG AA):</strong> at least <strong class=\"k\">4.5:1</strong> for normal text, <strong class=\"k\">3:1</strong> for large text (about 24px, or 19px bold) and for UI parts such as input borders, icons and focus rings. Check with the browser DevTools or a contrast checker, in both light and dark themes.</li><li><strong class=\"k\">Do not use colour alone</strong> to carry meaning: an error needs an icon or text as well, a link inside a paragraph needs an underline or another cue, a chart needs patterns or labels.</li><li><strong class=\"k\">Zoom and reflow:</strong> the page must work at <strong class=\"k\">200% zoom</strong>, and without horizontal scrolling at a 320px-wide viewport (400% zoom). Use relative units (<code>rem</code>, <code>%</code>), do not disable pinch zoom (<code>user-scalable=no</code>), and let text resize.</li><li><strong class=\"k\">Motion:</strong> respect <code>prefers-reduced-motion</code>; avoid auto-playing animation that cannot be paused; nothing should flash more than three times per second.</li><li><strong class=\"k\">Target size (WCAG 2.2):</strong> interactive targets should be at least <strong class=\"k\">24×24 CSS pixels</strong> (44px is more comfortable on touch).</li><li><strong class=\"k\">Do not rely on hover alone</strong>: the same content must be reachable by keyboard and touch.</li></ul> <pre><code>@media (prefers-reduced-motion: reduce) {\n  * {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition: none !important;\n    scroll-behavior: auto !important;\n  }\n}</code></pre> <p>In a design system, put these rules into the <strong class=\"k\">tokens and components</strong> (colour pairs that are already checked, focus styles built in) so that product teams get them by default.</p>",
+        "vi": "<ul><li><strong class=\"k\">Độ tương phản (WCAG AA):</strong> tối thiểu <strong class=\"k\">4.5:1</strong> cho chữ thường, <strong class=\"k\">3:1</strong> cho chữ lớn (khoảng 24px, hoặc 19px đậm) và cho các thành phần UI như viền input, icon, viền focus. Kiểm tra bằng DevTools của trình duyệt hoặc công cụ kiểm tra contrast, ở cả theme sáng và tối.</li><li><strong class=\"k\">Không chỉ dùng màu</strong> để truyền nghĩa: lỗi cần thêm icon hoặc chữ, liên kết trong đoạn văn cần gạch chân hoặc dấu hiệu khác, biểu đồ cần họa tiết hoặc nhãn.</li><li><strong class=\"k\">Zoom và reflow:</strong> trang phải dùng được ở <strong class=\"k\">zoom 200%</strong>, và không phải cuộn ngang ở viewport rộng 320px (zoom 400%). Dùng đơn vị tương đối (<code>rem</code>, <code>%</code>), không tắt pinch zoom (<code>user-scalable=no</code>), và để chữ co giãn được.</li><li><strong class=\"k\">Chuyển động:</strong> tôn trọng <code>prefers-reduced-motion</code>; tránh animation tự chạy mà không dừng được; không có thứ gì nhấp nháy quá ba lần mỗi giây.</li><li><strong class=\"k\">Kích thước vùng bấm (WCAG 2.2):</strong> vùng tương tác tối thiểu <strong class=\"k\">24×24 CSS pixel</strong> (44px thoải mái hơn trên cảm ứng).</li><li><strong class=\"k\">Không chỉ dựa vào hover</strong>: cùng một nội dung phải truy cập được bằng bàn phím và cảm ứng.</li></ul> <pre><code>@media (prefers-reduced-motion: reduce) {\n  * {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition: none !important;\n    scroll-behavior: auto !important;\n  }\n}</code></pre> <p>Trong một design system, hãy đưa các quy tắc này vào <strong class=\"k\">token và component</strong> (cặp màu đã kiểm tra sẵn, kiểu focus dựng sẵn) để các team sản phẩm có chúng theo mặc định.</p>"
+      },
+      "terms": [
+        "contrast",
+        "prefers-reduced-motion",
+        "zoom 200%",
+        "reflow",
+        "target size"
+      ]
+    },
+    {
+      "id": "q115",
+      "number": 115,
+      "tag": "Accessibility · Screen reader",
+      "title": "How does a screen reader decide what to announce? Explain accessible names and live regions.",
+      "titleVi": "Screen reader quyết định đọc gì? Giải thích accessible name và live region.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi phần tử có role, tên, trạng thái",
+          "Tên truy cập: nội dung, label, aria-labelledby, aria-label, alt",
+          "Ẩn khỏi screen reader: aria-hidden, display:none, visually-hidden",
+          "Live region cho thay đổi bất đồng bộ (toast, kết quả tìm kiếm)"
+        ]
+      },
+      "answer": {
+        "en": "<p>A screen reader reads the <strong class=\"k\">accessibility tree</strong>: for each element a <strong class=\"k\">role</strong> (button, heading, checkbox), an <strong class=\"k\">accessible name</strong>, and <strong class=\"k\">states</strong> (expanded, checked, disabled). Your job is to make those three correct.</p> <h5>Accessible name, in order of preference</h5> <ol><li>Visible text or a <code>&lt;label&gt;</code> (the best, because voice-control users say what they see).</li><li><code>aria-labelledby</code> pointing to another element.</li><li><code>aria-label</code> for controls with no visible text, such as an icon button: <code>&lt;button aria-label=\"Close\"&gt;×&lt;/button&gt;</code>.</li><li><code>alt</code> for images: describe the <strong class=\"k\">purpose</strong>; use <code>alt=\"\"</code> for decorative images so they are skipped.</li></ol> <p>The visible label should be part of the accessible name, otherwise voice control breaks (WCAG \"Label in Name\").</p> <h5>Hiding things</h5> <ul><li><code>display: none</code>, <code>visibility: hidden</code> or <code>hidden</code>: hidden from everyone.</li><li><code>aria-hidden=\"true\"</code>: hidden from assistive technology only. Never put it on something focusable.</li><li>A <strong class=\"k\">visually-hidden</strong> class (clipped but still in the DOM) shows text to screen readers only, for extra context such as \"Opens in a new tab\".</li></ul> <h5>Live regions</h5> <p>Content that changes without a page load is not announced by default. A <strong class=\"k\">live region</strong> tells the screen reader to speak updates: <code>aria-live=\"polite\"</code> waits for a pause (search result counts, \"Saved\"), while <code>aria-live=\"assertive\"</code> or <code>role=\"alert\"</code> interrupts (errors). The region must <strong class=\"k\">exist in the DOM before</strong> its content changes.</p> <pre><code>&lt;div role=\"status\" aria-live=\"polite\"&gt;{results.length} results found&lt;/div&gt;</code></pre> <p>Use them sparingly: announcing everything is just noise.</p>",
+        "vi": "<p>Screen reader đọc <strong class=\"k\">accessibility tree</strong>: với mỗi phần tử có một <strong class=\"k\">role</strong> (button, heading, checkbox), một <strong class=\"k\">accessible name (tên truy cập)</strong> và các <strong class=\"k\">trạng thái</strong> (expanded, checked, disabled). Việc của bạn là làm cho ba thứ đó đúng.</p> <h5>Accessible name, theo thứ tự ưu tiên</h5> <ol><li>Chữ nhìn thấy được hoặc <code>&lt;label&gt;</code> (tốt nhất, vì người dùng điều khiển bằng giọng nói đọc đúng cái họ thấy).</li><li><code>aria-labelledby</code> trỏ tới một phần tử khác.</li><li><code>aria-label</code> cho control không có chữ hiển thị, như nút chỉ có icon: <code>&lt;button aria-label=\"Close\"&gt;×&lt;/button&gt;</code>.</li><li><code>alt</code> cho ảnh: mô tả <strong class=\"k\">mục đích</strong>; dùng <code>alt=\"\"</code> cho ảnh trang trí để chúng bị bỏ qua.</li></ol> <p>Nhãn hiển thị nên là một phần của accessible name, nếu không điều khiển bằng giọng nói sẽ hỏng (WCAG “Label in Name”).</p> <h5>Ẩn nội dung</h5> <ul><li><code>display: none</code>, <code>visibility: hidden</code> hoặc <code>hidden</code>: ẩn với tất cả mọi người.</li><li><code>aria-hidden=\"true\"</code>: chỉ ẩn với công nghệ hỗ trợ. Không bao giờ đặt nó lên thứ có thể focus.</li><li>Class <strong class=\"k\">visually-hidden</strong> (bị cắt nhỏ nhưng vẫn nằm trong DOM) chỉ hiển thị chữ cho screen reader, để thêm ngữ cảnh như “Mở trong tab mới”.</li></ul> <h5>Live region</h5> <p>Nội dung thay đổi mà không tải lại trang sẽ không được đọc theo mặc định. <strong class=\"k\">Live region</strong> báo cho screen reader đọc các cập nhật: <code>aria-live=\"polite\"</code> đợi lúc rảnh (số kết quả tìm kiếm, “Đã lưu”), còn <code>aria-live=\"assertive\"</code> hoặc <code>role=\"alert\"</code> ngắt lời (lỗi). Vùng này phải <strong class=\"k\">tồn tại trong DOM trước khi</strong> nội dung của nó thay đổi.</p> <pre><code>&lt;div role=\"status\" aria-live=\"polite\"&gt;{results.length} results found&lt;/div&gt;</code></pre> <p>Dùng tiết kiệm: thông báo mọi thứ chỉ tạo ra tiếng ồn.</p>"
+      },
+      "terms": [
+        "accessible name",
+        "aria-label",
+        "aria-live",
+        "aria-hidden",
+        "visually-hidden"
+      ]
+    },
+    {
+      "id": "q116",
+      "number": 116,
+      "tag": "Accessibility · SPA",
+      "title": "What accessibility problems appear in single-page apps and Next.js, and how do you fix them?",
+      "titleVi": "SPA và Next.js hay gặp vấn đề accessibility nào, và sửa ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Đổi route không tải lại trang nên screen reader không biết",
+          "Cập nhật title, chuyển focus tới h1 hoặc main",
+          "Thông báo nội dung tải bất đồng bộ",
+          "Link và button đúng loại, thuộc tính lang, skip link"
+        ]
+      },
+      "answer": {
+        "en": "<p>In a classic website every navigation is a full page load: the browser resets focus, reads the new title, and the screen reader announces the new page. In a SPA the router swaps content without any of that, so a keyboard or screen reader user can activate a link and hear <strong class=\"k\">nothing</strong>, with focus still on the old link.</p> <h5>What to do</h5> <ul><li><strong class=\"k\">Announce the route change.</strong> Update <code>document.title</code> on every route (in Next.js use the <code>metadata</code> API, unique per page) and move focus to the new page's <code>&lt;h1&gt;</code> (give it <code>tabindex=\"-1\"</code>) or to <code>&lt;main&gt;</code>. Next.js also has a built-in route announcer that reads the new page title, so keep titles meaningful.</li><li><strong class=\"k\">Use real links and buttons.</strong> <code>&lt;Link href&gt;</code> renders an <code>&lt;a&gt;</code>, which keeps middle click, Open in new tab and the right semantics. Do not use <code>&lt;div onClick={() =&gt; router.push(...)}&gt;</code>.</li><li><strong class=\"k\">Announce async changes:</strong> loading states, toasts, search results and form errors go through a live region (Câu 115).</li><li><strong class=\"k\">Set <code>lang</code></strong> on <code>&lt;html&gt;</code> (and on foreign-language passages) so the screen reader uses the right voice.</li><li><strong class=\"k\">Add a skip link</strong> and use landmarks (<code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>) in the layout.</li><li><strong class=\"k\">Avoid focus traps on infinite scroll or lazy-loaded content</strong>: offer a \"Load more\" button and keep the footer reachable.</li><li><strong class=\"k\">Respect <code>prefers-reduced-motion</code></strong> for page transitions.</li><li><strong class=\"k\">Keep SSR output meaningful:</strong> semantic HTML that already works before hydration is more robust and more accessible.</li></ul> <pre><code>// app/layout.tsx\n&lt;html lang=\"vi\"&gt;\n  &lt;body&gt;\n    &lt;a className=\"skip-link\" href=\"#main\"&gt;Skip to main content&lt;/a&gt;\n    &lt;Header /&gt;\n    &lt;main id=\"main\" tabIndex={-1}&gt;{children}&lt;/main&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</code></pre>",
+        "vi": "<p>Ở website truyền thống, mỗi lần điều hướng là một lần tải cả trang: trình duyệt đặt lại focus, đọc title mới, và screen reader thông báo trang mới. Ở SPA, router thay nội dung mà không có điều nào trong số đó, nên người dùng bàn phím hay screen reader có thể kích hoạt một liên kết mà <strong class=\"k\">không nghe thấy gì</strong>, focus vẫn nằm ở liên kết cũ.</p> <h5>Cần làm gì</h5> <ul><li><strong class=\"k\">Thông báo việc đổi route.</strong> Cập nhật <code>document.title</code> ở mỗi route (trong Next.js dùng <code>metadata</code> API, riêng cho từng trang) và chuyển focus tới <code>&lt;h1&gt;</code> của trang mới (cho nó <code>tabindex=\"-1\"</code>) hoặc tới <code>&lt;main&gt;</code>. Next.js còn có sẵn route announcer đọc title của trang mới, nên hãy đặt title có nghĩa.</li><li><strong class=\"k\">Dùng link và button thật.</strong> <code>&lt;Link href&gt;</code> render ra thẻ <code>&lt;a&gt;</code>, giữ được click giữa chuột, Mở trong tab mới và đúng ngữ nghĩa. Đừng dùng <code>&lt;div onClick={() =&gt; router.push(...)}&gt;</code>.</li><li><strong class=\"k\">Thông báo các thay đổi bất đồng bộ:</strong> trạng thái loading, toast, kết quả tìm kiếm và lỗi form đi qua live region (Câu 115).</li><li><strong class=\"k\">Đặt <code>lang</code></strong> cho <code>&lt;html&gt;</code> (và cho các đoạn ngoại ngữ) để screen reader dùng đúng giọng đọc.</li><li><strong class=\"k\">Thêm skip link</strong> và dùng landmark (<code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>) trong layout.</li><li><strong class=\"k\">Tránh bẫy focus ở infinite scroll hoặc nội dung lazy-load</strong>: cung cấp nút “Tải thêm” và giữ cho footer truy cập được.</li><li><strong class=\"k\">Tôn trọng <code>prefers-reduced-motion</code></strong> cho hiệu ứng chuyển trang.</li><li><strong class=\"k\">Giữ output SSR có nghĩa:</strong> HTML ngữ nghĩa đã dùng được trước khi hydrate thì bền vững và dễ tiếp cận hơn.</li></ul> <pre><code>// app/layout.tsx\n&lt;html lang=\"vi\"&gt;\n  &lt;body&gt;\n    &lt;a className=\"skip-link\" href=\"#main\"&gt;Skip to main content&lt;/a&gt;\n    &lt;Header /&gt;\n    &lt;main id=\"main\" tabIndex={-1}&gt;{children}&lt;/main&gt;\n  &lt;/body&gt;\n&lt;/html&gt;</code></pre>"
+      },
+      "terms": [
+        "SPA",
+        "route announcer",
+        "focus management",
+        "skip link",
+        "lang"
+      ]
+    },
+    {
+      "id": "q117",
+      "number": 117,
+      "tag": "Accessibility · Kiểm thử",
+      "title": "How do you test accessibility? What can automated tools catch and what can't they?",
+      "titleVi": "Bạn kiểm thử accessibility thế nào? Công cụ tự động bắt được gì và không bắt được gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Công cụ tự động chỉ bắt được khoảng 30–40% lỗi",
+          "Tự động: eslint-plugin-jsx-a11y, jest-axe, axe với Playwright, Lighthouse",
+          "Thủ công: chỉ dùng bàn phím, screen reader, zoom",
+          "Đưa vào CI và có checklist cho từng component"
+        ]
+      },
+      "answer": {
+        "en": "<p>Automated tools find roughly a third of accessibility problems. They are great for the <strong class=\"k\">mechanical</strong> ones (missing alt, missing label, low contrast, invalid ARIA, duplicate ids) but they cannot judge whether an alt text is meaningful, whether the focus order makes sense, or whether a dialog is usable. So I combine both.</p> <h5>Automated, on every change</h5> <ul><li><strong class=\"k\"><code>eslint-plugin-jsx-a11y</code></strong> in the editor and CI catches mistakes while you type.</li><li><strong class=\"k\"><code>jest-axe</code></strong> (or <code>vitest-axe</code>) in component tests: <code>expect(await axe(container)).toHaveNoViolations()</code>.</li><li><strong class=\"k\"><code>@axe-core/playwright</code></strong> in E2E tests to scan real pages.</li><li><strong class=\"k\">Lighthouse</strong> and the browser <strong class=\"k\">axe DevTools</strong> for quick audits, and the Storybook a11y addon for each component state.</li></ul> <h5>Manual, before a release</h5> <ol><li><strong class=\"k\">Keyboard only:</strong> put the mouse away and do the main journeys. Can you see the focus? Reach everything? Leave every widget?</li><li><strong class=\"k\">Screen reader:</strong> VoiceOver (macOS/iOS), NVDA (Windows) or TalkBack, on the main flows and on custom widgets.</li><li><strong class=\"k\">Zoom to 200%</strong> and use a 320px-wide window; check text-only zoom.</li><li><strong class=\"k\">Check contrast</strong> in both themes, <strong class=\"k\">disable CSS</strong> to confirm the reading order, and turn on <strong class=\"k\">reduced motion</strong>.</li></ol> <pre><code>test('login form has no detectable a11y violations', async () =&gt; {\n  const { container } = render(&lt;LoginForm /&gt;);\n  expect(await axe(container)).toHaveNoViolations();\n});</code></pre> <p>Give each shared component an <strong class=\"k\">a11y checklist</strong> in the design system (keyboard, name, states, contrast), and treat new violations as failing builds.</p>",
+        "vi": "<p>Công cụ tự động tìm được khoảng một phần ba vấn đề accessibility. Chúng rất tốt với các lỗi <strong class=\"k\">cơ học</strong> (thiếu alt, thiếu label, contrast thấp, ARIA không hợp lệ, id trùng) nhưng không đánh giá được alt text có ý nghĩa không, thứ tự focus có hợp lý không, hay dialog có dùng được không. Vì vậy tôi kết hợp cả hai.</p> <h5>Tự động, ở mỗi thay đổi</h5> <ul><li><strong class=\"k\"><code>eslint-plugin-jsx-a11y</code></strong> trong editor và CI bắt lỗi ngay khi đang gõ.</li><li><strong class=\"k\"><code>jest-axe</code></strong> (hoặc <code>vitest-axe</code>) trong test component: <code>expect(await axe(container)).toHaveNoViolations()</code>.</li><li><strong class=\"k\"><code>@axe-core/playwright</code></strong> trong E2E test để quét các trang thật.</li><li><strong class=\"k\">Lighthouse</strong> và <strong class=\"k\">axe DevTools</strong> của trình duyệt để audit nhanh, cùng addon a11y của Storybook cho từng trạng thái component.</li></ul> <h5>Thủ công, trước khi release</h5> <ol><li><strong class=\"k\">Chỉ dùng bàn phím:</strong> bỏ chuột đi và làm các hành trình chính. Có thấy focus không? Tiếp cận được mọi thứ không? Rời khỏi được mọi widget không?</li><li><strong class=\"k\">Screen reader:</strong> VoiceOver (macOS/iOS), NVDA (Windows) hoặc TalkBack, trên các luồng chính và các widget tùy biến.</li><li><strong class=\"k\">Zoom 200%</strong> và dùng cửa sổ rộng 320px; kiểm tra cả zoom chỉ chữ.</li><li><strong class=\"k\">Kiểm tra contrast</strong> ở cả hai theme, <strong class=\"k\">tắt CSS</strong> để xác nhận thứ tự đọc, và bật <strong class=\"k\">reduced motion</strong>.</li></ol> <pre><code>test('login form has no detectable a11y violations', async () =&gt; {\n  const { container } = render(&lt;LoginForm /&gt;);\n  expect(await axe(container)).toHaveNoViolations();\n});</code></pre> <p>Hãy cho mỗi component dùng chung một <strong class=\"k\">checklist a11y</strong> trong design system (bàn phím, tên, trạng thái, contrast), và coi vi phạm mới là build lỗi.</p>"
+      },
+      "terms": [
+        "axe",
+        "jest-axe",
+        "eslint-plugin-jsx-a11y",
+        "VoiceOver",
+        "NVDA"
+      ]
+    },
+    {
+      "id": "q118",
+      "number": 118,
+      "tag": "Accessibility · WCAG 2.2",
+      "title": "What is new in WCAG 2.2 compared with 2.1? Which new criteria affect frontend developers the most?",
+      "titleVi": "WCAG 2.2 có gì mới so với 2.1? Những tiêu chí mới nào ảnh hưởng nhiều nhất tới lập trình viên frontend?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "WCAG 2.2 (2023) thêm 9 tiêu chí, bỏ 4.1.1 Parsing",
+          "Các tiêu chí mức A/AA ảnh hưởng frontend: focus không bị che, kéo thả, kích thước vùng bấm",
+          "Trợ giúp nhất quán, không bắt nhập lại, xác thực dễ tiếp cận",
+          "Cách áp dụng vào code và design system"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">WCAG 2.2</strong> became a W3C Recommendation in October 2023. It is backwards compatible with 2.1 (a page that meets 2.2 also meets 2.1), adds <strong class=\"k\">nine new success criteria</strong> and removes the obsolete <strong class=\"k\">4.1.1 Parsing</strong>. Six of the new criteria are at level A or AA, so they are part of a normal \"AA\" goal.</p> <h5>The new A/AA criteria, and what they mean in code</h5> <ul><li><strong class=\"k\">2.4.11 Focus Not Obscured (Minimum, AA):</strong> a focused element must not be completely hidden by other content such as a sticky header or cookie banner. Fix with <code>scroll-padding-top</code> / <code>scroll-margin</code> and by keeping banners out of the way.</li><li><strong class=\"k\">2.5.7 Dragging Movements (AA):</strong> anything you can do by dragging (sortable lists, sliders, maps, file reordering) needs a <strong class=\"k\">single-pointer alternative</strong>, such as up/down buttons or a click-to-place option.</li><li><strong class=\"k\">2.5.8 Target Size (Minimum, AA):</strong> pointer targets are at least <strong class=\"k\">24×24 CSS pixels</strong>, or have enough spacing around them (inline links in text are exempt).</li><li><strong class=\"k\">3.2.6 Consistent Help (A):</strong> if you offer help (contact link, chat, FAQ), put it in the <strong class=\"k\">same relative place</strong> on every page.</li><li><strong class=\"k\">3.3.7 Redundant Entry (A):</strong> do not make users type the same information again in one process; prefill or let them choose it (for example \"billing address same as shipping\").</li><li><strong class=\"k\">3.3.8 Accessible Authentication (Minimum, AA):</strong> logging in must not depend on a <strong class=\"k\">cognitive function test</strong> (remembering a password, solving a puzzle, transcribing a code) unless there is an alternative (see Câu 119).</li></ul> <p>The AAA additions are 2.4.12 Focus Not Obscured (Enhanced), 2.4.13 Focus Appearance and 3.3.9 Accessible Authentication (Enhanced).</p> <pre><code>html { scroll-padding-top: 5rem; }          /* keep focused and anchored elements below the sticky header */\n.sortable-item .move-up, .sortable-item .move-down { min-width: 24px; min-height: 24px; }</code></pre> <p>Put these checks into the <strong class=\"k\">design system</strong>: minimum hit areas on buttons and icon buttons, focus styles that are never clipped, drag and drop with keyboard and button alternatives.</p>",
+        "vi": "<p><strong class=\"k\">WCAG 2.2</strong> trở thành W3C Recommendation vào tháng 10/2023. Nó tương thích ngược với 2.1 (trang đạt 2.2 thì cũng đạt 2.1), thêm <strong class=\"k\">chín tiêu chí thành công mới</strong> và bỏ tiêu chí lỗi thời <strong class=\"k\">4.1.1 Parsing</strong>. Sáu tiêu chí mới thuộc mức A hoặc AA, nên nằm trong mục tiêu “AA” thông thường.</p> <h5>Các tiêu chí A/AA mới, và ý nghĩa trong code</h5> <ul><li><strong class=\"k\">2.4.11 Focus Not Obscured (Minimum, AA):</strong> phần tử đang focus không được bị nội dung khác che hoàn toàn, như header dính hay banner cookie. Cách sửa: <code>scroll-padding-top</code> / <code>scroll-margin</code> và đặt banner sao cho không che.</li><li><strong class=\"k\">2.5.7 Dragging Movements (AA):</strong> mọi thao tác làm được bằng kéo (danh sách sắp xếp, slider, bản đồ, đổi thứ tự file) cần có <strong class=\"k\">cách thay thế bằng một cú chạm/click</strong>, như nút lên/xuống hoặc chọn rồi đặt.</li><li><strong class=\"k\">2.5.8 Target Size (Minimum, AA):</strong> vùng bấm tối thiểu <strong class=\"k\">24×24 CSS pixel</strong>, hoặc có đủ khoảng cách xung quanh (liên kết nằm trong đoạn văn được miễn).</li><li><strong class=\"k\">3.2.6 Consistent Help (A):</strong> nếu có kênh trợ giúp (liên kết liên hệ, chat, FAQ), đặt nó ở <strong class=\"k\">cùng một vị trí tương đối</strong> trên mọi trang.</li><li><strong class=\"k\">3.3.7 Redundant Entry (A):</strong> đừng bắt người dùng nhập lại cùng một thông tin trong một quy trình; điền sẵn hoặc cho họ chọn (ví dụ “địa chỉ thanh toán giống địa chỉ giao hàng”).</li><li><strong class=\"k\">3.3.8 Accessible Authentication (Minimum, AA):</strong> việc đăng nhập không được phụ thuộc vào <strong class=\"k\">bài kiểm tra chức năng nhận thức</strong> (nhớ mật khẩu, giải câu đố, chép lại mã) trừ khi có phương án thay thế (xem Câu 119).</li></ul> <p>Các tiêu chí AAA bổ sung là 2.4.12 Focus Not Obscured (Enhanced), 2.4.13 Focus Appearance và 3.3.9 Accessible Authentication (Enhanced).</p> <pre><code>html { scroll-padding-top: 5rem; }          /* keep focused and anchored elements below the sticky header */\n.sortable-item .move-up, .sortable-item .move-down { min-width: 24px; min-height: 24px; }</code></pre> <p>Hãy đưa các kiểm tra này vào <strong class=\"k\">design system</strong>: vùng bấm tối thiểu cho button và icon button, kiểu focus không bao giờ bị cắt, kéo thả có phương án bàn phím và nút bấm.</p>"
+      },
+      "terms": [
+        "WCAG 2.2",
+        "Focus Not Obscured",
+        "Dragging Movements",
+        "Target Size",
+        "Redundant Entry"
+      ]
+    },
+    {
+      "id": "q119",
+      "number": 119,
+      "tag": "Accessibility · WCAG 2.2",
+      "title": "How would you make a login and OTP flow accessible under WCAG 2.2 (Accessible Authentication)?",
+      "titleVi": "Bạn làm cho luồng đăng nhập và OTP dễ tiếp cận theo WCAG 2.2 (Accessible Authentication) như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Quy tắc: không bắt người dùng nhớ, chép hay giải đố để đăng nhập",
+          "Cho phép paste và trình quản lý mật khẩu, đặt autocomplete đúng",
+          "OTP: một ô nhập, one-time-code, cho phép paste, có thể gửi lại",
+          "Phương án thay thế: magic link, passkey, đăng nhập mạng xã hội",
+          "CAPTCHA và thông báo lỗi dễ tiếp cận"
+        ]
+      },
+      "answer": {
+        "en": "<p>The rule (3.3.8, level AA): a login step must not require a <strong class=\"k\">cognitive function test</strong>, such as remembering a password, solving a puzzle or transcribing characters, unless the user has an alternative or a tool that does it for them. In practice, <strong class=\"k\">let tools and other methods do the hard part</strong>.</p> <h5>Password sign-in</h5> <ul><li><strong class=\"k\">Never block paste</strong> in password or code fields, and never disable password managers.</li><li>Use correct <code>autocomplete</code> values: <code>username</code>, <code>current-password</code>, <code>new-password</code>, so browsers and password managers can fill in.</li><li>Show a <strong class=\"k\">\"show password\"</strong> toggle with a proper button and <code>aria-pressed</code>.</li></ul> <h5>Email/SMS OTP (as in Câu 70)</h5> <ul><li><strong class=\"k\">One input</strong>, not six separate boxes: boxes confuse screen readers and break paste and autofill. If you must use boxes, handle paste across them and label the group.</li><li><code>autocomplete=\"one-time-code\"</code>, <code>inputmode=\"numeric\"</code>; the browser can fill the SMS code automatically.</li><li>Say clearly how many digits, where the code was sent and <strong class=\"k\">when it expires</strong>; offer <strong class=\"k\">resend</strong> with a countdown that is announced politely (not every second).</li><li>Move focus to the code field when the step appears, and put errors in a live region.</li></ul> <pre><code>&lt;label for=\"otp\"&gt;Verification code&lt;/label&gt;\n&lt;input id=\"otp\" name=\"otp\" inputmode=\"numeric\" autocomplete=\"one-time-code\"\n       maxlength=\"6\" aria-describedby=\"otp-hint\" /&gt;\n&lt;p id=\"otp-hint\"&gt;We sent a 6-digit code to your phone. It expires in 5 minutes.&lt;/p&gt;</code></pre> <h5>Alternatives and CAPTCHA</h5> <ul><li>Offer <strong class=\"k\">another way in</strong>: magic link by email, <strong class=\"k\">passkeys (WebAuthn)</strong>, or sign-in with Google/Facebook. Any of these satisfies the criterion because nothing has to be remembered or transcribed.</li><li>Avoid image or puzzle <strong class=\"k\">CAPTCHAs</strong>. Prefer invisible bot detection and rate limiting (Câu 70), and always provide an accessible alternative.</li><li>Keep error messages clear, but generic enough not to reveal whether an account exists.</li></ul> <p><strong class=\"k\">From your CV:</strong> your shared authentication (OAuth plus email/SMS OTP) already offers alternatives, so you can say it fits the criterion, as long as paste, autofill and the single OTP field are handled.</p>",
+        "vi": "<p>Quy tắc (3.3.8, mức AA): một bước đăng nhập không được yêu cầu <strong class=\"k\">bài kiểm tra chức năng nhận thức</strong>, như nhớ mật khẩu, giải câu đố hay chép lại ký tự, trừ khi người dùng có phương án thay thế hoặc công cụ làm hộ. Trên thực tế, hãy <strong class=\"k\">để công cụ và các phương thức khác làm phần khó</strong>.</p> <h5>Đăng nhập bằng mật khẩu</h5> <ul><li><strong class=\"k\">Không bao giờ chặn paste</strong> ở ô mật khẩu hay ô mã, và không vô hiệu hóa trình quản lý mật khẩu.</li><li>Dùng đúng giá trị <code>autocomplete</code>: <code>username</code>, <code>current-password</code>, <code>new-password</code>, để trình duyệt và trình quản lý mật khẩu tự điền.</li><li>Có nút <strong class=\"k\">“hiện mật khẩu”</strong> dùng button thật và <code>aria-pressed</code>.</li></ul> <h5>OTP qua email/SMS (như Câu 70)</h5> <ul><li><strong class=\"k\">Một ô nhập duy nhất</strong>, không phải sáu ô riêng: nhiều ô làm screen reader bối rối và hỏng paste lẫn autofill. Nếu buộc phải dùng nhiều ô, hãy xử lý paste xuyên các ô và gắn nhãn cho cả nhóm.</li><li><code>autocomplete=\"one-time-code\"</code>, <code>inputmode=\"numeric\"</code>; trình duyệt có thể tự điền mã SMS.</li><li>Nói rõ mã có bao nhiêu chữ số, gửi tới đâu và <strong class=\"k\">khi nào hết hạn</strong>; cho phép <strong class=\"k\">gửi lại</strong> với bộ đếm ngược được thông báo ở mức polite (không đọc mỗi giây).</li><li>Chuyển focus vào ô nhập mã khi bước này xuất hiện, và đặt lỗi trong live region.</li></ul> <pre><code>&lt;label for=\"otp\"&gt;Verification code&lt;/label&gt;\n&lt;input id=\"otp\" name=\"otp\" inputmode=\"numeric\" autocomplete=\"one-time-code\"\n       maxlength=\"6\" aria-describedby=\"otp-hint\" /&gt;\n&lt;p id=\"otp-hint\"&gt;We sent a 6-digit code to your phone. It expires in 5 minutes.&lt;/p&gt;</code></pre> <h5>Phương án thay thế và CAPTCHA</h5> <ul><li>Cung cấp <strong class=\"k\">cách vào khác</strong>: magic link qua email, <strong class=\"k\">passkey (WebAuthn)</strong>, hoặc đăng nhập bằng Google/Facebook. Mỗi cách đều thỏa tiêu chí vì không phải nhớ hay chép gì.</li><li>Tránh <strong class=\"k\">CAPTCHA</strong> dạng ảnh hay câu đố. Ưu tiên phát hiện bot ngầm và rate limit (Câu 70), và luôn có phương án thay thế dễ tiếp cận.</li><li>Thông báo lỗi nên rõ ràng, nhưng đủ chung chung để không lộ tài khoản có tồn tại hay không.</li></ul> <p><strong class=\"k\">Liên hệ CV:</strong> lớp xác thực dùng chung của bạn (OAuth cùng OTP email/SMS) đã có sẵn các phương án thay thế, nên bạn có thể nói nó phù hợp tiêu chí, miễn là xử lý đúng paste, autofill và ô OTP duy nhất.</p>"
+      },
+      "terms": [
+        "Accessible Authentication",
+        "3.3.8",
+        "passkeys",
+        "one-time-code",
+        "CAPTCHA"
+      ]
+    }
+  ]
+}

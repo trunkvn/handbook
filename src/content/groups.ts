@@ -25,6 +25,11 @@ const layout = [
     slugs: ["react-next-js", "vue-nuxt", "hieu-nang-web"],
   },
   {
+    id: "chat-luong",
+    title: "Testing, a11y & design system",
+    slugs: ["testing", "accessibility", "design-system"],
+  },
+  {
     id: "viet-code",
     title: "Viết code",
     slugs: ["viet-code-tay", "viet-code-ngay-3", "viet-code-ngay-4"],

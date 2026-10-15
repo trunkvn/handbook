@@ -852,4 +852,186 @@ cases((arr) => isValidBST(tree(arr)), [
 ]);
 `,
   },
+
+  /* ---------- Testing & design system ---------- */
+
+  q108: {
+    starter: `// mockFn(impl?) trả về một hàm giả, giống jest.fn():
+//   fn.mock.calls    mảng các mảng đối số của từng lần gọi
+//   fn.mock.results  [{ type: 'return' | 'throw', value }] cho từng lần gọi
+//   fn.mockImplementation(f), fn.mockReturnValue(v), fn.mockReturnValueOnce(v)
+//                    (trả về chính fn để gọi nối)
+//   fn.mockClear()   xóa calls/results nhưng giữ hành vi
+function mockFn(impl) {
+
+}
+`,
+    tests: `
+test("ghi lại đối số của từng lần gọi", () => {
+  const f = mockFn();
+  f(1, 2);
+  f("a");
+  eq(f.mock.calls, [[1, 2], ["a"]]);
+});
+
+test("gọi implementation và trả về kết quả của nó", () => {
+  const f = mockFn((a, b) => a + b);
+  eq(f(2, 3), 5);
+  eq(f.mock.results, [{ type: "return", value: 5 }]);
+});
+
+test("không có implementation thì trả về undefined", () => {
+  const f = mockFn();
+  eq(f(), undefined);
+  eq(f.mock.results, [{ type: "return", value: undefined }]);
+});
+
+test("ghi lại lỗi và ném lại lỗi đó", () => {
+  const f = mockFn(() => { throw new Error("boom"); });
+  let err;
+  try { f(); } catch (e) { err = e; }
+  eq(err && err.message, "boom", "lỗi phải được ném lại cho code đang test");
+  eq(f.mock.results.length, 1);
+  eq(f.mock.results[0].type, "throw");
+  eq(f.mock.results[0].value === err, true);
+});
+
+test("mockReturnValue trả về cùng một giá trị cho mọi lần gọi", () => {
+  const f = mockFn();
+  f.mockReturnValue(42);
+  eq([f(), f(), f()], [42, 42, 42]);
+});
+
+test("mockImplementation thay đổi hành vi", () => {
+  const f = mockFn(() => 1);
+  f.mockImplementation((x) => x * 10);
+  eq(f(4), 40);
+});
+
+test("các hàm mock trả về chính fn để gọi nối", () => {
+  const f = mockFn();
+  eq(f.mockReturnValue(1) === f, true, "mockReturnValue");
+  eq(f.mockImplementation(() => 2) === f, true, "mockImplementation");
+  eq(f.mockReturnValueOnce(3) === f, true, "mockReturnValueOnce");
+});
+
+test("mockReturnValueOnce được dùng theo thứ tự rồi quay lại mặc định", () => {
+  const f = mockFn(() => "default");
+  f.mockReturnValueOnce("a").mockReturnValueOnce("b");
+  eq([f(), f(), f(), f()], ["a", "b", "default", "default"]);
+});
+
+test("mockClear xóa lịch sử nhưng giữ implementation", () => {
+  const f = mockFn(() => 1);
+  f(1); f(2);
+  f.mockClear();
+  eq(f.mock.calls, []);
+  eq(f.mock.results, []);
+  eq(f(), 1);
+  eq(f.mock.calls, [[]]);
+});
+
+test("giữ đúng this khi dùng làm method", () => {
+  const o = { v: 7, m: mockFn(function () { return this.v; }) };
+  eq(o.m(), 7);
+});
+`,
+  },
+
+  q128: {
+    starter: `// classNames('a', { b: true, c: false }, ['d', ['e']], null) => 'a b d e'
+// Bỏ qua mọi giá trị falsy; chuỗi/số thêm trực tiếp; mảng lồng nhau; object lấy các key truthy.
+function classNames(...args) {
+
+}
+`,
+    tests: `
+cases(classNames, [
+  [["a", "b"], "a b"],
+  [[], ""],
+  [["a", null, undefined, false, 0, "", "b"], "a b"],
+  [[{ a: true, b: false, c: 1, d: 0 }], "a c"],
+  [[["a", ["b", "c"]], "d"], "a b c d"],
+  [["btn", { "btn-primary": true, "btn-disabled": false }, ["x", ["y"]], null], "btn btn-primary x y"],
+  [[1, 2], "1 2"],
+  [[[]], ""],
+  [[{}], ""],
+  [[["", false]], ""],
+]);
+
+test("không để dư dấu cách khi có phần rỗng ở giữa", () => {
+  eq(classNames("a", [], "", "b"), "a b");
+});
+`,
+  },
+
+  q129: {
+    starter: `// resolveTokens({ color: { blue: { 500: '#2563eb' }, primary: '{color.blue.500}' }, border: '1px solid {color.primary}' })
+//   => { 'color.blue.500': '#2563eb', 'color.primary': '#2563eb', border: '1px solid #2563eb' }
+// Giá trị luôn là chuỗi (số được chuyển thành chuỗi).
+// Tham chiếu không tồn tại: throw new Error('Unknown token: <tên>')
+// Tham chiếu vòng:         throw new Error('Circular reference: a -> b -> a')
+function resolveTokens(tokens) {
+
+}
+`,
+    tests: `
+function msgOf(fn) {
+  try { fn(); } catch (e) { return e.message; }
+  return null;
+}
+
+test("làm phẳng và resolve alias, kể cả alias nằm trong chuỗi dài hơn", () => {
+  const tokens = {
+    color: { blue: { 500: "#2563eb" }, primary: "{color.blue.500}" },
+    border: "1px solid {color.primary}",
+  };
+  eq(resolveTokens(tokens), {
+    "color.blue.500": "#2563eb",
+    "color.primary": "#2563eb",
+    border: "1px solid #2563eb",
+  });
+});
+
+test("alias nhiều cấp", () => {
+  eq(resolveTokens({ a: "{b}", b: "{c}", c: "x" }), { a: "x", b: "x", c: "x" });
+});
+
+test("alias trỏ tới token được khai báo sau nó", () => {
+  eq(resolveTokens({ a: "{z}", z: "1" }), { a: "1", z: "1" });
+});
+
+test("nhiều alias trong một chuỗi", () => {
+  eq(resolveTokens({ a: "1", b: "2", c: "{a}-{b}" }).c, "1-2");
+});
+
+test("số được chuyển thành chuỗi", () => {
+  eq(resolveTokens({ space: { sm: 8 } }), { "space.sm": "8" });
+});
+
+test("không sửa object đầu vào", () => {
+  const tokens = { a: "{b}", b: "x", n: { c: "{b}" } };
+  const copy = JSON.parse(JSON.stringify(tokens));
+  const out = resolveTokens(tokens);
+  eq(out.a, "x");
+  eq(tokens, copy, "object đầu vào bị sửa");
+});
+
+test("tham chiếu không tồn tại", () => {
+  eq(msgOf(() => resolveTokens({ a: "{missing}" })), "Unknown token: missing");
+});
+
+test("vòng tham chiếu giữa hai token", () => {
+  eq(msgOf(() => resolveTokens({ a: "{b}", b: "{a}" })), "Circular reference: a -> b -> a");
+});
+
+test("vòng tham chiếu qua ba token", () => {
+  eq(msgOf(() => resolveTokens({ a: "{b}", b: "{c}", c: "{a}" })), "Circular reference: a -> b -> c -> a");
+});
+
+test("token tự tham chiếu chính nó", () => {
+  eq(msgOf(() => resolveTokens({ a: "{a}" })), "Circular reference: a -> a");
+});
+`,
+  },
 };

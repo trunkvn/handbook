@@ -19,6 +19,9 @@ import part16 from "./parts/16-vue-nuxt.json";
 import part17 from "./parts/17-hieu-nang-web.json";
 import part18 from "./parts/18-viet-code-ngay-4.json";
 import part19 from "./parts/19-leetcode-ngay-4.json";
+import part20 from "./parts/20-testing.json";
+import part21 from "./parts/21-accessibility.json";
+import part22 from "./parts/22-design-system.json";
 
 export const parts: Part[] = [
   part01,
@@ -40,4 +43,7 @@ export const parts: Part[] = [
   part17,
   part18,
   part19,
+  part20,
+  part21,
+  part22,
 ];
