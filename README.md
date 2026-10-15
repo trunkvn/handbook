@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# handbook-interview
 
-## Getting Started
+Sổ tay ôn tập phỏng vấn Frontend: hơn 200 câu hỏi, đáp án song ngữ Anh–Việt, khung trả lời, chế độ luyện tập, tìm kiếm và theo dõi tiến độ.
 
-First, run the development server:
+Next.js (App Router) · React 19 · TypeScript · pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm dev      # http://localhost:3000
+pnpm build && pnpm start
+pnpm lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Cấu trúc
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Mỗi phần (Part) là một route riêng: `/` là danh sách các phần, `/<slug>` là trang của một phần (ví dụ `/javascript-core`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/
+    page.tsx            # trang chủ: giới thiệu + danh sách các phần
+    [part]/page.tsx     # trang một phần; mọi slug được prerender lúc build
+    layout.tsx          # topbar + sidebar dùng chung
+  content/
+    parts/NN-*.json     # nội dung: mỗi file là một phần (Part) chứa các câu hỏi
+    parts.ts            # thứ tự các phần theo file (số La Mã gốc)
+    groups.ts           # các phần được nhóm thế nào trong sidebar / trang chủ
+    exercises.ts        # bài tập viết code (starter + test), khoá theo id câu hỏi
+    types.ts            # kiểu Part / Question
+  components/handbook/
+    *-card, part-section, answer-columns, masthead, part-index, part-pager   # Server Component: nội dung tĩnh
+    card-shell, parts-nav, search-*, *-switch, progress, code-playground     # Client Component: phần tương tác
+  lib/
+    handbook-store.ts   # state ngôn ngữ / luyện tập / theme / tiến độ / tìm kiếm (localStorage)
+    search.ts           # tìm kiếm toàn văn, chỉ tải khi người dùng bắt đầu tìm
+    code-runner/        # chạy code của người dùng trong Web Worker
+  app/handbook.css      # toàn bộ giao diện
+```
 
-## Learn More
+## Thêm hoặc sửa câu hỏi
 
-To learn more about Next.js, take a look at the following resources:
+Mở file JSON của phần tương ứng trong `src/content/parts/` và thêm một object vào `questions`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```jsonc
+{
+  "id": "q100",            // duy nhất và không đổi: dùng làm anchor và khoá lưu tiến độ
+  "number": 100,
+  "tag": "Chủ đề · Nhóm nhỏ",
+  "title": "Câu hỏi tiếng Anh (cho phép <code>…</code>)",
+  "titleVi": "Bản dịch tiếng Việt",
+  "framework": { "title": "Khung trả lời", "steps": ["Bước 1", "Bước 2"] },
+  "answer": { "en": "<p>HTML…</p>", "vi": "<p>HTML…</p>" },
+  "terms": ["từ khoá"]
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Dùng `<strong class="k">…</strong>` để đánh dấu ý bắt buộc phải nhắc tới.
+- Thêm `"extras": [{ "title", "en", "vi" }]` nếu cần một phần mở rộng dưới đáp án.
+- Nội dung HTML do repo này tự viết nên được render trực tiếp, đừng đưa nội dung từ người dùng vào đây.
+- Phần mới: tạo file JSON mới rồi import vào `src/content/parts.ts`.
 
-## Deploy on Vercel
+Tiến độ "Đã thuộc" lưu trong `localStorage` (key `interview-handbook-v1`) theo `id` câu hỏi.
+- Phần mới: tạo file JSON mới (có `slug`), import vào `src/content/parts.ts`, rồi thêm slug vào một nhóm trong `src/content/groups.ts` (thiếu là build báo lỗi).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Viết code trực tiếp trên trang
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Câu nào có mục trong `src/content/exercises.ts` sẽ hiện nút "Viết code trực tiếp": mở trình soạn code (CodeMirror), bấm "Chạy test" hoặc Ctrl/⌘ + Enter. Code chạy trong Web Worker nên vòng lặp vô hạn chỉ làm worker bị dừng sau 6 giây, không làm đơ trang. Code đang viết được lưu trong `localStorage` (key `interview-handbook-code-v1`).
+
+Thêm một bài tập:
+
+```ts
+q101: {
+  starter: `function twoSum(nums, target) {\n\n}\n`,   // code ban đầu trong editor
+  tests: `
+    cases(twoSum, [
+      [[[2, 7, 11, 15], 9], [0, 1]],   // [danh sách đối số, kết quả kỳ vọng]
+    ], "same");                         // "same": bỏ qua thứ tự phần tử
+  `,
+},
+```
+
+Test được viết bằng JS và chạy cùng scope với code của người dùng nên gọi hàm theo tên. Các hàm hỗ trợ (xem `src/lib/code-runner/harness.ts`): `test(tên, fn)`, `eq(thực tế, kỳ vọng)`, `same(...)` (không phân biệt thứ tự), `cases(fn, hàng, "same"?)`, `wait(ms)`, và `ListNode`/`list()`/`toArray()`, `TreeNode`/`tree()` cho danh sách liên kết và cây nhị phân.
+
+Mỗi bài nên được kiểm chứng: lời giải mẫu trong thẻ phải qua hết test, và vài lời giải sai phải bị bắt.
