@@ -1,0 +1,36 @@
+{
+  "id": "part-1",
+  "slug": "gioi-thieu-ban-than",
+  "roman": "I",
+  "title": "Giới thiệu bản thân",
+  "description": "Câu mở đầu gần như luôn có: ngắn gọn, có số liệu, dẫn dắt sang dự án.",
+  "questions": [
+    {
+      "id": "q01",
+      "number": 1,
+      "tag": "Giới thiệu",
+      "title": "Tell me about yourself?",
+      "titleVi": "Hãy giới thiệu về bản thân.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vai trò + số năm kinh nghiệm",
+          "Công nghệ chính",
+          "Bốn mảng công việc",
+          "Dự án cá nhân"
+        ]
+      },
+      "answer": {
+        "en": "<p> I'm a <strong class=\"k\" >Frontend Developer with three and a half years of experience</strong> building web applications at OEG, an entertainment and gaming company. I mainly work with <strong class=\"k\">Next.js and Nuxt.js</strong>. </p> <p> My work has focused on four areas: <strong class=\"k\">game top-up portals</strong> with VietQR, ZaloPay and VNPlay; a <strong class=\"k\">shared authentication system</strong> across OEG's products; an <strong class=\"k\">esports platform</strong> for student tournament registration; and an <strong class=\"k\">internal CMS</strong> for OEG's products. </p> <p> Outside work, I enjoy building side projects such as a booking platform, a React UI component library, and some showcase projects about Vietnamese culture. </p>",
+        "vi": "<p> Tôi là Frontend Developer với ba năm rưỡi kinh nghiệm xây dựng ứng dụng web tại OEG, một công ty giải trí và game. Tôi chủ yếu làm việc với Next.js và Nuxt.js. </p> <p> Công việc của tôi tập trung vào bốn mảng: các cổng nạp game với VietQR, ZaloPay và VNPlay; hệ thống xác thực dùng chung cho các sản phẩm của OEG; nền tảng esports cho phép sinh viên đăng ký giải đấu; và CMS nội bộ cho các sản phẩm của OEG. </p> <p> Ngoài giờ làm, tôi thích xây dựng các dự án cá nhân như nền tảng đặt lịch, thư viện UI component bằng React và một số dự án giới thiệu văn hóa Việt Nam. </p>"
+      },
+      "terms": [
+        "Next.js",
+        "Nuxt.js",
+        "VietQR",
+        "SSO",
+        "CMS"
+      ]
+    }
+  ]
+}

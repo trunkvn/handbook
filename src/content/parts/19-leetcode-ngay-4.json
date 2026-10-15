@@ -1,0 +1,135 @@
+{
+  "id": "part-19",
+  "slug": "leetcode-ngay-4",
+  "roman": "XIX",
+  "title": "LeetCode · Ngày 4",
+  "description": "Linked list và cây: tự giải 15–20 phút trước khi xem đáp án.",
+  "questions": [
+    {
+      "id": "q95",
+      "number": 95,
+      "tag": "LeetCode · Linked list · Easy",
+      "title": "LeetCode 206. Reverse Linked List (Easy): reverse a singly linked list.",
+      "titleVi": "LeetCode 206. Reverse Linked List (Easy): đảo ngược một danh sách liên kết đơn.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ba con trỏ: <code>prev</code>, <code>curr</code>, <code>next</code>",
+          "Lưu <code>next</code> trước khi đổi chiều",
+          "Trả về <code>prev</code> (đầu mới)",
+          "O(n), O(1)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> walk the list once and point each node's <code>next</code> to the <strong class=\"k\">previous</strong> node. Save <code>next</code> <strong class=\"k\">before</strong> changing the pointer, or you lose the rest of the list.</p> <pre><code>function reverseList(head) {\n  let prev = null, curr = head;\n  while (curr) {\n    const next = curr.next;   // 1) remember the rest\n    curr.next = prev;         // 2) reverse the link\n    prev = curr;              // 3) move prev forward\n    curr = next;              // 4) move curr forward\n  }\n  return prev;                // the new head\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(1) space. A <strong class=\"k\">recursive</strong> version is also common but uses O(n) call-stack space; mention it as an alternative.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> duyệt danh sách một lần và cho <code>next</code> của mỗi node trỏ tới node <strong class=\"k\">đứng trước</strong>. Lưu <code>next</code> <strong class=\"k\">trước khi</strong> đổi con trỏ, nếu không bạn mất phần còn lại của danh sách.</p> <pre><code>function reverseList(head) {\n  let prev = null, curr = head;\n  while (curr) {\n    const next = curr.next;   // 1) nhớ phần còn lại\n    curr.next = prev;         // 2) đảo liên kết\n    prev = curr;              // 3) dịch prev lên\n    curr = next;              // 4) dịch curr lên\n  }\n  return prev;                // đầu danh sách mới\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(1) bộ nhớ. Phiên bản <strong class=\"k\">đệ quy</strong> cũng phổ biến nhưng tốn O(n) call stack; nên nhắc như một cách khác.</p>"
+      },
+      "terms": [
+        "linked list",
+        "pointers",
+        "O(1) space"
+      ]
+    },
+    {
+      "id": "q96",
+      "number": 96,
+      "tag": "LeetCode · Linked list · Easy",
+      "title": "LeetCode 21. Merge Two Sorted Lists (Easy): merge two sorted linked lists into one sorted list.",
+      "titleVi": "LeetCode 21. Merge Two Sorted Lists (Easy): gộp hai danh sách liên kết đã sort thành một danh sách đã sort.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Node giả <code>dummy</code> để bỏ xử lý đặc biệt đầu danh sách",
+          "So sánh hai đầu, nối node nhỏ hơn",
+          "Cuối cùng nối phần còn dư",
+          "O(n + m)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> use a <strong class=\"k\">dummy head node</strong> so you never special-case the first element. Repeatedly attach the smaller of the two current nodes to the tail, then attach whatever remains.</p> <pre><code>function mergeTwoLists(a, b) {\n  const dummy = { val: 0, next: null };\n  let tail = dummy;\n  while (a &amp;&amp; b) {\n    if (a.val &lt;= b.val) { tail.next = a; a = a.next; }\n    else                { tail.next = b; b = b.next; }\n    tail = tail.next;\n  }\n  tail.next = a || b;       // one list is exhausted: attach the rest of the other\n  return dummy.next;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n + m) time, O(1) extra space, since we relink existing nodes instead of creating new ones. Using <code>&lt;=</code> keeps the merge <strong class=\"k\">stable</strong>.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> dùng <strong class=\"k\">node đầu giả (dummy)</strong> để không bao giờ phải xử lý riêng phần tử đầu. Lặp lại việc nối node nhỏ hơn trong hai node hiện tại vào đuôi, rồi nối phần còn dư.</p> <pre><code>function mergeTwoLists(a, b) {\n  const dummy = { val: 0, next: null };\n  let tail = dummy;\n  while (a &amp;&amp; b) {\n    if (a.val &lt;= b.val) { tail.next = a; a = a.next; }\n    else                { tail.next = b; b = b.next; }\n    tail = tail.next;\n  }\n  tail.next = a || b;       // một danh sách đã hết: nối phần còn lại của danh sách kia\n  return dummy.next;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n + m) thời gian, O(1) bộ nhớ phụ, vì ta nối lại node có sẵn thay vì tạo node mới. Dùng <code>&lt;=</code> giữ phép gộp <strong class=\"k\">ổn định (stable)</strong>.</p>"
+      },
+      "terms": [
+        "linked list",
+        "dummy node",
+        "merge"
+      ]
+    },
+    {
+      "id": "q97",
+      "number": 97,
+      "tag": "LeetCode · Tree · Easy",
+      "title": "LeetCode 104. Maximum Depth of Binary Tree (Easy): return the depth of a binary tree.",
+      "titleVi": "LeetCode 104. Maximum Depth of Binary Tree (Easy): trả về độ sâu của cây nhị phân.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Cây rỗng → 0",
+          "Độ sâu = 1 + max(trái, phải)",
+          "Đệ quy DFS",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> the depth of a tree is <strong class=\"k\">1 plus the larger depth of its two subtrees</strong>; an empty tree has depth 0. This is a natural recursion.</p> <pre><code>function maxDepth(root) {\n  if (!root) return 0;\n  return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time (every node is visited once), O(h) space for the call stack, where h is the tree height (O(n) in the worst case, O(log n) for a balanced tree).</p> <p><strong class=\"k\">Alternative:</strong> do a <strong class=\"k\">level-order (BFS)</strong> traversal and count the levels; this avoids deep recursion (see the next problems).</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> độ sâu của cây là <strong class=\"k\">1 cộng độ sâu lớn hơn của hai cây con</strong>; cây rỗng có độ sâu 0. Đây là đệ quy rất tự nhiên.</p> <pre><code>function maxDepth(root) {\n  if (!root) return 0;\n  return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian (mỗi node thăm một lần), O(h) bộ nhớ cho call stack, với h là chiều cao cây (O(n) xấu nhất, O(log n) với cây cân bằng).</p> <p><strong class=\"k\">Cách khác:</strong> duyệt <strong class=\"k\">theo từng tầng (BFS)</strong> rồi đếm số tầng; tránh đệ quy sâu (xem các bài sau).</p>"
+      },
+      "terms": [
+        "binary tree",
+        "DFS",
+        "recursion"
+      ]
+    },
+    {
+      "id": "q98",
+      "number": 98,
+      "tag": "LeetCode · Tree · Medium",
+      "title": "LeetCode 102. Binary Tree Level Order Traversal (Medium): return the node values level by level.",
+      "titleVi": "LeetCode 102. Binary Tree Level Order Traversal (Medium): trả về giá trị các node theo từng tầng.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "BFS theo từng tầng",
+          "Giữ một mảng \"tầng hiện tại\"",
+          "Tầng kế = con của tầng hiện tại",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> breadth-first search. Keep the <strong class=\"k\">current level</strong> as an array, record its values, then build the <strong class=\"k\">next level</strong> from the children of the current nodes. Stop when a level is empty.</p> <pre><code>function levelOrder(root) {\n  if (!root) return [];\n  const res = [];\n  let level = [root];\n  while (level.length) {\n    res.push(level.map(n =&gt; n.val));\n    level = level.flatMap(n =&gt; [n.left, n.right]).filter(Boolean);\n  }\n  return res;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time and O(w) space, where w is the widest level.</p> <p><strong class=\"k\">Note:</strong> the classic version uses a queue with <code>queue.shift()</code>. In JavaScript <code>shift</code> can be O(n) on large arrays, so working level by level (as above) or tracking a head index avoids it.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> duyệt theo chiều rộng (BFS). Giữ <strong class=\"k\">tầng hiện tại</strong> trong một mảng, ghi lại giá trị của nó, rồi tạo <strong class=\"k\">tầng kế tiếp</strong> từ các con của các node hiện tại. Dừng khi một tầng rỗng.</p> <pre><code>function levelOrder(root) {\n  if (!root) return [];\n  const res = [];\n  let level = [root];\n  while (level.length) {\n    res.push(level.map(n =&gt; n.val));\n    level = level.flatMap(n =&gt; [n.left, n.right]).filter(Boolean);\n  }\n  return res;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian và O(w) bộ nhớ, với w là tầng rộng nhất.</p> <p><strong class=\"k\">Ghi chú:</strong> bản kinh điển dùng queue với <code>queue.shift()</code>. Trong JavaScript <code>shift</code> có thể là O(n) với mảng lớn, nên làm từng tầng (như trên) hoặc dùng chỉ số đầu hàng đợi sẽ tránh được.</p>"
+      },
+      "terms": [
+        "BFS",
+        "level order",
+        "queue"
+      ]
+    },
+    {
+      "id": "q99",
+      "number": 99,
+      "tag": "LeetCode · Tree · Medium",
+      "title": "LeetCode 98. Validate Binary Search Tree (Medium): is a binary tree a valid BST?",
+      "titleVi": "LeetCode 98. Validate Binary Search Tree (Medium): cây nhị phân có phải BST hợp lệ không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi node phải nằm trong khoảng (min, max)",
+          "Đi sang trái: max = giá trị node; sang phải: min = giá trị node",
+          "Lỗi hay gặp: chỉ so với node cha",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> it is <strong class=\"k\">not enough</strong> to compare a node with its parent. <strong class=\"k\">Every</strong> node in the left subtree must be smaller than the root, and every node in the right subtree larger. So pass down an allowed <strong class=\"k\">range <code>(min, max)</code></strong> and tighten it as you go.</p> <pre><code>function isValidBST(root, min = -Infinity, max = Infinity) {\n  if (!root) return true;\n  if (root.val &lt;= min || root.val &gt;= max) return false;    // strict: no duplicates\n  return (\n    isValidBST(root.left, min, root.val) &amp;&amp;   // left: must be &lt; root.val\n    isValidBST(root.right, root.val, max)     // right: must be &gt; root.val\n  );\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(h) space.</p> <p><strong class=\"k\">Classic bug:</strong> checking only <code>node.left.val &lt; node.val &lt; node.right.val</code>. A tree like <code>5 → (4, 6 → (3, 7))</code> passes that test but is invalid, because <code>3</code> sits in the right subtree of <code>5</code> yet is smaller than <code>5</code>.</p> <p><strong class=\"k\">Alternative:</strong> an <strong class=\"k\">in-order traversal</strong> of a BST must produce a <strong class=\"k\">strictly increasing</strong> sequence.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> so với node cha là <strong class=\"k\">chưa đủ</strong>. <strong class=\"k\">Mọi</strong> node ở cây con trái phải nhỏ hơn gốc, và mọi node ở cây con phải phải lớn hơn. Vì vậy truyền xuống một <strong class=\"k\">khoảng cho phép <code>(min, max)</code></strong> và thu hẹp dần.</p> <pre><code>function isValidBST(root, min = -Infinity, max = Infinity) {\n  if (!root) return true;\n  if (root.val &lt;= min || root.val &gt;= max) return false;    // chặt: không cho trùng\n  return (\n    isValidBST(root.left, min, root.val) &amp;&amp;   // trái: phải &lt; root.val\n    isValidBST(root.right, root.val, max)     // phải: phải &gt; root.val\n  );\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(h) bộ nhớ.</p> <p><strong class=\"k\">Lỗi kinh điển:</strong> chỉ kiểm tra <code>node.left.val &lt; node.val &lt; node.right.val</code>. Cây như <code>5 → (4, 6 → (3, 7))</code> qua được phép thử đó nhưng không hợp lệ, vì <code>3</code> nằm ở cây con phải của <code>5</code> mà lại nhỏ hơn <code>5</code>.</p> <p><strong class=\"k\">Cách khác:</strong> duyệt <strong class=\"k\">in-order</strong> của một BST phải cho ra dãy <strong class=\"k\">tăng chặt</strong>.</p>"
+      },
+      "terms": [
+        "BST",
+        "range check",
+        "in-order",
+        "DFS"
+      ]
+    }
+  ]
+}

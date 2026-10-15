@@ -1,0 +1,61 @@
+{
+  "id": "part-18",
+  "slug": "viet-code-ngay-4",
+  "roman": "XVIII",
+  "title": "Viết code · Ngày 4",
+  "description": "Hai hàm thường gặp: làm phẳng mảng và so sánh sâu.",
+  "questions": [
+    {
+      "id": "q93",
+      "number": 93,
+      "tag": "Viết code · Mảng",
+      "title": "Implement <code>flat(arr, depth)</code>: flatten a nested array up to a given depth.",
+      "titleVi": "Hãy tự viết <code>flat(arr, depth)</code>: làm phẳng mảng lồng nhau đến một độ sâu cho trước.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Duyệt từng phần tử",
+          "Là mảng và còn độ sâu → đệ quy với <code>depth - 1</code>",
+          "Ngược lại → thêm vào kết quả",
+          "Biến thể lặp bằng stack"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function flat(arr, depth = 1) {\n  const result = [];\n  for (const item of arr) {\n    if (Array.isArray(item) &amp;&amp; depth &gt; 0) result.push(...flat(item, depth - 1));\n    else result.push(item);\n  }\n  return result;\n}\n\nflat([1, [2, [3, [4]]]], 1);        // [1, 2, [3, [4]]]\nflat([1, [2, [3, [4]]]], Infinity); // [1, 2, 3, 4]</code></pre> <p>For each element: if it is an array <strong class=\"k\">and there is depth left</strong>, flatten it with <code>depth - 1</code>; otherwise keep it as it is. With <code>depth = 0</code> nothing is flattened. This is what built-in <code>arr.flat()</code> does (its default depth is 1).</p> <h5>Iterative version (no recursion limit)</h5> <pre><code>function flatten(arr) {                 // fully flattens\n  const stack = [...arr], out = [];\n  while (stack.length) {\n    const x = stack.pop();\n    if (Array.isArray(x)) stack.push(...x);\n    else out.push(x);\n  }\n  return out.reverse();                 // we popped from the end\n}</code></pre> <p>Mention that deep recursion can overflow the call stack, and that <code>push(...hugeArray)</code> can too, so the iterative form is safer for very large input.</p>",
+        "vi": "<pre><code>function flat(arr, depth = 1) {\n  const result = [];\n  for (const item of arr) {\n    if (Array.isArray(item) &amp;&amp; depth &gt; 0) result.push(...flat(item, depth - 1));\n    else result.push(item);\n  }\n  return result;\n}\n\nflat([1, [2, [3, [4]]]], 1);        // [1, 2, [3, [4]]]\nflat([1, [2, [3, [4]]]], Infinity); // [1, 2, 3, 4]</code></pre> <p>Với mỗi phần tử: nếu là mảng <strong class=\"k\">và còn độ sâu</strong>, làm phẳng nó với <code>depth - 1</code>; nếu không thì giữ nguyên. Với <code>depth = 0</code> không có gì bị làm phẳng. Đây là việc <code>arr.flat()</code> có sẵn làm (độ sâu mặc định là 1).</p> <h5>Phiên bản lặp (không bị giới hạn đệ quy)</h5> <pre><code>function flatten(arr) {                 // làm phẳng hoàn toàn\n  const stack = [...arr], out = [];\n  while (stack.length) {\n    const x = stack.pop();\n    if (Array.isArray(x)) stack.push(...x);\n    else out.push(x);\n  }\n  return out.reverse();                 // vì ta pop từ cuối\n}</code></pre> <p>Nên nhắc rằng đệ quy quá sâu có thể tràn call stack, và <code>push(...mảngRấtLớn)</code> cũng có thể, nên dạng lặp an toàn hơn với dữ liệu rất lớn.</p>"
+      },
+      "terms": [
+        "flat",
+        "recursion",
+        "stack",
+        "depth"
+      ]
+    },
+    {
+      "id": "q94",
+      "number": 94,
+      "tag": "Viết code · Đệ quy",
+      "title": "Implement <code>deepEqual(a, b)</code>.",
+      "titleVi": "Hãy tự viết <code>deepEqual(a, b)</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>===</code> bằng nhau → true",
+          "Khác kiểu / null / mảng vs object → false",
+          "So sánh số lượng key",
+          "Đệ quy trên từng key"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function deepEqual(a, b) {\n  if (a === b) return true;\n  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;\n  if (Array.isArray(a) !== Array.isArray(b)) return false;\n\n  const keysA = Object.keys(a), keysB = Object.keys(b);\n  if (keysA.length !== keysB.length) return false;\n\n  return keysA.every(\n    k =&gt; Object.prototype.hasOwnProperty.call(b, k) &amp;&amp; deepEqual(a[k], b[k]),\n  );\n}\n\ndeepEqual({ a: [1, { b: 2 }] }, { a: [1, { b: 2 }] });  // true\ndeepEqual([1, 2], { 0: 1, 1: 2 });                        // false (array vs object)</code></pre> <ul><li>Primitives are equal when <code>===</code> is true. Anything that is not an object on <strong class=\"k\">both</strong> sides is unequal otherwise.</li><li>Check <strong class=\"k\">array vs object</strong>, then compare the <strong class=\"k\">number of keys</strong> and recurse on each key.</li><li><code>hasOwnProperty</code> matters: <code>{ a: undefined }</code> and <code>{ b: 1 }</code> have the same key count but are not equal.</li></ul> <h5>What this version does not handle</h5> <ul><li><code>NaN</code> (use <code>Object.is</code>), <code>Date</code>, <code>Map</code>, <code>Set</code>, <code>RegExp</code>, and class instances.</li><li><strong class=\"k\">Circular references</strong>, which need a <code>WeakMap</code> of visited pairs (see Câu 39).</li><li>This is enough for JSON-like data, which is what the LeetCode 2628 version asks for.</li></ul>",
+        "vi": "<pre><code>function deepEqual(a, b) {\n  if (a === b) return true;\n  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;\n  if (Array.isArray(a) !== Array.isArray(b)) return false;\n\n  const keysA = Object.keys(a), keysB = Object.keys(b);\n  if (keysA.length !== keysB.length) return false;\n\n  return keysA.every(\n    k =&gt; Object.prototype.hasOwnProperty.call(b, k) &amp;&amp; deepEqual(a[k], b[k]),\n  );\n}\n\ndeepEqual({ a: [1, { b: 2 }] }, { a: [1, { b: 2 }] });  // true\ndeepEqual([1, 2], { 0: 1, 1: 2 });                        // false (mảng vs object)</code></pre> <ul><li>Giá trị nguyên thủy bằng nhau khi <code>===</code> đúng. Nếu không phải object ở <strong class=\"k\">cả hai</strong> phía thì không bằng nhau.</li><li>Kiểm tra <strong class=\"k\">mảng vs object</strong>, rồi so sánh <strong class=\"k\">số lượng key</strong> và đệ quy trên từng key.</li><li><code>hasOwnProperty</code> quan trọng: <code>{ a: undefined }</code> và <code>{ b: 1 }</code> có cùng số key nhưng không bằng nhau.</li></ul> <h5>Phiên bản này chưa xử lý</h5> <ul><li><code>NaN</code> (dùng <code>Object.is</code>), <code>Date</code>, <code>Map</code>, <code>Set</code>, <code>RegExp</code>, và instance của class.</li><li><strong class=\"k\">Tham chiếu vòng</strong>, cần một <code>WeakMap</code> các cặp đã duyệt (xem Câu 39).</li><li>Đủ cho dữ liệu kiểu JSON, đúng với yêu cầu của bản LeetCode 2628.</li></ul>"
+      },
+      "terms": [
+        "deepEqual",
+        "recursion",
+        "hasOwnProperty",
+        "JSON"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "id": "part-3",
+  "slug": "thanh-toan-thuong-mai",
+  "roman": "III",
+  "title": "Thanh toán & thương mại",
+  "description": "Idempotency, đánh đổi giữa conversion và rủi ro, và cách mở rộng cổng thanh toán.",
+  "questions": [
+    {
+      "id": "q05",
+      "number": 5,
+      "tag": "Thanh toán · Độ tin cậy",
+      "title": "What happens if a user clicks Pay twice, or the gateway responds slowly?",
+      "titleVi": "Điều gì xảy ra nếu người dùng bấm “Thanh toán” hai lần, hoặc cổng thanh toán phản hồi chậm?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Client: khóa nút",
+          "Server là nguồn sự thật",
+          "Chưa final → loading, không báo lỗi",
+          "Backend chống trùng"
+        ]
+      },
+      "answer": {
+        "en": "<p> On the client, I <strong class=\"k\">disable the button</strong> while a request is in flight. I also don't trust the browser alone to tell me whether the payment succeeded or failed. I <strong class=\"k\" >confirm the transaction status from the server</strong>, and if the result isn't final yet, I show a <strong class=\"k\">loading state</strong> instead of an error. </p> <p> To prevent duplicate transactions, the backend checks the <strong class=\"k\">transaction ID and the user ID</strong>. If a duplicate is detected, it returns the original transaction status to the client. </p>",
+        "vi": "<p> Ở phía client, tôi vô hiệu hóa nút bấm trong lúc request đang được xử lý. Tôi cũng không chỉ tin vào trình duyệt để biết thanh toán thành công hay thất bại: tôi xác nhận trạng thái giao dịch từ server, và nếu kết quả chưa ở trạng thái cuối cùng (final), tôi hiển thị trạng thái loading thay vì báo lỗi. </p> <p> Để ngăn giao dịch trùng lặp, backend kiểm tra theo ID giao dịch và ID người dùng; nếu phát hiện trùng, backend trả lại trạng thái của giao dịch gốc cho client. </p>"
+      },
+      "terms": [
+        "idempotency",
+        "double submit",
+        "transaction status"
+      ]
+    },
+    {
+      "id": "q06",
+      "number": 6,
+      "tag": "Thanh toán · Rủi ro",
+      "title": "Isn't guest checkout a fraud risk? Why accept it?",
+      "titleVi": "Guest checkout chẳng phải rủi ro gian lận sao? Tại sao vẫn chấp nhận?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Thừa nhận: đây là trade-off",
+          "Ba lý do chấp nhận",
+          "Biện pháp giảm thiểu"
+        ]
+      },
+      "answer": {
+        "en": "<p> Yes, guest checkout carries risk, but it's a <strong class=\"k\" >trade-off between conversion and fraud</strong>. We still accept it for three reasons. </p> <ol> <li> A game top-up is a <strong class=\"k\">quick purchase</strong>; forcing people to sign up would lose buyers. </li> <li> The product is <strong class=\"k\">tied to a game account</strong> rather than a physical delivery, so the potential loss is small. </li> <li> Most payments are <strong class=\"k\">QR or bank transfers</strong>, so there are almost no chargebacks. </li> </ol> <h5>Mitigations</h5> <p> For high-risk games, we require sign-in and email/phone verification. We also cap the amount for unauthenticated users, apply <strong class=\"k\">rate limiting</strong> by IP and fingerprint, and make order codes <strong class=\"k\">expiring and single-use</strong>. </p>",
+        "vi": "<p> Đúng, guest checkout có rủi ro, nhưng đây là bài toán đánh đổi giữa conversion và gian lận. Tôi vẫn chấp nhận vì ba lý do. </p> <ol> <li> Nạp game là mua nhanh, bắt đăng ký sẽ mất người mua. </li> <li> Sản phẩm gắn với tài khoản game chứ không giao hàng vật lý, nên thiệt hại nhỏ. </li> <li> Phần lớn thanh toán là QR/chuyển khoản nên gần như không có chargeback. </li> </ol> <h5>Biện pháp giảm thiểu</h5> <p> Game rủi ro cao thì bắt đăng nhập và xác thực email/SĐT. Ngoài ra có giới hạn số tiền cho người chưa đăng nhập, rate limit theo IP và fingerprint, và order code hết hạn, dùng một lần. </p>"
+      },
+      "terms": [
+        "guest checkout",
+        "conversion",
+        "chargeback",
+        "rate limit"
+      ]
+    },
+    {
+      "id": "q07",
+      "number": 7,
+      "tag": "Thanh toán · Kiến trúc",
+      "title": "Why do ex-pub games need sign-in to checkout?",
+      "titleVi": "Tại sao game ex-pub bắt buộc phải đăng nhập mới thanh toán được?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Lý do là kiến trúc, không phải rủi ro",
+          "Ex-pub: UID lấy từ tài khoản",
+          "Co-pub: người dùng nhập UID, portal chỉ verify"
+        ]
+      },
+      "answer": {
+        "en": "<p> It's because of the <strong class=\"k\" >architecture, not because of risk</strong>. </p> <p> For <strong class=\"k\">ex-pub</strong> games, the portal <em>is</em> the game's account system, so the UID isn't typed in by the user but taken from the signed-in account. Without signing in, we wouldn't know which character to top up. </p> <p> For <strong class=\"k\">co-pub</strong> games, the game has its own account system. Users enter their UID themselves and the portal only verifies it, so sign-in isn't needed. </p>",
+        "vi": "<p>Lý do nằm ở kiến trúc chứ không phải ở rủi ro.</p> <p> Với game ex-pub, portal chính là hệ thống tài khoản của game, nên UID không do người dùng tự nhập mà được lấy từ tài khoản đang đăng nhập. Nếu không đăng nhập, ta không biết cần nạp cho nhân vật nào. </p> <p> Với game co-pub, game có hệ thống tài khoản riêng. Người dùng tự nhập UID và portal chỉ xác minh UID đó, nên không cần đăng nhập. </p>"
+      },
+      "terms": [
+        "ex-pub",
+        "co-pub",
+        "UID",
+        "account system"
+      ]
+    },
+    {
+      "id": "q08",
+      "number": 8,
+      "tag": "Thanh toán · Thiết kế",
+      "title": "How would you add a new payment gateway?",
+      "titleVi": "Bạn sẽ thêm một cổng thanh toán mới như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Chia việc: backend / frontend",
+          "Phương thức đến từ API",
+          "Xác định loại cổng",
+          "Enum, điều kiện hiển thị, đặc thù"
+        ]
+      },
+      "answer": {
+        "en": "<p> I split it into two parts: <strong class=\"k\">the backend integrates</strong> the gateway and <strong class=\"k\">the frontend displays</strong> it. Payment methods come from an API, so when the backend enables a new gateway, it shows up in the dropdown automatically. </p> <p> On the frontend, the first step is to <strong class=\"k\">identify the type of gateway</strong>: showing a QR code, redirecting to the gateway's page, or entering card details. Then I add the gateway code to the enum, update the condition that decides whether to show the payment UI, and handle any <strong class=\"k\">gateway-specific quirks</strong>. </p> <p> For example, ZaloPay redirects back with status <code>-49</code> when the user cancels the payment, so I have to call the cancel-order API. </p>",
+        "vi": "<p> Tôi chia thành hai phần: backend tích hợp cổng thanh toán, còn frontend hiển thị nó. Danh sách phương thức thanh toán đến từ một API, nên khi backend bật một cổng mới, nó tự động xuất hiện trong dropdown. </p> <p> Ở frontend, bước đầu tiên là xác định loại cổng: hiển thị mã QR, chuyển hướng sang trang của cổng, hay nhập thông tin thẻ. Sau đó tôi thêm mã cổng vào enum, cập nhật điều kiện quyết định có hiển thị giao diện thanh toán hay không, và xử lý các đặc thù riêng của cổng. </p> <p> Ví dụ, ZaloPay chuyển hướng về với status <code>-49</code> khi người dùng hủy thanh toán, nên tôi phải gọi API hủy đơn hàng. </p>"
+      },
+      "terms": [
+        "payment gateway",
+        "ZaloPay",
+        "enum",
+        "redirect"
+      ]
+    }
+  ]
+}

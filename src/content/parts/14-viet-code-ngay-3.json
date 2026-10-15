@@ -1,0 +1,62 @@
+{
+  "id": "part-14",
+  "slug": "viet-code-ngay-3",
+  "roman": "XIV",
+  "title": "Viết code · Ngày 3",
+  "description": "Hai hàm tiện ích hay gặp: memoize và EventEmitter.",
+  "questions": [
+    {
+      "id": "q73",
+      "number": 73,
+      "tag": "Viết code · Utility",
+      "title": "Implement <code>memoize</code>.",
+      "titleVi": "Hãy tự viết hàm <code>memoize</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Cache kết quả theo khóa của đối số",
+          "Dùng <code>Map</code>, kiểm tra <code>has</code> (kết quả có thể là undefined)",
+          "Giữ <code>this</code> bằng <code>apply</code>",
+          "Lưu ý: cache không giới hạn → rò rỉ bộ nhớ"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function memoize(fn, keyFn = (...args) =&gt; JSON.stringify(args)) {\n  const cache = new Map();\n  return function (...args) {\n    const key = keyFn(...args);\n    if (cache.has(key)) return cache.get(key);   // has(), because a result may be undefined\n    const result = fn.apply(this, args);\n    cache.set(key, result);\n    return result;\n  };\n}\n\nconst slowSquare = n =&gt; n * n;\nconst fast = memoize(slowSquare);\nfast(9); // computed\nfast(9); // from the cache</code></pre> <p>The <strong class=\"k\">cache lives in the closure</strong>. The key is built from the arguments; <code>JSON.stringify</code> is a simple default but it ignores functions, treats object key order as significant, and can be slow, so allow a custom <code>keyFn</code>.</p> <h5>Things to mention</h5> <ul><li><strong class=\"k\">Unbounded cache = memory leak.</strong> Add a size limit (LRU) or a TTL.</li><li>Only <strong class=\"k\">pure functions</strong> are safe to memoize.</li><li><strong class=\"k\">Async functions:</strong> cache the <strong class=\"k\">promise</strong>, and remove it from the cache if it rejects, otherwise a failure is cached forever:</li></ul> <pre><code>const p = fn.apply(this, args);\ncache.set(key, p);\np.catch(() =&gt; cache.delete(key));</code></pre>",
+        "vi": "<pre><code>function memoize(fn, keyFn = (...args) =&gt; JSON.stringify(args)) {\n  const cache = new Map();\n  return function (...args) {\n    const key = keyFn(...args);\n    if (cache.has(key)) return cache.get(key);   // has(), vì kết quả có thể là undefined\n    const result = fn.apply(this, args);\n    cache.set(key, result);\n    return result;\n  };\n}\n\nconst slowSquare = n =&gt; n * n;\nconst fast = memoize(slowSquare);\nfast(9); // tính toán\nfast(9); // lấy từ cache</code></pre> <p><strong class=\"k\">Cache sống trong closure.</strong> Khóa được tạo từ đối số; <code>JSON.stringify</code> là mặc định đơn giản nhưng bỏ qua function, coi thứ tự key của object là quan trọng, và có thể chậm, nên cho phép truyền <code>keyFn</code> tùy chỉnh.</p> <h5>Những điều nên nhắc</h5> <ul><li><strong class=\"k\">Cache không giới hạn = rò rỉ bộ nhớ.</strong> Thêm giới hạn kích thước (LRU) hoặc TTL.</li><li>Chỉ <strong class=\"k\">hàm thuần (pure function)</strong> mới an toàn để memoize.</li><li><strong class=\"k\">Hàm async:</strong> cache <strong class=\"k\">promise</strong>, và xóa khỏi cache nếu nó reject, nếu không lỗi sẽ bị cache mãi:</li></ul> <pre><code>const p = fn.apply(this, args);\ncache.set(key, p);\np.catch(() =&gt; cache.delete(key));</code></pre>"
+      },
+      "terms": [
+        "memoize",
+        "closure",
+        "Map",
+        "LRU",
+        "pure function"
+      ]
+    },
+    {
+      "id": "q74",
+      "number": 74,
+      "tag": "Viết code · Pattern",
+      "title": "Implement an <code>EventEmitter</code> with <code>on</code>, <code>off</code>, <code>once</code> and <code>emit</code>.",
+      "titleVi": "Hãy tự viết <code>EventEmitter</code> với <code>on</code>, <code>off</code>, <code>once</code> và <code>emit</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>Map</code>: tên sự kiện → tập handler",
+          "<code>on</code> trả về hàm hủy đăng ký",
+          "<code>once</code> = bọc handler, tự <code>off</code> sau lần đầu",
+          "Sao chép tập handler trước khi lặp trong <code>emit</code>"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>class EventEmitter {\n  #handlers = new Map();                       // event name -&gt; Set of handlers\n\n  on(event, handler) {\n    if (!this.#handlers.has(event)) this.#handlers.set(event, new Set());\n    this.#handlers.get(event).add(handler);\n    return () =&gt; this.off(event, handler);     // handy unsubscribe function\n  }\n\n  off(event, handler) {\n    const set = this.#handlers.get(event);\n    if (!set) return;\n    set.delete(handler);\n    if (set.size === 0) this.#handlers.delete(event);\n  }\n\n  once(event, handler) {\n    const wrapper = (...args) =&gt; {\n      this.off(event, wrapper);\n      handler(...args);\n    };\n    return this.on(event, wrapper);\n  }\n\n  emit(event, ...args) {\n    const set = this.#handlers.get(event);\n    if (!set) return false;\n    [...set].forEach(h =&gt; h(...args));         // copy: handlers may unsubscribe while we loop\n    return true;\n  }\n}</code></pre> <ul><li><code>once</code> wraps the handler so it removes itself <strong class=\"k\">before</strong> calling the original.</li><li>In <code>emit</code>, <strong class=\"k\">iterate over a copy</strong> of the set, otherwise a handler that unsubscribes itself (like <code>once</code>) changes the set during the loop.</li><li>Using a <code>Set</code> means the same handler is registered only once. Node's <code>EventEmitter</code> allows duplicates, so mention this trade-off.</li><li>Follow-ups: error handling when a handler throws, <code>off</code> for a <code>once</code> handler (store the original), and removing all listeners.</li></ul>",
+        "vi": "<pre><code>class EventEmitter {\n  #handlers = new Map();                       // tên sự kiện -&gt; Set các handler\n\n  on(event, handler) {\n    if (!this.#handlers.has(event)) this.#handlers.set(event, new Set());\n    this.#handlers.get(event).add(handler);\n    return () =&gt; this.off(event, handler);     // hàm hủy đăng ký tiện dụng\n  }\n\n  off(event, handler) {\n    const set = this.#handlers.get(event);\n    if (!set) return;\n    set.delete(handler);\n    if (set.size === 0) this.#handlers.delete(event);\n  }\n\n  once(event, handler) {\n    const wrapper = (...args) =&gt; {\n      this.off(event, wrapper);\n      handler(...args);\n    };\n    return this.on(event, wrapper);\n  }\n\n  emit(event, ...args) {\n    const set = this.#handlers.get(event);\n    if (!set) return false;\n    [...set].forEach(h =&gt; h(...args));         // sao chép: handler có thể hủy đăng ký khi đang lặp\n    return true;\n  }\n}</code></pre> <ul><li><code>once</code> bọc handler để nó tự gỡ chính mình <strong class=\"k\">trước khi</strong> gọi handler gốc.</li><li>Trong <code>emit</code>, <strong class=\"k\">lặp trên bản sao</strong> của set, nếu không một handler tự hủy đăng ký (như <code>once</code>) sẽ làm thay đổi set giữa vòng lặp.</li><li>Dùng <code>Set</code> nghĩa là cùng một handler chỉ được đăng ký một lần. <code>EventEmitter</code> của Node cho phép trùng, nên hãy nhắc đến sự đánh đổi này.</li><li>Hỏi thêm: xử lý lỗi khi handler ném exception, <code>off</code> cho handler của <code>once</code> (lưu handler gốc), và gỡ toàn bộ listener.</li></ul>"
+      },
+      "terms": [
+        "EventEmitter",
+        "observer pattern",
+        "Set",
+        "once"
+      ]
+    }
+  ]
+}

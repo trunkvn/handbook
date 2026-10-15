@@ -1,0 +1,299 @@
+{
+  "id": "part-11",
+  "slug": "react-next-js",
+  "roman": "XI",
+  "title": "React & Next.js",
+  "description": "Ngày 2: chiến lược rendering, hydration, Server/Client Component, ISR, hiệu năng React, quản lý state và bảo vệ route.",
+  "questions": [
+    {
+      "id": "q49",
+      "number": 49,
+      "tag": "Rendering · Next.js",
+      "title": "Compare CSR, SSR, SSG and ISR. When do you use each?",
+      "titleVi": "So sánh CSR, SSR, SSG và ISR. Khi nào dùng cái nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nói HTML được tạo ở đâu và KHI NÀO",
+          "CSR / SSR / SSG / ISR, mỗi cái một câu",
+          "Chọn theo: dữ liệu có riêng cho từng người dùng không? đổi nhanh cỡ nào?",
+          "Ví dụ từ CV: portal nạp game, cổng tin tức, giải đấu"
+        ]
+      },
+      "answer": {
+        "en": "<p>The difference is <strong class=\"k\">where and when the HTML is generated</strong>.</p> <ul><li><strong class=\"k\">CSR</strong> (client-side rendering): the browser downloads JavaScript and builds the page. Simple hosting, but a slower first paint and weaker SEO. Good for dashboards behind a login.</li><li><strong class=\"k\">SSR</strong> (server-side rendering): the server builds the HTML <strong class=\"k\">on every request</strong>. Always fresh and personalized, but every request costs server time. Good for user-specific or real-time pages.</li><li><strong class=\"k\">SSG</strong> (static generation): HTML is built <strong class=\"k\">once at build time</strong> and served from a CDN. Fastest and cheapest, but it goes stale until the next build. Good for content that rarely changes.</li><li><strong class=\"k\">ISR</strong> (incremental static regeneration): static pages that are <strong class=\"k\">regenerated in the background</strong> after a time window or on demand. Close to SSG speed with fresher content. Good for shared public content such as news.</li></ul> <h5>How to choose</h5> <p>Ask two questions: is the page <strong class=\"k\">the same for everyone</strong>, and <strong class=\"k\">how fast does the data change</strong>? Same for everyone and changes slowly → SSG/ISR. Personal or must be real-time → SSR (or CSR behind a login).</p> <p><strong class=\"k\">From your CV:</strong> the top-up portal needs per-user, real-time data, so SSR fits. The news portals and tournament pages are shared public content, so ISR gives speed and SEO.</p>",
+        "vi": "<p>Khác biệt là <strong class=\"k\">HTML được tạo ở đâu và khi nào</strong>.</p> <ul><li><strong class=\"k\">CSR</strong> (render phía client): trình duyệt tải JavaScript rồi dựng trang. Hosting đơn giản, nhưng lần hiển thị đầu chậm và SEO yếu hơn. Hợp với dashboard sau đăng nhập.</li><li><strong class=\"k\">SSR</strong> (render phía server): server tạo HTML <strong class=\"k\">ở mỗi request</strong>. Luôn mới và cá nhân hóa được, nhưng mỗi request tốn thời gian server. Hợp với trang riêng cho từng người hoặc cần realtime.</li><li><strong class=\"k\">SSG</strong> (sinh tĩnh): HTML được tạo <strong class=\"k\">một lần lúc build</strong> và phục vụ từ CDN. Nhanh và rẻ nhất, nhưng cũ cho đến lần build sau. Hợp với nội dung ít thay đổi.</li><li><strong class=\"k\">ISR</strong> (sinh tĩnh tăng dần): trang tĩnh được <strong class=\"k\">tái tạo ngầm</strong> sau một khoảng thời gian hoặc theo yêu cầu. Gần tốc độ SSG mà nội dung mới hơn. Hợp với nội dung công khai dùng chung như tin tức.</li></ul> <h5>Cách chọn</h5> <p>Tự hỏi hai điều: trang có <strong class=\"k\">giống nhau với mọi người</strong> không, và dữ liệu <strong class=\"k\">đổi nhanh cỡ nào</strong>? Giống nhau và đổi chậm → SSG/ISR. Riêng từng người hoặc phải realtime → SSR (hoặc CSR sau đăng nhập).</p> <p><strong class=\"k\">Từ CV của bạn:</strong> portal nạp game cần dữ liệu riêng và realtime nên hợp SSR. Cổng tin tức và trang giải đấu là nội dung công khai dùng chung nên ISR cho tốc độ và SEO.</p>"
+      },
+      "terms": [
+        "CSR",
+        "SSR",
+        "SSG",
+        "ISR",
+        "CDN"
+      ]
+    },
+    {
+      "id": "q50",
+      "number": 50,
+      "tag": "Rendering · Hydration",
+      "title": "What is hydration? What causes a hydration mismatch and how do you fix it?",
+      "titleVi": "Hydration là gì? Nguyên nhân gây hydration mismatch và cách sửa?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hydration = gắn JS vào HTML server đã render",
+          "Mismatch = HTML server khác lần render đầu ở client",
+          "Nguyên nhân: Date/random, <code>window</code>, HTML sai cấu trúc",
+          "Cách sửa: render giống nhau trước, cập nhật sau trong <code>useEffect</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Hydration</strong> is when React takes the HTML the server already rendered and <strong class=\"k\">attaches event handlers and state</strong> to it in the browser, instead of rebuilding the DOM from scratch.</p> <p>A <strong class=\"k\">hydration mismatch</strong> happens when the HTML from the server is different from what React renders on the client in its first pass. React warns, and may throw away the server HTML and re-render, which hurts performance and can cause visual flicker.</p> <h5>Common causes</h5> <ul><li>Values that differ per render: <code>Date.now()</code>, <code>Math.random()</code>, time zone and locale formatting.</li><li>Branching on <code>typeof window !== 'undefined'</code> or reading <code>localStorage</code> during render.</li><li>Invalid HTML nesting, for example a <code>&lt;div&gt;</code> inside a <code>&lt;p&gt;</code>.</li><li>Browser extensions that modify the DOM before hydration.</li></ul> <h5>Fix</h5> <p>Render the <strong class=\"k\">same output first</strong>, then update on the client inside <code>useEffect</code>:</p> <pre><code>// Bad: the server and the client render different text\nfunction Clock() { return &lt;p&gt;{new Date().toLocaleTimeString()}&lt;/p&gt;; }\n\n// Good: same first render, then update on the client\nfunction Clock() {\n  const [now, setNow] = useState(null);\n  useEffect(() =&gt; { setNow(new Date().toLocaleTimeString()); }, []);\n  return &lt;p&gt;{now ?? '--:--'}&lt;/p&gt;;\n}</code></pre> <p>For genuinely unavoidable differences (such as a timestamp), <code>suppressHydrationWarning</code> on that one element is acceptable. Use it sparingly.</p>",
+        "vi": "<p><strong class=\"k\">Hydration</strong> là khi React lấy HTML mà server đã render và <strong class=\"k\">gắn event handler và state</strong> vào đó ở trình duyệt, thay vì dựng lại DOM từ đầu.</p> <p><strong class=\"k\">Hydration mismatch</strong> xảy ra khi HTML từ server khác với những gì React render ở client trong lượt đầu. React cảnh báo, và có thể bỏ HTML của server để render lại, làm giảm hiệu năng và có thể gây nhấp nháy.</p> <h5>Nguyên nhân thường gặp</h5> <ul><li>Giá trị khác nhau mỗi lần render: <code>Date.now()</code>, <code>Math.random()</code>, định dạng múi giờ và locale.</li><li>Rẽ nhánh theo <code>typeof window !== 'undefined'</code> hoặc đọc <code>localStorage</code> ngay trong lúc render.</li><li>Lồng HTML sai, ví dụ <code>&lt;div&gt;</code> trong <code>&lt;p&gt;</code>.</li><li>Extension của trình duyệt sửa DOM trước khi hydrate.</li></ul> <h5>Cách sửa</h5> <p>Render <strong class=\"k\">cùng một kết quả trước</strong>, rồi cập nhật ở client trong <code>useEffect</code>:</p> <pre><code>// Sai: server và client render ra chữ khác nhau\nfunction Clock() { return &lt;p&gt;{new Date().toLocaleTimeString()}&lt;/p&gt;; }\n\n// Đúng: lượt render đầu giống nhau, sau đó mới cập nhật ở client\nfunction Clock() {\n  const [now, setNow] = useState(null);\n  useEffect(() =&gt; { setNow(new Date().toLocaleTimeString()); }, []);\n  return &lt;p&gt;{now ?? '--:--'}&lt;/p&gt;;\n}</code></pre> <p>Với khác biệt thật sự không tránh được (như timestamp), dùng <code>suppressHydrationWarning</code> trên đúng phần tử đó là chấp nhận được. Dùng hạn chế.</p>"
+      },
+      "terms": [
+        "hydration",
+        "mismatch",
+        "useEffect",
+        "suppressHydrationWarning"
+      ]
+    },
+    {
+      "id": "q51",
+      "number": 51,
+      "tag": "Next.js · App Router",
+      "title": "In the Next.js App Router, what is the difference between Server Components and Client Components?",
+      "titleVi": "Trong Next.js App Router, Server Component và Client Component khác nhau thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mặc định là Server Component",
+          "Server: chạy ở server, không có state/effect, dùng được secret, ít JS gửi xuống",
+          "Client: <code>\"use client\"</code>, có state/effect/event",
+          "Quy tắc: đẩy ranh giới client xuống lá"
+        ]
+      },
+      "answer": {
+        "en": "<p>In the App Router, components are <strong class=\"k\">Server Components by default</strong>.</p> <ul><li><strong class=\"k\">Server Component:</strong> runs only on the server. It can be <code>async</code>, read a database or call an API with secrets, and its code is <strong class=\"k\">not sent to the browser</strong>, so the JavaScript bundle is smaller. It cannot use <code>useState</code>, <code>useEffect</code> or browser event handlers.</li><li><strong class=\"k\">Client Component:</strong> marked with <code>'use client'</code>. It is rendered on the server for the first HTML, then hydrated in the browser. It can use state, effects and events.</li></ul> <pre><code>// app/products/page.tsx: a Server Component (default)\nexport default async function Page() {\n  const products = await getProducts();   // runs on the server, secrets stay there\n  return &lt;ProductList products={products} /&gt;;\n}\n\n// components/AddToCart.tsx: a Client Component\n'use client';\nimport { useState } from 'react';\nexport function AddToCart({ id }: { id: string }) {\n  const [adding, setAdding] = useState(false);\n  return &lt;button onClick={() =&gt; setAdding(true)} disabled={adding}&gt;Add&lt;/button&gt;;\n}</code></pre> <p><strong class=\"k\">Rule of thumb:</strong> keep components on the server by default and push the <code>'use client'</code> boundary <strong class=\"k\">down to the smallest leaf</strong> that needs interactivity. Props passed from server to client must be serializable (no functions).</p> <p>If your project used the Pages Router, say so: there, <code>getServerSideProps</code> / <code>getStaticProps</code> play the role that async Server Components play here. Be clear about which one you actually used.</p>",
+        "vi": "<p>Trong App Router, component <strong class=\"k\">mặc định là Server Component</strong>.</p> <ul><li><strong class=\"k\">Server Component:</strong> chỉ chạy ở server. Có thể <code>async</code>, đọc database hoặc gọi API với secret, và code của nó <strong class=\"k\">không được gửi xuống trình duyệt</strong> nên bundle JavaScript nhỏ hơn. Không dùng được <code>useState</code>, <code>useEffect</code> hay event handler của trình duyệt.</li><li><strong class=\"k\">Client Component:</strong> đánh dấu bằng <code>'use client'</code>. Vẫn được render ở server cho HTML đầu tiên, rồi hydrate ở trình duyệt. Dùng được state, effect và event.</li></ul> <pre><code>// app/products/page.tsx: Server Component (mặc định)\nexport default async function Page() {\n  const products = await getProducts();   // chạy ở server, secret ở lại server\n  return &lt;ProductList products={products} /&gt;;\n}\n\n// components/AddToCart.tsx: Client Component\n'use client';\nimport { useState } from 'react';\nexport function AddToCart({ id }: { id: string }) {\n  const [adding, setAdding] = useState(false);\n  return &lt;button onClick={() =&gt; setAdding(true)} disabled={adding}&gt;Add&lt;/button&gt;;\n}</code></pre> <p><strong class=\"k\">Quy tắc ngón tay cái:</strong> mặc định để component ở server và đẩy ranh giới <code>'use client'</code> <strong class=\"k\">xuống lá nhỏ nhất</strong> cần tương tác. Props truyền từ server sang client phải serialize được (không truyền function).</p> <p>Nếu dự án của bạn dùng Pages Router thì hãy nói rõ: ở đó <code>getServerSideProps</code> / <code>getStaticProps</code> đóng vai trò mà async Server Component đảm nhận ở đây. Nói đúng bạn đã dùng cái nào.</p>"
+      },
+      "terms": [
+        "Server Component",
+        "use client",
+        "App Router",
+        "serializable props"
+      ]
+    },
+    {
+      "id": "q52",
+      "number": 52,
+      "tag": "Rendering · ISR",
+      "title": "How does ISR work? Why would you not use it for the payment portal?",
+      "titleVi": "ISR hoạt động thế nào? Vì sao không dùng ISR cho portal thanh toán?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "ISR = trang tĩnh + tái tạo ngầm (stale-while-revalidate)",
+          "Hai cách làm mới: theo thời gian, theo yêu cầu",
+          "Kết quả được CHIA SẺ giữa mọi người dùng",
+          "Portal thanh toán: dữ liệu riêng và realtime → SSR"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">ISR</strong> serves a pre-built static page and <strong class=\"k\">regenerates it in the background</strong>. It follows a *stale-while-revalidate* pattern: after the revalidate window passes, the next visitor still gets the cached page instantly while a new version is built; later visitors get the fresh one.</p> <pre><code>// App Router: revalidate at most every 60 seconds\nexport const revalidate = 60;\n\n// On demand, e.g. when an editor publishes in the CMS\nimport { revalidatePath } from 'next/cache';\nrevalidatePath('/news/my-article');\n\n// Pages Router equivalent\nexport async function getStaticProps() {\n  return { props: { /* ... */ }, revalidate: 60 };\n}</code></pre> <h5>Why not for the payment portal</h5> <ul><li>The cached page is <strong class=\"k\">shared by every visitor</strong>. A page showing a user's balance, order or checkout state would leak one user's data to another, or show stale data.</li><li>Payment status must be <strong class=\"k\">real-time and correct</strong>. A page that may be up to a minute out of date is not acceptable.</li><li>So the top-up portal uses <strong class=\"k\">SSR</strong> (fresh per request), while public, shared pages such as news use ISR.</li></ul>",
+        "vi": "<p><strong class=\"k\">ISR</strong> phục vụ một trang tĩnh dựng sẵn và <strong class=\"k\">tái tạo nó ngầm</strong>. Theo mô hình *stale-while-revalidate*: sau khi hết khoảng revalidate, người truy cập kế tiếp vẫn nhận ngay trang cache trong khi bản mới đang được dựng; những người sau nhận bản mới.</p> <pre><code>// App Router: revalidate tối đa mỗi 60 giây\nexport const revalidate = 60;\n\n// Theo yêu cầu, ví dụ khi biên tập viên xuất bản trong CMS\nimport { revalidatePath } from 'next/cache';\nrevalidatePath('/news/my-article');\n\n// Tương đương trong Pages Router\nexport async function getStaticProps() {\n  return { props: { /* ... */ }, revalidate: 60 };\n}</code></pre> <h5>Vì sao không dùng cho portal thanh toán</h5> <ul><li>Trang cache được <strong class=\"k\">chia sẻ cho mọi người truy cập</strong>. Trang hiển thị số dư, đơn hàng hay trạng thái checkout của một người sẽ lộ dữ liệu của người này cho người khác, hoặc hiển thị dữ liệu cũ.</li><li>Trạng thái thanh toán phải <strong class=\"k\">realtime và chính xác</strong>. Một trang có thể cũ tới một phút là không chấp nhận được.</li><li>Vì vậy portal nạp game dùng <strong class=\"k\">SSR</strong> (mới ở mỗi request), còn trang công khai dùng chung như tin tức dùng ISR.</li></ul>"
+      },
+      "terms": [
+        "ISR",
+        "stale-while-revalidate",
+        "revalidatePath",
+        "shared cache"
+      ]
+    },
+    {
+      "id": "q53",
+      "number": 53,
+      "tag": "SEO · Performance",
+      "title": "Why does SSR help SEO? What did you do to reach a Lighthouse SEO score of 98?",
+      "titleVi": "Vì sao SSR giúp SEO? Bạn đã làm gì để đạt Lighthouse SEO 98?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "SSR/ISR gửi HTML đầy đủ ngay lần đầu",
+          "Checklist kỹ thuật SEO cơ bản",
+          "Lighthouse SEO chỉ là kiểm tra cơ bản, không phải thứ hạng",
+          "Chỉ nói những gì bạn THỰC SỰ đã làm"
+        ]
+      },
+      "answer": {
+        "en": "<p>With SSR or ISR the server sends <strong class=\"k\">complete HTML</strong> on the first response, so crawlers and social previews see the real content without running JavaScript. It also usually gives a faster first paint (LCP). With CSR, a crawler may see an empty shell first.</p> <h5>Typical technical SEO checklist</h5> <ul><li>Unique <code>&lt;title&gt;</code> and meta description per page.</li><li>Canonical URL, and Open Graph / Twitter tags for sharing.</li><li>Semantic HTML: one <code>h1</code>, logical heading order, descriptive link text, <code>alt</code> on images.</li><li>Structured data (JSON-LD) where it fits, plus <code>sitemap.xml</code> and <code>robots.txt</code>.</li><li>Correct status codes and redirects, mobile-friendly layout, fast loading.</li></ul> <p><strong class=\"k\">Be honest about the metric.</strong> A Lighthouse SEO score checks basic, automatable rules. It is <strong class=\"k\">not</strong> a ranking guarantee. When you answer, mention only the items you really implemented, and be ready to say what the score was before and after.</p>",
+        "vi": "<p>Với SSR hoặc ISR, server gửi <strong class=\"k\">HTML đầy đủ</strong> ngay phản hồi đầu tiên, nên crawler và bản xem trước khi chia sẻ thấy nội dung thật mà không cần chạy JavaScript. Thường cũng cho lần hiển thị đầu nhanh hơn (LCP). Với CSR, crawler có thể chỉ thấy một vỏ trống lúc đầu.</p> <h5>Checklist SEO kỹ thuật cơ bản</h5> <ul><li><code>&lt;title&gt;</code> và meta description riêng cho từng trang.</li><li>Canonical URL, và thẻ Open Graph / Twitter để chia sẻ.</li><li>HTML ngữ nghĩa: một <code>h1</code>, thứ tự heading hợp lý, text của link có nghĩa, <code>alt</code> cho ảnh.</li><li>Structured data (JSON-LD) khi phù hợp, cùng <code>sitemap.xml</code> và <code>robots.txt</code>.</li><li>Status code và redirect đúng, layout thân thiện mobile, tải nhanh.</li></ul> <p><strong class=\"k\">Hãy trung thực về chỉ số.</strong> Điểm Lighthouse SEO chỉ kiểm tra các luật cơ bản có thể tự động hóa. Nó <strong class=\"k\">không</strong> đảm bảo thứ hạng. Khi trả lời, chỉ nhắc những mục bạn thực sự đã làm, và sẵn sàng nói điểm trước và sau là bao nhiêu.</p>"
+      },
+      "terms": [
+        "SEO",
+        "Lighthouse",
+        "JSON-LD",
+        "canonical"
+      ]
+    },
+    {
+      "id": "q54",
+      "number": 54,
+      "tag": "React · Reconciliation",
+      "title": "How does React decide what to update? Why do keys matter in lists?",
+      "titleVi": "React quyết định cập nhật những gì thế nào? Vì sao <code>key</code> quan trọng trong danh sách?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Render tạo cây mô tả mới, React so với cây cũ (diff)",
+          "Cùng kiểu + cùng vị trí/key = giữ nguyên instance và state",
+          "<code>key</code> ổn định, duy nhất = danh tính phần tử",
+          "Không dùng index khi danh sách đổi thứ tự/xóa"
+        ]
+      },
+      "answer": {
+        "en": "<p>When state changes, React renders a new tree of elements and <strong class=\"k\">compares it with the previous one</strong> (reconciliation). Elements of the same type at the same position are <strong class=\"k\">updated in place</strong> (their DOM and state are kept); a different type is torn down and rebuilt.</p> <p>For lists, the <strong class=\"k\"><code>key</code></strong> tells React which item is which between renders. A <strong class=\"k\">stable, unique key</strong> (such as a database id) lets React move items instead of recreating them, and keeps each item's state attached to the correct item.</p> <pre><code>// Good: a stable id\n{items.map(item =&gt; &lt;Row key={item.id} item={item} /&gt;)}\n\n// Risky: index as key\n{items.map((item, i) =&gt; &lt;Row key={i} item={item} /&gt;)}</code></pre> <p><strong class=\"k\">The classic bug:</strong> with index keys, deleting or reordering rows makes React reuse the wrong row, so an input's typed text or a checkbox state ends up on a different item. Index keys are only safe for static lists that never reorder.</p>",
+        "vi": "<p>Khi state đổi, React render ra một cây element mới rồi <strong class=\"k\">so sánh với cây trước</strong> (reconciliation). Element cùng kiểu ở cùng vị trí được <strong class=\"k\">cập nhật tại chỗ</strong> (giữ DOM và state); khác kiểu thì bị hủy và dựng lại.</p> <p>Với danh sách, <strong class=\"k\"><code>key</code></strong> cho React biết phần tử nào là phần tử nào giữa các lần render. <strong class=\"k\">Key ổn định và duy nhất</strong> (như id trong database) cho phép React di chuyển phần tử thay vì tạo lại, và giữ state của mỗi phần tử gắn đúng với phần tử đó.</p> <pre><code>// Tốt: id ổn định\n{items.map(item =&gt; &lt;Row key={item.id} item={item} /&gt;)}\n\n// Rủi ro: dùng index làm key\n{items.map((item, i) =&gt; &lt;Row key={i} item={item} /&gt;)}</code></pre> <p><strong class=\"k\">Lỗi kinh điển:</strong> dùng index làm key, khi xóa hoặc đổi thứ tự dòng thì React tái sử dụng nhầm dòng, nên chữ đang gõ trong input hay trạng thái checkbox nhảy sang phần tử khác. Key theo index chỉ an toàn với danh sách tĩnh không bao giờ đổi thứ tự.</p>"
+      },
+      "terms": [
+        "reconciliation",
+        "key",
+        "diffing"
+      ]
+    },
+    {
+      "id": "q55",
+      "number": 55,
+      "tag": "React · Hiệu năng",
+      "title": "What causes a component to re-render, and how do you avoid unnecessary re-renders?",
+      "titleVi": "Điều gì khiến component re-render, và làm sao tránh re-render không cần thiết?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Re-render do: state đổi, parent re-render, context đổi",
+          "Đo trước (React DevTools Profiler)",
+          "Giải pháp theo thứ tự: để state gần nơi dùng → tách component → <code>memo</code>/<code>useMemo</code>/<code>useCallback</code>",
+          "<code>memo</code> vô dụng nếu props mới mỗi lần"
+        ]
+      },
+      "answer": {
+        "en": "<p>A component re-renders when <strong class=\"k\">its state changes</strong>, when <strong class=\"k\">its parent re-renders</strong> (even if props are the same), or when a <strong class=\"k\">context it reads changes</strong>. A re-render is not automatically a problem: it only matters when it is slow or visible.</p> <h5>What to do, in order</h5> <ol><li><strong class=\"k\">Measure first</strong> with the React DevTools Profiler. Do not guess.</li><li><strong class=\"k\">Colocate state</strong>: keep state in the lowest component that needs it, so a keystroke does not re-render the whole page.</li><li><strong class=\"k\">Split components</strong> so expensive parts do not depend on the changing state, or pass them in as <code>children</code>.</li><li>Then use <code>React.memo</code> (skip re-render if props are equal), <code>useMemo</code> (cache an expensive calculation) and <code>useCallback</code> (keep a stable function reference).</li></ol> <p><strong class=\"k\">Common pitfall:</strong> <code>React.memo</code> does nothing if you pass a <strong class=\"k\">new object or function</strong> as a prop on every render. That is exactly when <code>useMemo</code> / <code>useCallback</code> are needed to keep the reference stable. Overusing them adds complexity without benefit. Tools such as the React Compiler can also add memoization automatically.</p>",
+        "vi": "<p>Component re-render khi <strong class=\"k\">state của nó đổi</strong>, khi <strong class=\"k\">parent re-render</strong> (kể cả props giống nhau), hoặc khi <strong class=\"k\">context nó đọc đổi</strong>. Re-render không tự động là vấn đề: chỉ đáng quan tâm khi nó chậm hoặc nhìn thấy được.</p> <h5>Làm gì, theo thứ tự</h5> <ol><li><strong class=\"k\">Đo trước</strong> bằng Profiler của React DevTools. Đừng đoán.</li><li><strong class=\"k\">Đặt state gần nơi dùng</strong>: giữ state ở component thấp nhất cần nó, để mỗi lần gõ phím không re-render cả trang.</li><li><strong class=\"k\">Tách component</strong> để phần nặng không phụ thuộc vào state đang đổi, hoặc truyền vào dưới dạng <code>children</code>.</li><li>Sau đó mới dùng <code>React.memo</code> (bỏ qua re-render nếu props bằng nhau), <code>useMemo</code> (cache phép tính nặng) và <code>useCallback</code> (giữ tham chiếu hàm ổn định).</li></ol> <p><strong class=\"k\">Bẫy hay gặp:</strong> <code>React.memo</code> không có tác dụng nếu mỗi lần render bạn truyền vào một <strong class=\"k\">object hoặc function mới</strong> làm prop. Chính lúc đó mới cần <code>useMemo</code> / <code>useCallback</code> để giữ tham chiếu ổn định. Lạm dụng chỉ thêm phức tạp mà không có lợi. Công cụ như React Compiler cũng có thể tự thêm memoization.</p>"
+      },
+      "terms": [
+        "re-render",
+        "React.memo",
+        "useMemo",
+        "useCallback",
+        "Profiler"
+      ]
+    },
+    {
+      "id": "q56",
+      "number": 56,
+      "tag": "React · Hooks",
+      "title": "What are the common <code>useEffect</code> pitfalls?",
+      "titleVi": "Những lỗi thường gặp với <code>useEffect</code> là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Stale closure",
+          "Race condition khi fetch",
+          "Quên cleanup",
+          "Effect không cần thiết",
+          "StrictMode chạy effect 2 lần ở dev"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Stale closure:</strong> the effect captures the values from the render it was created in. Wrong or missing dependencies cause it to use old values.</li><li><strong class=\"k\">Race condition when fetching:</strong> if <code>id</code> changes quickly, an older request can finish last and overwrite newer data. Cancel or ignore old requests.</li><li><strong class=\"k\">Missing cleanup:</strong> intervals, subscriptions and listeners must be cleaned up or they leak.</li><li><strong class=\"k\">Unnecessary effects:</strong> do not use an effect to derive data from props/state (compute it during render) or to respond to an event (do it in the handler).</li><li><strong class=\"k\">StrictMode</strong> runs effects twice in development to expose missing cleanup. It is a feature, not a bug.</li></ul> <pre><code>// Stale closure: count is always 0 inside the interval\nuseEffect(() =&gt; {\n  const id = setInterval(() =&gt; setCount(count + 1), 1000);\n  return () =&gt; clearInterval(id);\n}, []);\n// Fix: use the functional update\n// setCount(c =&gt; c + 1)\n\n// Race condition + cleanup: abort the previous request\nuseEffect(() =&gt; {\n  const ctrl = new AbortController();\n  fetch(`/api/user/${id}`, { signal: ctrl.signal })\n    .then(r =&gt; r.json())\n    .then(setUser)\n    .catch(e =&gt; { if (e.name !== 'AbortError') setError(e); });\n  return () =&gt; ctrl.abort();\n}, [id]);</code></pre> <p>In real projects, prefer a data-fetching library such as React Query, which handles caching, cancellation and races for you.</p>",
+        "vi": "<ul><li><strong class=\"k\">Stale closure:</strong> effect \"chụp\" giá trị của lần render đã tạo ra nó. Dependency sai hoặc thiếu khiến nó dùng giá trị cũ.</li><li><strong class=\"k\">Race condition khi fetch:</strong> nếu <code>id</code> đổi nhanh, request cũ có thể xong sau cùng và ghi đè dữ liệu mới. Cần hủy hoặc bỏ qua request cũ.</li><li><strong class=\"k\">Thiếu cleanup:</strong> interval, subscription và listener phải được dọn, nếu không sẽ bị rò rỉ.</li><li><strong class=\"k\">Effect không cần thiết:</strong> đừng dùng effect để suy ra dữ liệu từ props/state (tính ngay lúc render) hay để phản ứng với sự kiện (làm trong handler).</li><li><strong class=\"k\">StrictMode</strong> chạy effect hai lần ở môi trường dev để lộ ra chỗ thiếu cleanup. Đó là tính năng, không phải lỗi.</li></ul> <pre><code>// Stale closure: count luôn là 0 bên trong interval\nuseEffect(() =&gt; {\n  const id = setInterval(() =&gt; setCount(count + 1), 1000);\n  return () =&gt; clearInterval(id);\n}, []);\n// Cách sửa: dùng functional update\n// setCount(c =&gt; c + 1)\n\n// Race condition + cleanup: hủy request trước đó\nuseEffect(() =&gt; {\n  const ctrl = new AbortController();\n  fetch(`/api/user/${id}`, { signal: ctrl.signal })\n    .then(r =&gt; r.json())\n    .then(setUser)\n    .catch(e =&gt; { if (e.name !== 'AbortError') setError(e); });\n  return () =&gt; ctrl.abort();\n}, [id]);</code></pre> <p>Trong dự án thật, nên dùng thư viện lấy dữ liệu như React Query, nó xử lý cache, hủy request và race giúp bạn.</p>"
+      },
+      "terms": [
+        "useEffect",
+        "stale closure",
+        "race condition",
+        "AbortController",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "q57",
+      "number": 57,
+      "tag": "State · Dữ liệu",
+      "title": "React Query vs Zustand: when do you use each?",
+      "titleVi": "React Query và Zustand: khi nào dùng cái nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Phân biệt server state và client state",
+          "React Query: cache, stale, invalidate cho dữ liệu từ server",
+          "Zustand: state UI/client dùng chung",
+          "Đừng chép dữ liệu server vào store"
+        ]
+      },
+      "answer": {
+        "en": "<p>They solve <strong class=\"k\">different problems</strong>, because there are two kinds of state:</p> <ul><li><strong class=\"k\">Server state:</strong> data that lives on the server and that you only borrow: orders, user profile, tournaments. It can become stale and needs caching, refetching and invalidation. Use <strong class=\"k\">React Query</strong>.</li><li><strong class=\"k\">Client state:</strong> state that exists only in the browser: open modal, selected tab, a multi-step form draft, theme. Use <code>useState</code>, context, or <strong class=\"k\">Zustand</strong> when it is shared across distant components.</li></ul> <pre><code>// Server state: React Query\nconst { data, isPending } = useQuery({\n  queryKey: ['order', orderId],\n  queryFn: () =&gt; fetchOrder(orderId),\n  staleTime: 30_000,           // treat as fresh for 30s\n});\nconst pay = useMutation({\n  mutationFn: payOrder,\n  onSuccess: () =&gt; queryClient.invalidateQueries({ queryKey: ['order', orderId] }),\n});\n\n// Client state: Zustand\nconst useUi = create(set =&gt; ({\n  sidebarOpen: false,\n  toggle: () =&gt; set(s =&gt; ({ sidebarOpen: !s.sidebarOpen })),\n}));</code></pre> <p><strong class=\"k\">Anti-pattern:</strong> copying API data into a global store by hand. You then have to rebuild caching, loading states and invalidation yourself. Let React Query own server data.</p>",
+        "vi": "<p>Chúng giải quyết <strong class=\"k\">hai vấn đề khác nhau</strong>, vì có hai loại state:</p> <ul><li><strong class=\"k\">Server state:</strong> dữ liệu sống trên server mà bạn chỉ \"mượn\": đơn hàng, hồ sơ người dùng, giải đấu. Nó có thể cũ đi và cần cache, fetch lại, invalidate. Dùng <strong class=\"k\">React Query</strong>.</li><li><strong class=\"k\">Client state:</strong> state chỉ tồn tại ở trình duyệt: modal đang mở, tab đang chọn, bản nháp form nhiều bước, theme. Dùng <code>useState</code>, context, hoặc <strong class=\"k\">Zustand</strong> khi cần chia sẻ giữa các component ở xa nhau.</li></ul> <pre><code>// Server state: React Query\nconst { data, isPending } = useQuery({\n  queryKey: ['order', orderId],\n  queryFn: () =&gt; fetchOrder(orderId),\n  staleTime: 30_000,           // coi là còn mới trong 30s\n});\nconst pay = useMutation({\n  mutationFn: payOrder,\n  onSuccess: () =&gt; queryClient.invalidateQueries({ queryKey: ['order', orderId] }),\n});\n\n// Client state: Zustand\nconst useUi = create(set =&gt; ({\n  sidebarOpen: false,\n  toggle: () =&gt; set(s =&gt; ({ sidebarOpen: !s.sidebarOpen })),\n}));</code></pre> <p><strong class=\"k\">Anti-pattern:</strong> tự tay chép dữ liệu API vào store toàn cục. Khi đó bạn phải tự xây lại cache, trạng thái loading và invalidate. Hãy để React Query sở hữu dữ liệu server.</p>"
+      },
+      "terms": [
+        "React Query",
+        "Zustand",
+        "server state",
+        "client state",
+        "invalidation"
+      ]
+    },
+    {
+      "id": "q58",
+      "number": 58,
+      "tag": "Next.js · Streaming",
+      "title": "How do streaming and Suspense improve perceived performance?",
+      "titleVi": "Streaming và Suspense cải thiện hiệu năng cảm nhận như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: một phần chậm chặn cả trang",
+          "Suspense bọc phần chậm, hiển thị fallback",
+          "Server stream HTML từng phần",
+          "Người dùng thấy và dùng được phần nhanh trước"
+        ]
+      },
+      "answer": {
+        "en": "<p>Without streaming, the server must wait for <strong class=\"k\">all</strong> the data before sending any HTML, so one slow query delays the whole page.</p> <p>With <strong class=\"k\">streaming</strong>, the server sends the page shell immediately and <strong class=\"k\">streams the slow parts later</strong>. You wrap the slow part in <code>&lt;Suspense&gt;</code> with a fallback (a skeleton); React shows the fallback first and swaps in the real content when it arrives. In the App Router, a <code>loading.tsx</code> file gives you this per route.</p> <pre><code>export default function Page() {\n  return (\n    &lt;&gt;\n      &lt;Header /&gt;                          {/* fast: sent immediately */}\n      &lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;\n        &lt;SlowRecommendations /&gt;           {/* slow: streamed in later */}\n      &lt;/Suspense&gt;\n    &lt;/&gt;\n  );\n}</code></pre> <p>Result: a lower <strong class=\"k\">time to first byte</strong> and earlier first paint, and users can start reading and interacting with the fast parts instead of staring at a blank page.</p>",
+        "vi": "<p>Nếu không streaming, server phải đợi <strong class=\"k\">toàn bộ</strong> dữ liệu rồi mới gửi HTML, nên một truy vấn chậm làm trễ cả trang.</p> <p>Với <strong class=\"k\">streaming</strong>, server gửi ngay phần khung của trang và <strong class=\"k\">stream các phần chậm sau</strong>. Bạn bọc phần chậm trong <code>&lt;Suspense&gt;</code> với fallback (một skeleton); React hiển thị fallback trước rồi thay bằng nội dung thật khi nó về tới. Trong App Router, file <code>loading.tsx</code> làm điều này cho mỗi route.</p> <pre><code>export default function Page() {\n  return (\n    &lt;&gt;\n      &lt;Header /&gt;                          {/* nhanh: gửi ngay */}\n      &lt;Suspense fallback={&lt;Skeleton /&gt;}&gt;\n        &lt;SlowRecommendations /&gt;           {/* chậm: stream sau */}\n      &lt;/Suspense&gt;\n    &lt;/&gt;\n  );\n}</code></pre> <p>Kết quả: <strong class=\"k\">time to first byte</strong> thấp hơn và hiển thị đầu tiên sớm hơn, người dùng bắt đầu đọc và tương tác với phần nhanh thay vì nhìn một trang trắng.</p>"
+      },
+      "terms": [
+        "streaming",
+        "Suspense",
+        "loading.tsx",
+        "TTFB"
+      ]
+    },
+    {
+      "id": "q59",
+      "number": 59,
+      "tag": "Next.js · Bảo mật route",
+      "title": "How do you protect private routes in Next.js? Is a client-side guard enough?",
+      "titleVi": "Bạn bảo vệ route riêng tư trong Next.js thế nào? Guard phía client có đủ không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Guard ở client chỉ để UX, KHÔNG phải bảo mật",
+          "Middleware: chặn sớm trước khi render",
+          "Server vẫn phải kiểm tra quyền ở mỗi request dữ liệu",
+          "Liên hệ CV: route-level access control + session revalidation"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">No, a client-side guard is not enough.</strong> Anyone can open DevTools and change client code, so client checks only improve the <strong class=\"k\">user experience</strong> (redirect, hide a button). Real protection must happen on the <strong class=\"k\">server</strong>.</p> <ol><li><strong class=\"k\">Middleware</strong> runs before the page is rendered. It can redirect users without a session to <code>/login</code>. It is a fast first gate, but it only checks that a session exists.</li><li><strong class=\"k\">Server-side checks</strong> in the page or data layer verify the session and the user's <strong class=\"k\">permissions</strong> on every request for protected data.</li><li><strong class=\"k\">The API</strong> must enforce authorization itself and never trust the frontend.</li><li>Client guards and session revalidation (on startup and tab refocus) keep the UI consistent with the real session.</li></ol> <pre><code>// middleware.ts\nimport { NextResponse, type NextRequest } from 'next/server';\n\nexport function middleware(req: NextRequest) {\n  const hasSession = req.cookies.has('session');\n  if (!hasSession &amp;&amp; req.nextUrl.pathname.startsWith('/account')) {\n    return NextResponse.redirect(new URL('/login', req.url));\n  }\n  return NextResponse.next();\n}\nexport const config = { matcher: ['/account/:path*'] };</code></pre> <p>Note: in newer Next.js versions this file may be called <code>proxy</code>; check the docs for the version you used. <strong class=\"k\">Link to your CV:</strong> your route-level access control plus session revalidation maps directly onto this answer.</p>",
+        "vi": "<p><strong class=\"k\">Không, guard phía client là không đủ.</strong> Ai cũng có thể mở DevTools và sửa code client, nên kiểm tra ở client chỉ cải thiện <strong class=\"k\">trải nghiệm</strong> (chuyển hướng, ẩn nút). Bảo vệ thật sự phải làm ở <strong class=\"k\">server</strong>.</p> <ol><li><strong class=\"k\">Middleware</strong> chạy trước khi trang được render. Nó có thể chuyển người dùng chưa có session về <code>/login</code>. Đây là cổng đầu tiên nhanh, nhưng chỉ kiểm tra session có tồn tại.</li><li><strong class=\"k\">Kiểm tra phía server</strong> trong trang hoặc tầng dữ liệu xác minh session và <strong class=\"k\">quyền</strong> của người dùng ở mỗi request lấy dữ liệu được bảo vệ.</li><li><strong class=\"k\">API</strong> phải tự thực thi phân quyền và không bao giờ tin frontend.</li><li>Guard ở client và revalidate session (khi khởi động và khi focus lại tab) giữ UI nhất quán với session thật.</li></ol> <pre><code>// middleware.ts\nimport { NextResponse, type NextRequest } from 'next/server';\n\nexport function middleware(req: NextRequest) {\n  const hasSession = req.cookies.has('session');\n  if (!hasSession &amp;&amp; req.nextUrl.pathname.startsWith('/account')) {\n    return NextResponse.redirect(new URL('/login', req.url));\n  }\n  return NextResponse.next();\n}\nexport const config = { matcher: ['/account/:path*'] };</code></pre> <p>Lưu ý: ở các phiên bản Next.js mới hơn, file này có thể được gọi là <code>proxy</code>; hãy xem docs đúng phiên bản bạn đã dùng. <strong class=\"k\">Liên hệ CV:</strong> kiểm soát truy cập theo route cùng revalidate session của bạn khớp trực tiếp với câu trả lời này.</p>"
+      },
+      "terms": [
+        "middleware",
+        "route guard",
+        "authorization",
+        "session"
+      ]
+    }
+  ]
+}

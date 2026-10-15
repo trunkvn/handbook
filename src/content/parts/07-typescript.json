@@ -1,0 +1,183 @@
+{
+  "id": "part-7",
+  "slug": "typescript",
+  "roman": "VII",
+  "title": "TypeScript",
+  "description": "Hệ thống kiểu, generics và cách mô hình hóa trạng thái an toàn.",
+  "questions": [
+    {
+      "id": "q30",
+      "number": 30,
+      "tag": "TypeScript · Kiểu",
+      "title": "What is the difference between <code>interface</code> and <code>type</code>?",
+      "titleVi": "<code>interface</code> và <code>type</code> khác nhau thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Cả hai mô tả hình dạng object",
+          "<code>interface</code>: declaration merging, extends",
+          "<code>type</code>: union, intersection, mapped, conditional",
+          "Quan trọng: nhất quán trong team"
+        ]
+      },
+      "answer": {
+        "en": "<p>Both describe the shape of an object. <code>interface</code> supports <strong class=\"k\">declaration merging</strong> (declaring the same name twice merges them) and <code>extends</code>. <code>type</code> is more flexible: unions, intersections, tuples, mapped and conditional types.</p> <p>In practice: use <code>interface</code> for public object shapes (a library's API) and <code>type</code> for everything else. What matters most is being <strong class=\"k\">consistent within the team</strong>.</p>",
+        "vi": "<p>Cả hai mô tả hình dạng object. <code>interface</code> có thể <strong class=\"k\">declaration merging</strong> (khai báo cùng tên thì gộp) và <code>extends</code>. <code>type</code> linh hoạt hơn: union, intersection, tuple, mapped/conditional types.</p> <p>Thực tế: dùng <code>interface</code> cho hình dạng object công khai (API của thư viện), <code>type</code> cho phần còn lại. Quan trọng là <strong class=\"k\">nhất quán trong team</strong>.</p>"
+      },
+      "terms": [
+        "interface",
+        "type",
+        "declaration merging"
+      ]
+    },
+    {
+      "id": "q31",
+      "number": 31,
+      "tag": "TypeScript · Kiểu",
+      "title": "What are <code>any</code>, <code>unknown</code> and <code>never</code>?",
+      "titleVi": "<code>any</code>, <code>unknown</code>, <code>never</code> là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>any</code>: tắt kiểm tra, tránh dùng",
+          "<code>unknown</code>: phải narrow trước khi dùng",
+          "<code>never</code>: không bao giờ xảy ra, dùng cho exhaustive check"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><code>any</code>: turns off type checking; avoid it.</li><li><code>unknown</code>: accepts any value but you <strong class=\"k\">must narrow it before use</strong>. Use it for external data such as API responses and <code>catch (e)</code>.</li><li><code>never</code>: the type of a value that can never occur (a function that always throws, an unreachable branch). Used for <strong class=\"k\">exhaustiveness checks</strong> in a <code>switch</code>.</li></ul>",
+        "vi": "<ul><li><code>any</code>: tắt kiểm tra kiểu, tránh dùng.</li><li><code>unknown</code>: nhận mọi giá trị nhưng <strong class=\"k\">bắt buộc phải thu hẹp (narrow) trước khi dùng</strong>. Dùng cho dữ liệu từ bên ngoài như response API, <code>catch (e)</code>.</li><li><code>never</code>: kiểu của giá trị không bao giờ xảy ra (hàm luôn throw, nhánh không thể tới). Dùng để <strong class=\"k\">kiểm tra exhaustive</strong> trong <code>switch</code>.</li></ul>"
+      },
+      "terms": [
+        "any",
+        "unknown",
+        "never",
+        "narrowing"
+      ]
+    },
+    {
+      "id": "q32",
+      "number": 32,
+      "tag": "TypeScript · Generics",
+      "title": "What are generics? Give an example.",
+      "titleVi": "Generics là gì? Cho ví dụ.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Tham số hóa kiểu",
+          "Ví dụ <code>first&lt;T&gt;</code>",
+          "Ràng buộc với <code>extends</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p>Generics <strong class=\"k\">parameterize types</strong>, so you can write reusable functions and types that stay type-safe.</p> <pre><code>function first&lt;T&gt;(arr: T[]): T | undefined { return arr[0]; }\nfirst([1, 2, 3]);   // number | undefined\nfirst(['a']);       // string | undefined\n\n// Constraint: T must have an id\nfunction byId&lt;T extends { id: string }&gt;(items: T[], id: string) {\n  return items.find(i =&gt; i.id === id);\n}</code></pre> <p><strong class=\"k\">Link to your CV:</strong> does your <code>gnoud-ui</code> library have a generic component (a list, a select)? If so, bring that example.</p>",
+        "vi": "<p>Generics <strong class=\"k\">tham số hóa kiểu</strong> để viết hàm/kiểu tái sử dụng mà vẫn an toàn.</p> <pre><code>function first&lt;T&gt;(arr: T[]): T | undefined { return arr[0]; }\nfirst([1, 2, 3]);   // number | undefined\nfirst(['a']);       // string | undefined\n\n// Giới hạn kiểu: T phải có thuộc tính id\nfunction byId&lt;T extends { id: string }&gt;(items: T[], id: string) {\n  return items.find(i =&gt; i.id === id);\n}</code></pre> <p><strong class=\"k\">Liên hệ CV:</strong> component library <code>gnoud-ui</code> có component generic (ví dụ danh sách, select) không? Nếu có, bạn nên mang ví dụ đó ra.</p>"
+      },
+      "terms": [
+        "generics",
+        "T extends",
+        "type parameter"
+      ]
+    },
+    {
+      "id": "q33",
+      "number": 33,
+      "tag": "TypeScript · Utility types",
+      "title": "Which utility types do you use most often?",
+      "titleVi": "Những utility types nào thường dùng?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Partial / Required / Readonly",
+          "Pick / Omit",
+          "Record",
+          "ReturnType / Parameters / Awaited"
+        ]
+      },
+      "answer": {
+        "en": "<p><code>Partial&lt;T&gt;</code> (all fields optional), <code>Required&lt;T&gt;</code>, <code>Pick&lt;T, K&gt;</code>, <code>Omit&lt;T, K&gt;</code>, <code>Record&lt;K, V&gt;</code>, <code>Readonly&lt;T&gt;</code>, <code>ReturnType&lt;F&gt;</code>, <code>Parameters&lt;F&gt;</code>, <code>Awaited&lt;T&gt;</code>.</p> <pre><code>type User = { id: string; name: string; email: string };\ntype UserPreview = Pick&lt;User, 'id' | 'name'&gt;;\ntype UserUpdate = Partial&lt;Omit&lt;User, 'id'&gt;&gt;;</code></pre>",
+        "vi": "<p><code>Partial&lt;T&gt;</code> (mọi field optional), <code>Required&lt;T&gt;</code>, <code>Pick&lt;T, K&gt;</code>, <code>Omit&lt;T, K&gt;</code>, <code>Record&lt;K, V&gt;</code>, <code>Readonly&lt;T&gt;</code>, <code>ReturnType&lt;F&gt;</code>, <code>Parameters&lt;F&gt;</code>, <code>Awaited&lt;T&gt;</code>.</p> <pre><code>type User = { id: string; name: string; email: string };\ntype UserPreview = Pick&lt;User, 'id' | 'name'&gt;;\ntype UserUpdate = Partial&lt;Omit&lt;User, 'id'&gt;&gt;;</code></pre>"
+      },
+      "terms": [
+        "Partial",
+        "Pick",
+        "Omit",
+        "Record"
+      ]
+    },
+    {
+      "id": "q34",
+      "number": 34,
+      "tag": "TypeScript · Narrowing",
+      "title": "What are type narrowing and discriminated unions?",
+      "titleVi": "Type narrowing và discriminated union là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Narrow bằng typeof, instanceof, in, ===",
+          "Discriminated union = field \"nhãn\" chung",
+          "Ví dụ PaymentState",
+          "<code>never</code> để bắt nhánh thiếu"
+        ]
+      },
+      "answer": {
+        "en": "<p>You narrow a type with <code>typeof</code>, <code>instanceof</code>, <code>in</code>, <code>===</code> checks, or a custom type guard. A <strong class=\"k\">discriminated union</strong> uses one shared \"tag\" field so TypeScript knows which branch you are in. It is a great way to model UI state:</p> <pre><code>type PaymentState =\n  | { status: 'idle' }\n  | { status: 'pending'; orderId: string }\n  | { status: 'success'; orderId: string; paidAt: Date }\n  | { status: 'failed'; reason: string };\n\nfunction render(s: PaymentState) {\n  switch (s.status) {\n    case 'idle':    return 'Not paid yet';\n    case 'pending': return `Processing ${s.orderId}`;\n    case 'success': return `Done at ${s.paidAt.toISOString()}`;\n    case 'failed':  return `Error: ${s.reason}`;\n    default: { const _exhaustive: never = s; return _exhaustive; } // add a status and forget it =&gt; compile error\n  }\n}</code></pre> <p><strong class=\"k\">Link to your CV:</strong> payment state is a natural example for this technique.</p>",
+        "vi": "<p>Thu hẹp kiểu bằng <code>typeof</code>, <code>instanceof</code>, <code>in</code>, kiểm tra <code>===</code>, hoặc type guard tự định nghĩa. <strong class=\"k\">Discriminated union</strong> dùng một field \"nhãn\" chung để TS biết đang ở nhánh nào, rất phù hợp để mô hình hóa trạng thái UI:</p> <pre><code>type PaymentState =\n  | { status: 'idle' }\n  | { status: 'pending'; orderId: string }\n  | { status: 'success'; orderId: string; paidAt: Date }\n  | { status: 'failed'; reason: string };\n\nfunction render(s: PaymentState) {\n  switch (s.status) {\n    case 'idle':    return 'Chưa thanh toán';\n    case 'pending': return `Đang xử lý ${s.orderId}`;\n    case 'success': return `Xong lúc ${s.paidAt.toISOString()}`;\n    case 'failed':  return `Lỗi: ${s.reason}`;\n    default: { const _exhaustive: never = s; return _exhaustive; } // thêm status mới mà quên xử lý thì lỗi biên dịch\n  }\n}</code></pre> <p><strong class=\"k\">Liên hệ CV:</strong> trạng thái thanh toán là ví dụ rất tự nhiên để bạn nói về kỹ thuật này.</p>"
+      },
+      "terms": [
+        "narrowing",
+        "discriminated union",
+        "exhaustive check"
+      ]
+    },
+    {
+      "id": "q35",
+      "number": 35,
+      "tag": "TypeScript · Runtime",
+      "title": "Does TypeScript guarantee safety at runtime?",
+      "titleVi": "TypeScript có đảm bảo an toàn lúc chạy không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Không: kiểu bị xóa khi biên dịch",
+          "Dữ liệu ngoài vẫn có thể sai hình dạng",
+          "Validate ở runtime (Zod) tại biên hệ thống",
+          "<code>as</code> chỉ là \"tin tôi\""
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">No.</strong> Types are erased after compilation. Data from an API, <code>localStorage</code> or <code>JSON.parse</code> can still have the wrong shape. You need <strong class=\"k\">runtime validation</strong> (for example Zod) at the system boundary. <code>as</code> just means \"trust me\"; it checks nothing.</p>",
+        "vi": "<p><strong class=\"k\">Không.</strong> Kiểu bị xóa sau khi biên dịch. Dữ liệu từ API, <code>localStorage</code>, <code>JSON.parse</code> vẫn có thể sai hình dạng. Cần <strong class=\"k\">validate ở runtime</strong> (ví dụ Zod) tại biên hệ thống. <code>as</code> chỉ là \"tin tôi\", không kiểm tra gì.</p>"
+      },
+      "terms": [
+        "type erasure",
+        "Zod",
+        "runtime validation"
+      ]
+    },
+    {
+      "id": "q36",
+      "number": 36,
+      "tag": "TypeScript · Kiểu",
+      "title": "Should you use an <code>enum</code> or a union of literals?",
+      "titleVi": "<code>enum</code> hay union of literals?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ưu tiên union: không sinh code runtime",
+          "Enum có hành vi bất ngờ (numeric)",
+          "Chọn enum khi cần ánh xạ ngược / codebase đã dùng"
+        ]
+      },
+      "answer": {
+        "en": "<p>I usually prefer a <strong class=\"k\">union</strong> (<code>'a' | 'b'</code>): it generates no runtime code, is tree-shakeable and easy to use. <code>enum</code> generates extra runtime code and has a few surprising behaviors (numeric enums). Choose <code>enum</code> if you need reverse mapping or the codebase already uses it.</p>",
+        "vi": "<p>Thường ưu tiên <strong class=\"k\">union</strong> (<code>'a' | 'b'</code>): không sinh code runtime, dễ tree-shake, dễ dùng. <code>enum</code> thường tạo thêm code runtime và có vài hành vi bất ngờ (numeric enum). Chọn <code>enum</code> nếu cần ánh xạ ngược hoặc codebase đã dùng sẵn.</p>"
+      },
+      "terms": [
+        "enum",
+        "union type",
+        "tree-shaking"
+      ]
+    }
+  ]
+}

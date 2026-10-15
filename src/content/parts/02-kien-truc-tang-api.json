@@ -1,0 +1,86 @@
+{
+  "id": "part-2",
+  "slug": "kien-truc-tang-api",
+  "roman": "II",
+  "title": "Kiến trúc & tầng API",
+  "description": "Proxy và BFF: khi nào thêm một tầng trung gian là đáng giá, và cái giá phải trả.",
+  "questions": [
+    {
+      "id": "q02",
+      "number": 2,
+      "tag": "Kiến trúc · Bảo mật",
+      "title": "Why proxy the API through the server? Any downsides?",
+      "titleVi": "Tại sao phải proxy API qua server? Có nhược điểm gì không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Bảo mật: ẩn credentials",
+          "Kiểm soát: lỗi, log",
+          "Tránh CORS",
+          "Đánh đổi: thêm hop, phức tạp"
+        ]
+      },
+      "answer": {
+        "en": "<p> The main reasons to proxy the API through the server are <strong class=\"k\">security and control</strong>. Credentials and partner endpoints are <strong class=\"k\">never exposed to the client</strong>. I get a single place to handle errors and logging, and I can avoid <strong class=\"k\">CORS</strong> issues. </p> <p> The downsides are <strong class=\"k\">an extra network hop</strong>, which can add some latency, and more complexity in the system. </p>",
+        "vi": "<p> Lý do chính để proxy API qua server là bảo mật và khả năng kiểm soát. Thông tin xác thực (credentials) và endpoint của đối tác không bao giờ bị lộ ra phía client. Tôi có một nơi duy nhất để xử lý lỗi và ghi log, đồng thời tránh được các vấn đề CORS. </p> <p> Nhược điểm là phải thêm một bước nhảy mạng (network hop), có thể làm tăng độ trễ, và hệ thống phức tạp hơn. </p>"
+      },
+      "terms": [
+        "proxy",
+        "CORS",
+        "credentials",
+        "latency"
+      ]
+    },
+    {
+      "id": "q03",
+      "number": 3,
+      "tag": "Kiến trúc",
+      "title": "What is BFF and why would you use it?",
+      "titleVi": "BFF là gì và tại sao bạn sử dụng nó?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa",
+          "Làm được gì",
+          "Khi nào dùng",
+          "Khi nào không nên"
+        ]
+      },
+      "answer": {
+        "en": "<p> BFF stands for <strong class=\"k\">Backend-for-Frontend</strong>. It is a backend layer designed specifically for a frontend application. Instead of calling multiple backend services directly, the frontend communicates with the BFF, which handles tasks such as <strong class=\"k\" >data aggregation, authentication,</strong> and adapting responses to the frontend's needs. </p> <p> I would use a BFF when the application needs better control over authentication, needs to combine data from multiple services, or requires a backend layer tailored to the frontend. However, for a simple application, a separate BFF might add <strong class=\"k\">unnecessary complexity</strong>. </p>",
+        "vi": "<p> BFF là viết tắt của Backend-for-Frontend, một lớp backend được thiết kế riêng để phục vụ một ứng dụng frontend. Thay vì gọi trực tiếp nhiều backend service, frontend giao tiếp với BFF. BFF xử lý các công việc như tổng hợp dữ liệu, xác thực và điều chỉnh response cho phù hợp với nhu cầu của frontend. </p> <p> Tôi sẽ dùng BFF khi ứng dụng cần kiểm soát việc xác thực tốt hơn, cần tổng hợp dữ liệu từ nhiều service hoặc cần một lớp backend được thiết kế riêng cho frontend. Tuy nhiên, với ứng dụng đơn giản, việc bổ sung BFF có thể tạo ra sự phức tạp không cần thiết. </p>"
+      },
+      "terms": [
+        "BFF",
+        "aggregation",
+        "authentication"
+      ]
+    },
+    {
+      "id": "q04",
+      "number": 4,
+      "tag": "Kiến trúc · Hiệu năng",
+      "title": "Does BFF make an application slower?",
+      "titleVi": "BFF có làm ứng dụng chậm hơn không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Thừa nhận: có thêm độ trễ",
+          "Nhưng: không nhất thiết chậm hơn",
+          "Gộp API, gọi song song, cache",
+          "Đo bằng p95"
+        ]
+      },
+      "answer": {
+        "en": "<p> A BFF can introduce <strong class=\"k\">additional latency</strong> because requests pass through an extra layer. However, it does not necessarily make the application significantly slower. A well-designed BFF can <em>improve</em> overall response time by <strong class=\"k\">aggregating multiple API calls</strong>, executing independent requests <strong class=\"k\">in parallel</strong>, and <strong class=\"k\">caching</strong> suitable data. </p> <p> I would measure end-to-end latency and monitor metrics such as <strong class=\"k\">p95 response time</strong> to understand its actual impact. </p>",
+        "vi": "<p> BFF có thể làm tăng độ trễ vì request phải đi qua thêm một lớp trung gian. Tuy nhiên, điều đó không có nghĩa là ứng dụng chắc chắn chậm đi đáng kể. Một BFF được thiết kế tốt có thể cải thiện thời gian phản hồi tổng thể bằng cách tổng hợp nhiều API, gọi song song các request độc lập và cache những dữ liệu phù hợp. </p> <p> Tôi sẽ đo độ trễ đầu cuối và theo dõi các chỉ số như thời gian phản hồi p95 để đánh giá tác động thực tế. </p>"
+      },
+      "terms": [
+        "latency",
+        "p95",
+        "caching",
+        "parallel requests"
+      ]
+    }
+  ]
+}

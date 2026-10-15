@@ -1,0 +1,198 @@
+{
+  "id": "part-17",
+  "slug": "hieu-nang-web",
+  "roman": "XVII",
+  "title": "Hiệu năng web",
+  "description": "Ngày 4: Core Web Vitals, đo lường, ảnh và font, bundle, animation, danh sách lớn và HTTP cache.",
+  "questions": [
+    {
+      "id": "q86",
+      "number": 86,
+      "tag": "Hiệu năng · Core Web Vitals",
+      "title": "What are the Core Web Vitals and how do you improve each one?",
+      "titleVi": "Core Web Vitals là gì và cải thiện từng chỉ số như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "LCP ≤ 2.5s: tốc độ hiển thị nội dung chính",
+          "INP ≤ 200ms: độ nhạy khi tương tác",
+          "CLS ≤ 0.1: ổn định bố cục",
+          "Mỗi chỉ số: nguyên nhân phổ biến + cách sửa"
+        ]
+      },
+      "answer": {
+        "en": "<p>Three user-centred metrics, judged at the <strong class=\"k\">75th percentile of real users</strong>:</p> <ul><li><strong class=\"k\">LCP</strong> (Largest Contentful Paint), good ≤ <strong class=\"k\">2.5 s</strong>: how fast the main content appears.</li><li><strong class=\"k\">INP</strong> (Interaction to Next Paint), good ≤ <strong class=\"k\">200 ms</strong>: how quickly the page responds to clicks and keys. It replaced FID in 2024.</li><li><strong class=\"k\">CLS</strong> (Cumulative Layout Shift), good ≤ <strong class=\"k\">0.1</strong>: how much the layout jumps around.</li></ul> <h5>How to improve each</h5> <ul><li><strong class=\"k\">LCP:</strong> find the LCP element (usually the hero image or a heading). Lower <strong class=\"k\">TTFB</strong> with SSR/ISR and a CDN, <strong class=\"k\">preload</strong> the hero image with <code>fetchpriority=\"high\"</code>, compress and size images properly, remove <strong class=\"k\">render-blocking</strong> CSS/JS, and <strong class=\"k\">never lazy-load</strong> the LCP image.</li><li><strong class=\"k\">INP:</strong> reduce main-thread work. <strong class=\"k\">Break up long tasks</strong>, avoid heavy event handlers, defer non-critical JavaScript, <strong class=\"k\">code-split</strong>, lower hydration cost, and use <code>startTransition</code> / <code>useTransition</code> for non-urgent updates.</li><li><strong class=\"k\">CLS:</strong> give images, videos and embeds <strong class=\"k\"><code>width</code>/<code>height</code> or <code>aspect-ratio</code></strong>; reserve space for ads and late-loaded content; do not insert content above existing content; load fonts without layout jumps; animate with <code>transform</code>.</li></ul>",
+        "vi": "<p>Ba chỉ số lấy người dùng làm trung tâm, được đánh giá ở <strong class=\"k\">phân vị 75 của người dùng thật</strong>:</p> <ul><li><strong class=\"k\">LCP</strong> (Largest Contentful Paint), tốt ≤ <strong class=\"k\">2.5 s</strong>: nội dung chính xuất hiện nhanh cỡ nào.</li><li><strong class=\"k\">INP</strong> (Interaction to Next Paint), tốt ≤ <strong class=\"k\">200 ms</strong>: trang phản hồi nhanh thế nào với click và phím. Nó đã thay FID từ năm 2024.</li><li><strong class=\"k\">CLS</strong> (Cumulative Layout Shift), tốt ≤ <strong class=\"k\">0.1</strong>: bố cục bị nhảy nhiều hay ít.</li></ul> <h5>Cách cải thiện từng chỉ số</h5> <ul><li><strong class=\"k\">LCP:</strong> tìm phần tử LCP (thường là ảnh hero hoặc một heading). Giảm <strong class=\"k\">TTFB</strong> bằng SSR/ISR và CDN, <strong class=\"k\">preload</strong> ảnh hero kèm <code>fetchpriority=\"high\"</code>, nén và đặt kích thước ảnh đúng, bỏ CSS/JS <strong class=\"k\">chặn render</strong>, và <strong class=\"k\">không bao giờ lazy-load</strong> ảnh LCP.</li><li><strong class=\"k\">INP:</strong> giảm công việc trên main thread. <strong class=\"k\">Chia nhỏ long task</strong>, tránh event handler nặng, hoãn JavaScript không quan trọng, <strong class=\"k\">code-split</strong>, giảm chi phí hydration, và dùng <code>startTransition</code> / <code>useTransition</code> cho cập nhật không khẩn cấp.</li><li><strong class=\"k\">CLS:</strong> đặt <strong class=\"k\"><code>width</code>/<code>height</code> hoặc <code>aspect-ratio</code></strong> cho ảnh, video và embed; chừa chỗ cho quảng cáo và nội dung tải muộn; không chèn nội dung phía trên nội dung có sẵn; tải font không gây nhảy bố cục; animate bằng <code>transform</code>.</li></ul>"
+      },
+      "terms": [
+        "LCP",
+        "INP",
+        "CLS",
+        "TTFB",
+        "long tasks"
+      ]
+    },
+    {
+      "id": "q87",
+      "number": 87,
+      "tag": "Hiệu năng · Đo lường",
+      "title": "What is the difference between lab data and field data? How do you measure and protect performance over time?",
+      "titleVi": "Dữ liệu lab và dữ liệu field khác nhau thế nào? Đo và giữ hiệu năng theo thời gian ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Lab (Lighthouse): một lần chạy mô phỏng, dễ lặp lại",
+          "Field (RUM/CrUX): người dùng thật, đa dạng thiết bị",
+          "Core Web Vitals được đánh giá bằng field data",
+          "Giữ lâu dài: Lighthouse CI + performance budget + RUM"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Lab data</strong> (Lighthouse, WebPageTest): <strong class=\"k\">one simulated run</strong> on a fixed device and network. Great for debugging because it is <strong class=\"k\">repeatable</strong>, but it does not reflect real users, and scores vary between runs.</li><li><strong class=\"k\">Field data</strong> (RUM, the Chrome UX Report): measured from <strong class=\"k\">real users</strong> on real devices and networks. It is what Core Web Vitals are <strong class=\"k\">judged on</strong>, but it is slower to collect and harder to debug.</li></ul> <h5>In a real project</h5> <ol><li>Use <strong class=\"k\">field data</strong> to find out *whether* there is a problem and *which pages* are affected.</li><li>Use <strong class=\"k\">lab data</strong> to find out *why* and to test a fix.</li><li>Add <strong class=\"k\">Lighthouse CI</strong> with <strong class=\"k\">performance budgets</strong> (for example JS size, LCP) to the pipeline so regressions fail the build.</li><li>Collect real-user metrics with the <strong class=\"k\"><code>web-vitals</code></strong> library and send them to your analytics.</li></ol> <pre><code>import { onLCP, onINP, onCLS } from 'web-vitals';\n\nonLCP(m =&gt; sendToAnalytics(m));\nonINP(m =&gt; sendToAnalytics(m));\nonCLS(m =&gt; sendToAnalytics(m));</code></pre> <p><strong class=\"k\">Link to your CV:</strong> when you say Lighthouse SEO is 98, be clear that this is a <strong class=\"k\">lab</strong> score for one page. Be ready to say how you tracked it over time.</p>",
+        "vi": "<ul><li><strong class=\"k\">Dữ liệu lab</strong> (Lighthouse, WebPageTest): <strong class=\"k\">một lần chạy mô phỏng</strong> trên thiết bị và mạng cố định. Rất tốt để debug vì <strong class=\"k\">lặp lại được</strong>, nhưng không phản ánh người dùng thật, và điểm dao động giữa các lần chạy.</li><li><strong class=\"k\">Dữ liệu field</strong> (RUM, Chrome UX Report): đo từ <strong class=\"k\">người dùng thật</strong> trên thiết bị và mạng thật. Đây là cái mà Core Web Vitals <strong class=\"k\">được đánh giá</strong>, nhưng thu thập chậm hơn và khó debug hơn.</li></ul> <h5>Trong dự án thật</h5> <ol><li>Dùng <strong class=\"k\">field data</strong> để biết *có* vấn đề hay không và *trang nào* bị ảnh hưởng.</li><li>Dùng <strong class=\"k\">lab data</strong> để biết *vì sao* và để thử bản sửa.</li><li>Thêm <strong class=\"k\">Lighthouse CI</strong> với <strong class=\"k\">performance budget</strong> (ví dụ dung lượng JS, LCP) vào pipeline để hồi quy làm hỏng build.</li><li>Thu thập số đo người dùng thật bằng thư viện <strong class=\"k\"><code>web-vitals</code></strong> và gửi tới hệ thống analytics.</li></ol> <pre><code>import { onLCP, onINP, onCLS } from 'web-vitals';\n\nonLCP(m =&gt; sendToAnalytics(m));\nonINP(m =&gt; sendToAnalytics(m));\nonCLS(m =&gt; sendToAnalytics(m));</code></pre> <p><strong class=\"k\">Liên hệ CV:</strong> khi nói Lighthouse SEO là 98, hãy nói rõ đó là điểm <strong class=\"k\">lab</strong> của một trang. Hãy sẵn sàng nói bạn theo dõi nó theo thời gian bằng cách nào.</p>"
+      },
+      "terms": [
+        "Lighthouse",
+        "RUM",
+        "CrUX",
+        "performance budget",
+        "web-vitals"
+      ]
+    },
+    {
+      "id": "q88",
+      "number": 88,
+      "tag": "Hiệu năng · Tài nguyên",
+      "title": "How do you optimize images and fonts?",
+      "titleVi": "Bạn tối ưu ảnh và font như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ảnh: định dạng hiện đại, responsive, kích thước, lazy-load đúng chỗ",
+          "Ảnh LCP: ưu tiên cao, không lazy",
+          "Font: self-host, subset, <code>font-display</code>, preload",
+          "Dùng <code>next/image</code>, <code>next/font</code>, <code>@nuxt/image</code>"
+        ]
+      },
+      "answer": {
+        "en": "<h5>Images</h5> <ul><li>Use modern formats (<strong class=\"k\">WebP / AVIF</strong>) and <strong class=\"k\">responsive images</strong> (<code>srcset</code> + <code>sizes</code>) so phones do not download desktop-sized files.</li><li>Always set <strong class=\"k\">dimensions</strong> (<code>width</code>/<code>height</code> or <code>aspect-ratio</code>) to avoid layout shift.</li><li><strong class=\"k\">Lazy-load below-the-fold images</strong> with <code>loading=\"lazy\"</code>, but load the <strong class=\"k\">LCP image eagerly</strong> with <code>fetchpriority=\"high\"</code>.</li><li><code>next/image</code> and <code>@nuxt/image</code> do most of this automatically (resizing, formats, lazy loading).</li></ul> <h5>Fonts</h5> <ul><li><strong class=\"k\">Self-host</strong> WOFF2 files, <strong class=\"k\">subset</strong> them (include the Vietnamese subset you need), and limit the number of weights.</li><li><code>font-display: swap</code> shows text immediately with a fallback; match the fallback's metrics to reduce layout shift.</li><li><strong class=\"k\">Preload</strong> the critical font and <code>preconnect</code> to the font host if you use one. <code>next/font</code> self-hosts and optimizes fonts for you.</li></ul> <pre><code>&lt;img\n  src=\"/hero-800.avif\"\n  srcset=\"/hero-400.avif 400w, /hero-800.avif 800w, /hero-1600.avif 1600w\"\n  sizes=\"(max-width: 600px) 100vw, 800px\"\n  width=\"800\" height=\"450\"\n  fetchpriority=\"high\"\n  alt=\"Tournament banner\" /&gt;\n&lt;!-- the LCP image: load early, no lazy --&gt;</code></pre>",
+        "vi": "<h5>Ảnh</h5> <ul><li>Dùng định dạng hiện đại (<strong class=\"k\">WebP / AVIF</strong>) và <strong class=\"k\">ảnh responsive</strong> (<code>srcset</code> + <code>sizes</code>) để điện thoại không tải file cỡ desktop.</li><li>Luôn đặt <strong class=\"k\">kích thước</strong> (<code>width</code>/<code>height</code> hoặc <code>aspect-ratio</code>) để tránh dịch chuyển bố cục.</li><li><strong class=\"k\">Lazy-load ảnh ngoài màn hình đầu</strong> bằng <code>loading=\"lazy\"</code>, nhưng tải <strong class=\"k\">ảnh LCP ngay</strong> với <code>fetchpriority=\"high\"</code>.</li><li><code>next/image</code> và <code>@nuxt/image</code> làm phần lớn việc này tự động (đổi kích thước, định dạng, lazy loading).</li></ul> <h5>Font</h5> <ul><li><strong class=\"k\">Tự host</strong> file WOFF2, <strong class=\"k\">subset</strong> (gồm subset tiếng Việt bạn cần), và giới hạn số weight.</li><li><code>font-display: swap</code> hiện chữ ngay bằng font dự phòng; chỉnh metrics của font dự phòng để giảm dịch chuyển bố cục.</li><li><strong class=\"k\">Preload</strong> font quan trọng và <code>preconnect</code> tới nơi host font nếu dùng. <code>next/font</code> tự host và tối ưu font cho bạn.</li></ul> <pre><code>&lt;img\n  src=\"/hero-800.avif\"\n  srcset=\"/hero-400.avif 400w, /hero-800.avif 800w, /hero-1600.avif 1600w\"\n  sizes=\"(max-width: 600px) 100vw, 800px\"\n  width=\"800\" height=\"450\"\n  fetchpriority=\"high\"\n  alt=\"Tournament banner\" /&gt;\n&lt;!-- ảnh LCP: tải sớm, không lazy --&gt;</code></pre>"
+      },
+      "terms": [
+        "WebP/AVIF",
+        "srcset",
+        "fetchpriority",
+        "font-display",
+        "next/image"
+      ]
+    },
+    {
+      "id": "q89",
+      "number": 89,
+      "tag": "Hiệu năng · Bundle",
+      "title": "How do you reduce JavaScript bundle size? How would you handle heavy libraries such as GSAP, Spline or three.js?",
+      "titleVi": "Làm sao giảm kích thước bundle JavaScript? Bạn xử lý các thư viện nặng như GSAP, Spline hay three.js ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Đo trước: bundle analyzer",
+          "Code splitting theo route + <code>import()</code> động",
+          "Tree-shaking: ESM + import có chọn lọc",
+          "Thư viện nặng: chỉ tải khi cần (in view / sau tương tác)",
+          "Script bên thứ ba: <code>defer</code>, <code>lazyOnload</code>"
+        ]
+      },
+      "answer": {
+        "en": "<ol><li><strong class=\"k\">Measure first</strong> with a bundle analyzer (<code>@next/bundle-analyzer</code>, <code>nuxi analyze</code>, vite-bundle-visualizer) to see what is actually big.</li><li><strong class=\"k\">Code splitting:</strong> frameworks split <strong class=\"k\">per route</strong> automatically; use <strong class=\"k\">dynamic <code>import()</code></strong> (<code>next/dynamic</code>, or <code>Lazy</code>-prefixed components in Nuxt) for heavy parts that are not needed immediately.</li><li><strong class=\"k\">Tree-shaking:</strong> prefer <strong class=\"k\">ESM</strong> libraries and named imports; avoid pulling in a whole library for one function (swap a large date library for a small one).</li><li><strong class=\"k\">Defer third-party scripts</strong> (analytics, chat widgets) with <code>defer</code> / <code>async</code> or <code>next/script</code> with <code>strategy=\"lazyOnload\"</code>.</li></ol> <h5>Heavy libraries (your corporate site)</h5> <ul><li><strong class=\"k\">Load only where needed.</strong> A 3D scene (Spline, three.js) should not be in the main bundle of every page.</li><li><strong class=\"k\">Load when needed:</strong> when the section scrolls <strong class=\"k\">into view</strong> (<code>IntersectionObserver</code>) or after the first user interaction, with a lightweight <strong class=\"k\">poster image or skeleton</strong> until then.</li><li>Import only the <strong class=\"k\">GSAP plugins</strong> you use, and disable heavy effects on low-power devices or with <code>prefers-reduced-motion</code>.</li></ul> <pre><code>// Next.js: the 3D scene is a separate chunk, loaded on the client only\nconst Scene = dynamic(() =&gt; import('./Scene'), {\n  ssr: false,\n  loading: () =&gt; &lt;img src=\"/scene-poster.webp\" alt=\"\" /&gt;,\n});</code></pre>",
+        "vi": "<ol><li><strong class=\"k\">Đo trước</strong> bằng bundle analyzer (<code>@next/bundle-analyzer</code>, <code>nuxi analyze</code>, vite-bundle-visualizer) để thấy cái gì thực sự lớn.</li><li><strong class=\"k\">Code splitting:</strong> framework tự tách <strong class=\"k\">theo route</strong>; dùng <strong class=\"k\"><code>import()</code> động</strong> (<code>next/dynamic</code>, hoặc component có tiền tố <code>Lazy</code> trong Nuxt) cho phần nặng chưa cần ngay.</li><li><strong class=\"k\">Tree-shaking:</strong> ưu tiên thư viện <strong class=\"k\">ESM</strong> và import theo tên; tránh kéo cả thư viện chỉ vì một hàm (thay thư viện date lớn bằng thư viện nhỏ).</li><li><strong class=\"k\">Hoãn script bên thứ ba</strong> (analytics, chat widget) bằng <code>defer</code> / <code>async</code> hoặc <code>next/script</code> với <code>strategy=\"lazyOnload\"</code>.</li></ol> <h5>Thư viện nặng (website doanh nghiệp của bạn)</h5> <ul><li><strong class=\"k\">Chỉ tải ở nơi cần.</strong> Một cảnh 3D (Spline, three.js) không nên nằm trong bundle chính của mọi trang.</li><li><strong class=\"k\">Tải khi cần:</strong> khi phần đó cuộn <strong class=\"k\">vào tầm nhìn</strong> (<code>IntersectionObserver</code>) hoặc sau lần tương tác đầu tiên, với <strong class=\"k\">ảnh poster hoặc skeleton</strong> nhẹ trong lúc chờ.</li><li>Chỉ import các <strong class=\"k\">plugin GSAP</strong> bạn dùng, và tắt hiệu ứng nặng trên thiết bị yếu hoặc khi có <code>prefers-reduced-motion</code>.</li></ul> <pre><code>// Next.js: cảnh 3D là chunk riêng, chỉ tải ở client\nconst Scene = dynamic(() =&gt; import('./Scene'), {\n  ssr: false,\n  loading: () =&gt; &lt;img src=\"/scene-poster.webp\" alt=\"\" /&gt;,\n});</code></pre>"
+      },
+      "terms": [
+        "bundle analyzer",
+        "code splitting",
+        "dynamic import",
+        "tree-shaking",
+        "lazy load"
+      ]
+    },
+    {
+      "id": "q90",
+      "number": 90,
+      "tag": "Hiệu năng · Animation",
+      "title": "How do you keep animations smooth? What is layout thrashing?",
+      "titleVi": "Làm sao giữ animation mượt? Layout thrashing là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Chỉ animate <code>transform</code> và <code>opacity</code>",
+          "Tránh animate width/height/top/left (gây layout)",
+          "Layout thrashing: đọc/ghi layout xen kẽ",
+          "Dọn dẹp animation khi unmount, tôn trọng <code>prefers-reduced-motion</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p>The browser pipeline is <strong class=\"k\">style → layout → paint → composite</strong>. Animating <code>transform</code> and <code>opacity</code> can be done on the <strong class=\"k\">compositor</strong> (often on the GPU) and skips layout and paint, so it stays at 60 fps. Animating <code>width</code>, <code>height</code>, <code>top</code> or <code>left</code> triggers <strong class=\"k\">layout</strong> every frame.</p> <ul><li><strong class=\"k\">Animate <code>transform</code> and <code>opacity</code></strong> only. Use <code>will-change</code> sparingly, because it costs memory.</li><li><strong class=\"k\">Layout thrashing:</strong> alternating <strong class=\"k\">reads</strong> of layout (<code>offsetHeight</code>, <code>getBoundingClientRect</code>) and <strong class=\"k\">writes</strong> (<code>style.width</code>) forces the browser to recalculate layout again and again. <strong class=\"k\">Batch reads, then writes.</strong></li><li>Drive JavaScript animation with <strong class=\"k\"><code>requestAnimationFrame</code></strong>, or a library such as <strong class=\"k\">GSAP</strong> that batches updates for you.</li><li><strong class=\"k\">Clean up</strong> on unmount (kill timelines and <code>ScrollTrigger</code> instances; <code>gsap.context().revert()</code> in React, <code>onUnmounted</code> in Vue) to avoid leaks.</li><li>Respect <strong class=\"k\"><code>prefers-reduced-motion</code></strong>, which is also an accessibility requirement.</li></ul> <pre><code>// Thrashing: each loop iteration reads, then writes, forcing a reflow\nitems.forEach(el =&gt; { el.style.width = el.offsetWidth + 10 + 'px'; });\n\n// Better: read everything first, then write\nconst widths = items.map(el =&gt; el.offsetWidth);\nitems.forEach((el, i) =&gt; { el.style.width = widths[i] + 10 + 'px'; });</code></pre>",
+        "vi": "<p>Pipeline của trình duyệt là <strong class=\"k\">style → layout → paint → composite</strong>. Animate <code>transform</code> và <code>opacity</code> có thể làm ở <strong class=\"k\">compositor</strong> (thường trên GPU) và bỏ qua layout và paint, nên giữ được 60 fps. Animate <code>width</code>, <code>height</code>, <code>top</code> hay <code>left</code> kích hoạt <strong class=\"k\">layout</strong> mỗi khung hình.</p> <ul><li><strong class=\"k\">Chỉ animate <code>transform</code> và <code>opacity</code>.</strong> Dùng <code>will-change</code> có chừng mực, vì nó tốn bộ nhớ.</li><li><strong class=\"k\">Layout thrashing:</strong> xen kẽ <strong class=\"k\">đọc</strong> layout (<code>offsetHeight</code>, <code>getBoundingClientRect</code>) và <strong class=\"k\">ghi</strong> (<code>style.width</code>) khiến trình duyệt tính lại layout liên tục. <strong class=\"k\">Gom các lần đọc, rồi mới ghi.</strong></li><li>Điều khiển animation bằng JavaScript qua <strong class=\"k\"><code>requestAnimationFrame</code></strong>, hoặc thư viện như <strong class=\"k\">GSAP</strong> gom cập nhật giúp bạn.</li><li><strong class=\"k\">Dọn dẹp</strong> khi unmount (hủy timeline và các instance <code>ScrollTrigger</code>; <code>gsap.context().revert()</code> trong React, <code>onUnmounted</code> trong Vue) để tránh rò rỉ.</li><li>Tôn trọng <strong class=\"k\"><code>prefers-reduced-motion</code></strong>, đây cũng là yêu cầu về accessibility.</li></ul> <pre><code>// Thrashing: mỗi vòng lặp đọc rồi ghi, ép reflow\nitems.forEach(el =&gt; { el.style.width = el.offsetWidth + 10 + 'px'; });\n\n// Tốt hơn: đọc hết trước, rồi mới ghi\nconst widths = items.map(el =&gt; el.offsetWidth);\nitems.forEach((el, i) =&gt; { el.style.width = widths[i] + 10 + 'px'; });</code></pre>"
+      },
+      "terms": [
+        "transform",
+        "compositor",
+        "layout thrashing",
+        "requestAnimationFrame",
+        "GSAP"
+      ]
+    },
+    {
+      "id": "q91",
+      "number": 91,
+      "tag": "Hiệu năng · Danh sách lớn",
+      "title": "How do you render a very long list efficiently (for example thousands of rows in the CMS)?",
+      "titleVi": "Render một danh sách rất dài (ví dụ hàng nghìn dòng trong CMS) hiệu quả như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vấn đề: quá nhiều DOM node",
+          "Giải pháp: phân trang / infinite scroll",
+          "Virtualization: chỉ render dòng trong tầm nhìn + overscan",
+          "Đánh đổi: find-in-page, accessibility, SEO"
+        ]
+      },
+      "answer": {
+        "en": "<p>The problem is the <strong class=\"k\">number of DOM nodes</strong>: thousands of rows make layout, painting and memory slow.</p> <ol><li><strong class=\"k\">Pagination or infinite scroll with a cursor:</strong> do not load everything at once. Often the simplest and best option, especially for tables that get filtered.</li><li><strong class=\"k\">Virtualization (windowing):</strong> render <strong class=\"k\">only the rows in the viewport</strong> plus a small <strong class=\"k\">overscan</strong> buffer, and keep the scrollbar correct with spacer elements. Libraries: <code>@tanstack/virtual</code>, <code>react-window</code>, <code>vue-virtual-scroller</code>.</li><li><strong class=\"k\">CSS <code>content-visibility: auto</code></strong> lets the browser skip rendering off-screen sections.</li><li>Keep rows cheap: <strong class=\"k\">stable keys</strong>, memoized row components, and no heavy work per row during scroll.</li></ol> <h5>Trade-offs of virtualization</h5> <ul><li><strong class=\"k\">Find-in-page</strong> (Ctrl+F) cannot search rows that are not in the DOM.</li><li><strong class=\"k\">Accessibility</strong> needs care: set <code>aria-rowcount</code> / <code>aria-setsize</code> and keep keyboard navigation working.</li><li>Not suitable for content that must be <strong class=\"k\">indexed by search engines</strong>.</li></ul>",
+        "vi": "<p>Vấn đề là <strong class=\"k\">số lượng DOM node</strong>: hàng nghìn dòng làm layout, painting và bộ nhớ chậm đi.</p> <ol><li><strong class=\"k\">Phân trang hoặc infinite scroll theo cursor:</strong> đừng tải tất cả một lúc. Thường là lựa chọn đơn giản và tốt nhất, nhất là với bảng có lọc.</li><li><strong class=\"k\">Virtualization (windowing):</strong> chỉ render <strong class=\"k\">các dòng trong viewport</strong> cộng một vùng đệm nhỏ <strong class=\"k\">overscan</strong>, và giữ thanh cuộn đúng bằng phần tử đệm. Thư viện: <code>@tanstack/virtual</code>, <code>react-window</code>, <code>vue-virtual-scroller</code>.</li><li><strong class=\"k\">CSS <code>content-visibility: auto</code></strong> cho phép trình duyệt bỏ qua render các vùng ngoài màn hình.</li><li>Giữ mỗi dòng nhẹ: <strong class=\"k\">key ổn định</strong>, component dòng được memo, và không làm việc nặng cho mỗi dòng khi cuộn.</li></ol> <h5>Đánh đổi của virtualization</h5> <ul><li><strong class=\"k\">Tìm trong trang</strong> (Ctrl+F) không tìm được các dòng không có trong DOM.</li><li><strong class=\"k\">Accessibility</strong> cần cẩn thận: đặt <code>aria-rowcount</code> / <code>aria-setsize</code> và giữ điều hướng bằng bàn phím hoạt động.</li><li>Không phù hợp với nội dung cần <strong class=\"k\">được công cụ tìm kiếm lập chỉ mục</strong>.</li></ul>"
+      },
+      "terms": [
+        "virtualization",
+        "windowing",
+        "pagination",
+        "content-visibility"
+      ]
+    },
+    {
+      "id": "q92",
+      "number": 92,
+      "tag": "Hiệu năng · Cache",
+      "title": "How does HTTP caching work, and what <code>Cache-Control</code> headers would you set?",
+      "titleVi": "HTTP caching hoạt động thế nào và bạn đặt những header <code>Cache-Control</code> nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Asset có hash tên file: cache rất lâu, <code>immutable</code>",
+          "HTML: <code>no-cache</code> (luôn xác thực lại với ETag)",
+          "CDN: <code>s-maxage</code> + <code>stale-while-revalidate</code>",
+          "Dữ liệu cá nhân: <code>private</code>/<code>no-store</code>, không cache chung"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Hashed static assets</strong> (<code>app.3f9c2.js</code>, images with a content hash): the URL changes whenever the content changes, so cache them <strong class=\"k\">for a year</strong>: <code>Cache-Control: public, max-age=31536000, immutable</code>. Next.js and Nuxt do this for their build output.</li><li><strong class=\"k\">HTML pages:</strong> <code>Cache-Control: no-cache</code> means \"<strong class=\"k\">revalidate before reuse</strong>\" (with an <strong class=\"k\">ETag</strong> the server can answer <code>304 Not Modified</code>). That way users always get fresh HTML but save the bandwidth.</li><li><strong class=\"k\">Shared content on a CDN:</strong> <code>s-maxage=60, stale-while-revalidate=300</code> lets the edge serve a cached copy and refresh it in the background. This is the same idea as ISR.</li><li><strong class=\"k\">Personal or sensitive data:</strong> <code>private</code> or <code>no-store</code>, so no shared cache ever stores one user's response and serves it to another.</li></ul> <pre><code># Hashed asset\nCache-Control: public, max-age=31536000, immutable\n\n# HTML (always revalidate)\nCache-Control: no-cache\n\n# Public content on a CDN\nCache-Control: public, s-maxage=60, stale-while-revalidate=300\n\n# User-specific API response\nCache-Control: private, no-store</code></pre> <p><strong class=\"k\">Common bug:</strong> caching a personalized response on a shared CDN, which leaks data between users. See also Câu 52.</p>",
+        "vi": "<ul><li><strong class=\"k\">Asset tĩnh có hash</strong> (<code>app.3f9c2.js</code>, ảnh có hash nội dung): URL đổi mỗi khi nội dung đổi, nên cache chúng <strong class=\"k\">cả năm</strong>: <code>Cache-Control: public, max-age=31536000, immutable</code>. Next.js và Nuxt làm vậy cho output build của chúng.</li><li><strong class=\"k\">Trang HTML:</strong> <code>Cache-Control: no-cache</code> nghĩa là \"<strong class=\"k\">xác thực lại trước khi dùng lại</strong>\" (với <strong class=\"k\">ETag</strong> server có thể trả <code>304 Not Modified</code>). Nhờ vậy người dùng luôn nhận HTML mới mà vẫn tiết kiệm băng thông.</li><li><strong class=\"k\">Nội dung dùng chung trên CDN:</strong> <code>s-maxage=60, stale-while-revalidate=300</code> cho edge phục vụ bản cache và làm mới ngầm. Cùng ý tưởng với ISR.</li><li><strong class=\"k\">Dữ liệu cá nhân hoặc nhạy cảm:</strong> <code>private</code> hoặc <code>no-store</code>, để không cache chung nào lưu response của người này rồi phục vụ cho người khác.</li></ul> <pre><code># Asset có hash\nCache-Control: public, max-age=31536000, immutable\n\n# HTML (luôn xác thực lại)\nCache-Control: no-cache\n\n# Nội dung công khai trên CDN\nCache-Control: public, s-maxage=60, stale-while-revalidate=300\n\n# Response API riêng của người dùng\nCache-Control: private, no-store</code></pre> <p><strong class=\"k\">Lỗi hay gặp:</strong> cache response đã cá nhân hóa trên CDN dùng chung, làm rò rỉ dữ liệu giữa người dùng. Xem thêm Câu 52.</p>"
+      },
+      "terms": [
+        "Cache-Control",
+        "ETag",
+        "CDN",
+        "s-maxage",
+        "immutable"
+      ]
+    }
+  ]
+}

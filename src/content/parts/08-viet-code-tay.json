@@ -1,0 +1,109 @@
+{
+  "id": "part-8",
+  "slug": "viet-code-tay",
+  "roman": "VIII",
+  "title": "Viết code tay",
+  "description": "Bốn hàm tiện ích hay gặp: tự viết trên giấy trước, rồi mới đối chiếu.",
+  "questions": [
+    {
+      "id": "q37",
+      "number": 37,
+      "tag": "Viết code · Utility",
+      "title": "Implement <code>debounce</code>.",
+      "titleVi": "Hãy tự viết hàm <code>debounce</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi lần gọi: hủy timer cũ, đặt timer mới",
+          "<code>timer</code> sống trong closure",
+          "<code>fn.apply(this, args)</code> giữ <code>this</code> và đối số",
+          "Thêm <code>cancel</code>"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function debounce(fn, wait) {\n  let timer;\n  function debounced(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() =&gt; fn.apply(this, args), wait);\n  }\n  debounced.cancel = () =&gt; clearTimeout(timer);\n  return debounced;\n}</code></pre> <p>Each call clears the old timer and sets a new one, so only the <strong class=\"k\">last call</strong> runs. <code>timer</code> lives in the <strong class=\"k\">closure</strong>. <code>fn.apply(this, args)</code> preserves the right <code>this</code> and arguments. Note that <code>setTimeout</code> uses an arrow function, so <code>this</code> comes from <code>debounced</code>.</p> <p>Common follow-ups: add a <code>leading</code> option (run immediately on the first call), or <code>flush</code>. <strong class=\"k\">In React</strong>, a debounced search box must keep the same function across renders (<code>useMemo</code> / <code>useRef</code>); otherwise every render creates a new function and the debounce stops working.</p>",
+        "vi": "<pre><code>function debounce(fn, wait) {\n  let timer;\n  function debounced(...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() =&gt; fn.apply(this, args), wait);\n  }\n  debounced.cancel = () =&gt; clearTimeout(timer);\n  return debounced;\n}</code></pre> <p>Mỗi lần gọi thì hủy timer cũ và đặt timer mới nên chỉ <strong class=\"k\">lần gọi cuối cùng</strong> được chạy. <code>timer</code> sống trong <strong class=\"k\">closure</strong>. <code>fn.apply(this, args)</code> giữ đúng <code>this</code> và đối số. Chú ý <code>setTimeout</code> dùng arrow function nên <code>this</code> lấy từ <code>debounced</code>.</p> <p>Hỏi thêm hay gặp: thêm tùy chọn <code>leading</code> (chạy ngay lần đầu), hoặc <code>flush</code>. <strong class=\"k\">Dùng thực tế:</strong> debounce ô tìm kiếm trong React cần giữ cùng một hàm giữa các lần render (<code>useMemo</code>/<code>useRef</code>), nếu không mỗi render tạo hàm mới và debounce mất tác dụng.</p>"
+      },
+      "terms": [
+        "debounce",
+        "closure",
+        "clearTimeout"
+      ]
+    },
+    {
+      "id": "q38",
+      "number": 38,
+      "tag": "Viết code · Utility",
+      "title": "Implement <code>throttle</code> (leading + trailing).",
+      "titleVi": "Hãy tự viết hàm <code>throttle</code> (leading + trailing).",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Qua <code>wait</code> kể từ lần trước → chạy ngay (leading)",
+          "Chưa qua → hẹn một lần chạy cuối (trailing)",
+          "Lưu <code>lastArgs</code> / <code>lastThis</code>"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function throttle(fn, wait) {\n  let last = 0, timer = null, lastArgs, lastThis;\n  return function (...args) {\n    const now = Date.now();\n    const remaining = wait - (now - last);\n    lastArgs = args;\n    lastThis = this;\n    if (remaining &lt;= 0) {\n      if (timer) { clearTimeout(timer); timer = null; }\n      last = now;\n      fn.apply(lastThis, lastArgs);          // run now (leading)\n    } else if (!timer) {\n      timer = setTimeout(() =&gt; {              // run once more at the end (trailing)\n        last = Date.now();\n        timer = null;\n        fn.apply(lastThis, lastArgs);\n      }, remaining);\n    }\n  };\n}</code></pre> <p>If <code>wait</code> has already passed since the last run, run now. Otherwise schedule one <strong class=\"k\">trailing</strong> call so the final invocation is not lost. A simpler version (leading only) is acceptable in an interview if you state its limitation.</p>",
+        "vi": "<pre><code>function throttle(fn, wait) {\n  let last = 0, timer = null, lastArgs, lastThis;\n  return function (...args) {\n    const now = Date.now();\n    const remaining = wait - (now - last);\n    lastArgs = args;\n    lastThis = this;\n    if (remaining &lt;= 0) {\n      if (timer) { clearTimeout(timer); timer = null; }\n      last = now;\n      fn.apply(lastThis, lastArgs);          // chạy ngay (leading)\n    } else if (!timer) {\n      timer = setTimeout(() =&gt; {              // chạy lần cuối (trailing)\n        last = Date.now();\n        timer = null;\n        fn.apply(lastThis, lastArgs);\n      }, remaining);\n    }\n  };\n}</code></pre> <p>Nếu đã qua <code>wait</code> kể từ lần chạy trước thì chạy ngay; nếu chưa thì hẹn một lần chạy <strong class=\"k\">trailing</strong> để không mất lần gọi cuối cùng. Phiên bản đơn giản (chỉ leading) cũng được chấp nhận trong phỏng vấn nếu bạn nói rõ giới hạn của nó.</p>"
+      },
+      "terms": [
+        "throttle",
+        "leading",
+        "trailing"
+      ]
+    },
+    {
+      "id": "q39",
+      "number": 39,
+      "tag": "Viết code · Đệ quy",
+      "title": "Implement <code>deepClone</code> that handles circular references.",
+      "titleVi": "Hãy tự viết <code>deepClone</code> có xử lý vòng tham chiếu.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Kiểu nguyên thủy: trả thẳng",
+          "<code>WeakMap</code> nhớ object đã clone",
+          "<code>seen.set</code> TRƯỚC khi đệ quy",
+          "Xử lý Date, RegExp, Map, Set"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function deepClone(value, seen = new WeakMap()) {\n  if (value === null || typeof value !== 'object') return value;\n  if (seen.has(value)) return seen.get(value);          // avoid infinite loops\n\n  if (value instanceof Date) return new Date(value);\n  if (value instanceof RegExp) return new RegExp(value.source, value.flags);\n  if (value instanceof Map) {\n    const m = new Map(); seen.set(value, m);\n    value.forEach((v, k) =&gt; m.set(deepClone(k, seen), deepClone(v, seen)));\n    return m;\n  }\n  if (value instanceof Set) {\n    const s = new Set(); seen.set(value, s);\n    value.forEach(v =&gt; s.add(deepClone(v, seen)));\n    return s;\n  }\n\n  const out = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value));\n  seen.set(value, out);                                   // register BEFORE recursing\n  for (const key of Reflect.ownKeys(value)) out[key] = deepClone(value[key], seen);\n  return out;\n}</code></pre> <p>The <code>WeakMap</code> remembers objects that were already cloned, which handles circular references (<code>a.self = a</code>). You must call <code>seen.set</code> <strong class=\"k\">before</strong> recursing into children, otherwise a circular reference still loops forever. In real code, use <code>structuredClone</code>; this exercise checks that you understand recursion and references.</p>",
+        "vi": "<pre><code>function deepClone(value, seen = new WeakMap()) {\n  if (value === null || typeof value !== 'object') return value;\n  if (seen.has(value)) return seen.get(value);          // tránh lặp vô hạn\n\n  if (value instanceof Date) return new Date(value);\n  if (value instanceof RegExp) return new RegExp(value.source, value.flags);\n  if (value instanceof Map) {\n    const m = new Map(); seen.set(value, m);\n    value.forEach((v, k) =&gt; m.set(deepClone(k, seen), deepClone(v, seen)));\n    return m;\n  }\n  if (value instanceof Set) {\n    const s = new Set(); seen.set(value, s);\n    value.forEach(v =&gt; s.add(deepClone(v, seen)));\n    return s;\n  }\n\n  const out = Array.isArray(value) ? [] : Object.create(Object.getPrototypeOf(value));\n  seen.set(value, out);                                   // đăng ký TRƯỚC khi đệ quy\n  for (const key of Reflect.ownKeys(value)) out[key] = deepClone(value[key], seen);\n  return out;\n}</code></pre> <p><code>WeakMap</code> ghi nhớ object đã clone để xử lý vòng tham chiếu (<code>a.self = a</code>). Phải <code>seen.set</code> <strong class=\"k\">trước</strong> khi đệ quy xuống con, nếu không vòng tham chiếu vẫn lặp vô hạn. Ngoài đời thật, hãy dùng <code>structuredClone</code>, bài này để kiểm tra bạn hiểu đệ quy và tham chiếu.</p>"
+      },
+      "terms": [
+        "deepClone",
+        "WeakMap",
+        "recursion",
+        "circular reference"
+      ]
+    },
+    {
+      "id": "q40",
+      "number": 40,
+      "tag": "Viết code · Promise",
+      "title": "Implement <code>Promise.all</code>.",
+      "titleVi": "Hãy tự viết <code>Promise.all</code>.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Lưu kết quả theo CHỈ SỐ, không push",
+          "<code>Promise.resolve(item)</code> cho cả giá trị thường",
+          "Mảng rỗng: resolve ngay",
+          "Một cái reject thì reject ngay"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>function promiseAll(iterable) {\n  return new Promise((resolve, reject) =&gt; {\n    const items = Array.from(iterable);\n    const results = new Array(items.length);\n    let remaining = items.length;\n    if (remaining === 0) return resolve(results);\n\n    items.forEach((item, i) =&gt; {\n      Promise.resolve(item).then(\n        value =&gt; {\n          results[i] = value;                 // keep the INPUT ORDER\n          if (--remaining === 0) resolve(results);\n        },\n        reject                                // one failure rejects immediately\n      );\n    });\n  });\n}</code></pre> <p>Easy mistakes to avoid:</p> <ul><li>Store results by <strong class=\"k\">index</strong>, not with <code>push</code> (promises do not finish in order).</li><li><code>Promise.resolve(item)</code> handles both plain values and promises.</li><li>An empty array must resolve immediately.</li></ul>",
+        "vi": "<pre><code>function promiseAll(iterable) {\n  return new Promise((resolve, reject) =&gt; {\n    const items = Array.from(iterable);\n    const results = new Array(items.length);\n    let remaining = items.length;\n    if (remaining === 0) return resolve(results);\n\n    items.forEach((item, i) =&gt; {\n      Promise.resolve(item).then(\n        value =&gt; {\n          results[i] = value;                 // giữ đúng THỨ TỰ đầu vào\n          if (--remaining === 0) resolve(results);\n        },\n        reject                                // một cái lỗi thì reject ngay\n      );\n    });\n  });\n}</code></pre> <p>Điểm dễ sai cần nhớ:</p> <ul><li>Lưu kết quả theo <strong class=\"k\">chỉ số</strong>, không <code>push</code> (vì các promise xong không theo thứ tự).</li><li><code>Promise.resolve(item)</code> để xử lý cả giá trị thường lẫn promise.</li><li>Mảng rỗng phải resolve ngay.</li></ul>"
+      },
+      "terms": [
+        "Promise.all",
+        "index",
+        "fail fast"
+      ]
+    }
+  ]
+}

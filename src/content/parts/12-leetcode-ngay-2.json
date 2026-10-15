@@ -1,0 +1,110 @@
+{
+  "id": "part-12",
+  "slug": "leetcode-ngay-2",
+  "roman": "XII",
+  "title": "LeetCode · Ngày 2",
+  "description": "Two pointers và sliding window: tự giải 15–20 phút trước khi xem đáp án.",
+  "questions": [
+    {
+      "id": "q60",
+      "number": 60,
+      "tag": "LeetCode · Two pointers · Easy",
+      "title": "LeetCode 125. Valid Palindrome (Easy): ignoring case and non-alphanumeric characters, is the string a palindrome?",
+      "titleVi": "LeetCode 125. Valid Palindrome (Easy): bỏ qua hoa/thường và ký tự không phải chữ/số, chuỗi có phải palindrome không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hai con trỏ từ hai đầu vào giữa",
+          "Bỏ qua ký tự không hợp lệ",
+          "So sánh không phân biệt hoa/thường",
+          "O(n), O(1)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> two pointers, one at each end, moving toward the middle. Skip characters that are not letters or digits, then compare the two characters case-insensitively.</p> <pre><code>function isPalindrome(s) {\n  const isAlnum = c =&gt; /[a-z0-9]/i.test(c);\n  let l = 0, r = s.length - 1;\n  while (l &lt; r) {\n    while (l &lt; r &amp;&amp; !isAlnum(s[l])) l++;\n    while (l &lt; r &amp;&amp; !isAlnum(s[r])) r--;\n    if (s[l].toLowerCase() !== s[r].toLowerCase()) return false;\n    l++; r--;\n  }\n  return true;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(1) space. A shortcut like <code>s.replace(...).split('').reverse().join('')</code> is shorter but uses O(n) extra space; mention both.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> hai con trỏ, mỗi con ở một đầu, tiến vào giữa. Bỏ qua ký tự không phải chữ hoặc số, rồi so sánh hai ký tự không phân biệt hoa/thường.</p> <pre><code>function isPalindrome(s) {\n  const isAlnum = c =&gt; /[a-z0-9]/i.test(c);\n  let l = 0, r = s.length - 1;\n  while (l &lt; r) {\n    while (l &lt; r &amp;&amp; !isAlnum(s[l])) l++;\n    while (l &lt; r &amp;&amp; !isAlnum(s[r])) r--;\n    if (s[l].toLowerCase() !== s[r].toLowerCase()) return false;\n    l++; r--;\n  }\n  return true;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(1) bộ nhớ. Cách tắt như <code>s.replace(...).split('').reverse().join('')</code> ngắn hơn nhưng tốn O(n) bộ nhớ phụ; nên nhắc cả hai.</p>"
+      },
+      "terms": [
+        "two pointers",
+        "palindrome",
+        "O(1) space"
+      ]
+    },
+    {
+      "id": "q61",
+      "number": 61,
+      "tag": "LeetCode · Sliding window · Medium",
+      "title": "LeetCode 3. Longest Substring Without Repeating Characters (Medium): length of the longest substring with no repeated character.",
+      "titleVi": "LeetCode 3. Longest Substring Without Repeating Characters (Medium): độ dài chuỗi con dài nhất không có ký tự lặp.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Cửa sổ trượt <code>[start, i]</code> luôn không trùng",
+          "Map lưu vị trí cuối của mỗi ký tự",
+          "Gặp trùng trong cửa sổ → dịch <code>start</code> qua vị trí cũ",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> a <strong class=\"k\">sliding window</strong> <code>[start, i]</code> that never contains a repeated character. Keep a <code>Map</code> of each character's <strong class=\"k\">last seen index</strong>. When the current character was already seen <strong class=\"k\">inside the window</strong>, move <code>start</code> just past its previous position.</p> <pre><code>function lengthOfLongestSubstring(s) {\n  const last = new Map();\n  let start = 0, best = 0;\n  for (let i = 0; i &lt; s.length; i++) {\n    const c = s[i];\n    if (last.has(c) &amp;&amp; last.get(c) &gt;= start) start = last.get(c) + 1;\n    last.set(c, i);\n    best = Math.max(best, i - start + 1);\n  }\n  return best;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(min(n, alphabet)) space.</p> <p><strong class=\"k\">Common bug:</strong> forgetting the <code>last.get(c) &gt;= start</code> check. An old occurrence that is already outside the window must not move <code>start</code> backward.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> <strong class=\"k\">cửa sổ trượt</strong> <code>[start, i]</code> không bao giờ chứa ký tự lặp. Dùng <code>Map</code> lưu <strong class=\"k\">vị trí gần nhất</strong> của mỗi ký tự. Khi ký tự hiện tại đã xuất hiện <strong class=\"k\">trong cửa sổ</strong>, dịch <code>start</code> qua ngay sau vị trí trước đó của nó.</p> <pre><code>function lengthOfLongestSubstring(s) {\n  const last = new Map();\n  let start = 0, best = 0;\n  for (let i = 0; i &lt; s.length; i++) {\n    const c = s[i];\n    if (last.has(c) &amp;&amp; last.get(c) &gt;= start) start = last.get(c) + 1;\n    last.set(c, i);\n    best = Math.max(best, i - start + 1);\n  }\n  return best;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(min(n, alphabet)) bộ nhớ.</p> <p><strong class=\"k\">Lỗi hay gặp:</strong> quên điều kiện <code>last.get(c) &gt;= start</code>. Một lần xuất hiện cũ đã nằm ngoài cửa sổ không được làm <code>start</code> lùi về sau.</p>"
+      },
+      "terms": [
+        "sliding window",
+        "Map",
+        "last index"
+      ]
+    },
+    {
+      "id": "q62",
+      "number": 62,
+      "tag": "LeetCode · Two pointers · Medium",
+      "title": "LeetCode 11. Container With Most Water (Medium): pick two lines that, with the x-axis, hold the most water.",
+      "titleVi": "LeetCode 11. Container With Most Water (Medium): chọn hai đường thẳng sao cho cùng trục x chứa được nhiều nước nhất.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hai con trỏ ở hai đầu: chiều rộng lớn nhất",
+          "Diện tích = min(hai cao) × khoảng cách",
+          "Luôn dịch con trỏ ở đường THẤP hơn",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> start with the widest container (pointers at both ends). The area is <code>min(left, right) × distance</code>. Each move shrinks the width, so the only way to do better is to find a <strong class=\"k\">taller limiting line</strong>. Therefore always move the pointer at the <strong class=\"k\">shorter</strong> line.</p> <pre><code>function maxArea(height) {\n  let l = 0, r = height.length - 1, best = 0;\n  while (l &lt; r) {\n    best = Math.max(best, Math.min(height[l], height[r]) * (r - l));\n    if (height[l] &lt; height[r]) l++; else r--;\n  }\n  return best;\n}</code></pre> <p><strong class=\"k\">Why not move the taller one?</strong> The area is capped by the shorter line. Moving the taller pointer can only reduce the width without raising that cap, so it can never improve the answer.</p> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(1) space.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> bắt đầu với bình rộng nhất (hai con trỏ ở hai đầu). Diện tích là <code>min(trái, phải) × khoảng cách</code>. Mỗi lần dịch chuyển đều làm chiều rộng giảm, nên cách duy nhất để tốt hơn là tìm được <strong class=\"k\">đường giới hạn cao hơn</strong>. Vì vậy luôn dịch con trỏ ở đường <strong class=\"k\">thấp hơn</strong>.</p> <pre><code>function maxArea(height) {\n  let l = 0, r = height.length - 1, best = 0;\n  while (l &lt; r) {\n    best = Math.max(best, Math.min(height[l], height[r]) * (r - l));\n    if (height[l] &lt; height[r]) l++; else r--;\n  }\n  return best;\n}</code></pre> <p><strong class=\"k\">Vì sao không dịch đường cao hơn?</strong> Diện tích bị chặn bởi đường thấp hơn. Dịch con trỏ ở đường cao chỉ làm chiều rộng giảm mà không nâng được mức chặn đó, nên không bao giờ cải thiện kết quả.</p> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(1) bộ nhớ.</p>"
+      },
+      "terms": [
+        "two pointers",
+        "greedy",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "q63",
+      "number": 63,
+      "tag": "LeetCode · Two pointers · Medium",
+      "title": "LeetCode 15. 3Sum (Medium): return all unique triplets that sum to zero.",
+      "titleVi": "LeetCode 15. 3Sum (Medium): trả về mọi bộ ba duy nhất có tổng bằng 0.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Sort mảng",
+          "Cố định <code>i</code>, hai con trỏ <code>l</code>, <code>r</code> tìm cặp còn lại",
+          "Bỏ qua giá trị trùng để không lặp bộ ba",
+          "O(n²)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> sort the array. Fix the first number <code>nums[i]</code>, then use two pointers <code>l</code> and <code>r</code> on the rest to find a pair that sums to <code>-nums[i]</code>. Move <code>l</code> up if the sum is too small, <code>r</code> down if it is too large.</p> <pre><code>function threeSum(nums) {\n  nums.sort((a, b) =&gt; a - b);\n  const res = [];\n  for (let i = 0; i &lt; nums.length - 2; i++) {\n    if (nums[i] &gt; 0) break;                          // sorted: no way to reach 0\n    if (i &gt; 0 &amp;&amp; nums[i] === nums[i - 1]) continue;  // skip duplicate first value\n    let l = i + 1, r = nums.length - 1;\n    while (l &lt; r) {\n      const sum = nums[i] + nums[l] + nums[r];\n      if (sum &lt; 0) l++;\n      else if (sum &gt; 0) r--;\n      else {\n        res.push([nums[i], nums[l], nums[r]]);\n        l++; r--;\n        while (l &lt; r &amp;&amp; nums[l] === nums[l - 1]) l++;   // skip duplicates\n        while (l &lt; r &amp;&amp; nums[r] === nums[r + 1]) r--;\n      }\n    }\n  }\n  return res;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n²) time (the sort is O(n log n)), O(1) extra space ignoring the output.</p> <p><strong class=\"k\">The hard part is duplicates.</strong> Skip repeated values for <code>i</code>, and for <code>l</code> and <code>r</code> after a match, so the result has no repeated triplets.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> sort mảng. Cố định số đầu <code>nums[i]</code>, rồi dùng hai con trỏ <code>l</code> và <code>r</code> trên phần còn lại để tìm cặp có tổng bằng <code>-nums[i]</code>. Tổng nhỏ quá thì tăng <code>l</code>, lớn quá thì giảm <code>r</code>.</p> <pre><code>function threeSum(nums) {\n  nums.sort((a, b) =&gt; a - b);\n  const res = [];\n  for (let i = 0; i &lt; nums.length - 2; i++) {\n    if (nums[i] &gt; 0) break;                          // đã sort: không thể ra 0\n    if (i &gt; 0 &amp;&amp; nums[i] === nums[i - 1]) continue;  // bỏ qua giá trị đầu trùng\n    let l = i + 1, r = nums.length - 1;\n    while (l &lt; r) {\n      const sum = nums[i] + nums[l] + nums[r];\n      if (sum &lt; 0) l++;\n      else if (sum &gt; 0) r--;\n      else {\n        res.push([nums[i], nums[l], nums[r]]);\n        l++; r--;\n        while (l &lt; r &amp;&amp; nums[l] === nums[l - 1]) l++;   // bỏ qua giá trị trùng\n        while (l &lt; r &amp;&amp; nums[r] === nums[r + 1]) r--;\n      }\n    }\n  }\n  return res;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n²) thời gian (sort là O(n log n)), O(1) bộ nhớ phụ không tính kết quả.</p> <p><strong class=\"k\">Phần khó là xử lý trùng.</strong> Bỏ qua giá trị lặp cho <code>i</code>, và cho <code>l</code>, <code>r</code> sau mỗi lần khớp, để kết quả không có bộ ba lặp.</p>"
+      },
+      "terms": [
+        "3Sum",
+        "two pointers",
+        "sorting",
+        "duplicates"
+      ]
+    }
+  ]
+}

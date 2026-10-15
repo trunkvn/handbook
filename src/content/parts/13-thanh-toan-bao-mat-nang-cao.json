@@ -1,0 +1,250 @@
+{
+  "id": "part-13",
+  "slug": "thanh-toan-bao-mat-nang-cao",
+  "roman": "XIII",
+  "title": "Thanh toán & bảo mật nâng cao",
+  "description": "Ngày 3: xác minh thanh toán, tiền tệ, XSS, CSRF, CORS, PKCE, OTP, JWT và RBAC. Bổ sung cho “Thanh toán &amp; thương mại” và “Xác thực &amp; bảo mật”.",
+  "questions": [
+    {
+      "id": "q64",
+      "number": 64,
+      "tag": "Thanh toán · Xác minh",
+      "title": "After the user pays, how do you know the payment really succeeded?",
+      "titleVi": "Sau khi người dùng thanh toán, làm sao biết giao dịch thực sự thành công?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Redirect về return URL KHÔNG đáng tin",
+          "Nguồn sự thật: callback/IPN server-to-server, có chữ ký",
+          "Kiểm tra chữ ký, số tiền, mã đơn, trạng thái",
+          "Cập nhật đơn idempotent (callback có thể đến nhiều lần)",
+          "Frontend chỉ hiển thị trạng thái lấy từ backend"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">I never trust the browser.</strong> After paying, the gateway redirects the user back to a return URL with query parameters. Those parameters can be edited, and the redirect may never happen at all (the user closes the tab or loses connection).</p> <h5>The reliable flow</h5> <ol><li>The gateway sends a <strong class=\"k\">server-to-server callback</strong> (IPN / webhook) to my backend. This is the <strong class=\"k\">source of truth</strong>.</li><li>The backend <strong class=\"k\">verifies the signature</strong> (the gateway signs the data with a shared secret, usually HMAC), and checks the <strong class=\"k\">order id, the amount and the status</strong> against its own records.</li><li>It updates the order <strong class=\"k\">idempotently</strong>, because the same callback can arrive more than once.</li><li>If a callback is missing or in doubt, the backend <strong class=\"k\">queries the gateway's transaction-status API</strong> (reconciliation).</li><li>The return page on the frontend only <strong class=\"k\">asks my backend</strong> for the order status. It shows \"pending\" until the backend confirms, polling with backoff and a timeout.</li></ol> <p><strong class=\"k\">Frontend rule:</strong> never unlock items or show \"success\" based on the URL parameters alone. Link this to the idempotency answer in Câu 05.</p>",
+        "vi": "<p><strong class=\"k\">Tôi không bao giờ tin trình duyệt.</strong> Sau khi thanh toán, cổng chuyển hướng người dùng về một return URL kèm query parameter. Các tham số đó có thể bị sửa, và việc chuyển hướng có thể không xảy ra (người dùng đóng tab hoặc mất mạng).</p> <h5>Luồng đáng tin cậy</h5> <ol><li>Cổng gửi <strong class=\"k\">callback server-to-server</strong> (IPN / webhook) tới backend của tôi. Đây là <strong class=\"k\">nguồn sự thật</strong>.</li><li>Backend <strong class=\"k\">xác minh chữ ký</strong> (cổng ký dữ liệu bằng secret dùng chung, thường là HMAC), và đối chiếu <strong class=\"k\">mã đơn, số tiền và trạng thái</strong> với dữ liệu của mình.</li><li>Cập nhật đơn <strong class=\"k\">idempotent</strong>, vì cùng một callback có thể đến nhiều lần.</li><li>Nếu thiếu callback hoặc nghi ngờ, backend <strong class=\"k\">gọi API tra cứu trạng thái giao dịch</strong> của cổng (đối soát).</li><li>Trang return ở frontend chỉ <strong class=\"k\">hỏi backend</strong> trạng thái đơn. Hiển thị \"đang xử lý\" cho đến khi backend xác nhận, polling có backoff và timeout.</li></ol> <p><strong class=\"k\">Quy tắc frontend:</strong> không bao giờ mở khóa vật phẩm hay hiện \"thành công\" chỉ dựa trên tham số trên URL. Liên hệ với câu trả lời về idempotency ở Câu 05.</p>"
+      },
+      "terms": [
+        "IPN",
+        "webhook",
+        "HMAC",
+        "idempotency",
+        "reconciliation"
+      ]
+    },
+    {
+      "id": "q65",
+      "number": 65,
+      "tag": "Thanh toán · Tiền tệ",
+      "title": "How do you handle money amounts in JavaScript?",
+      "titleVi": "Bạn xử lý số tiền trong JavaScript như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Số thực dấu phẩy động sai: 0.1 + 0.2",
+          "Lưu số nguyên theo đơn vị nhỏ nhất",
+          "Chỉ định dạng lúc hiển thị (<code>Intl.NumberFormat</code>)",
+          "Giá trị cuối do server tính, client chỉ hiển thị"
+        ]
+      },
+      "answer": {
+        "en": "<p>JavaScript numbers are <strong class=\"k\">floating-point</strong>, so decimals are inexact: <code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. Money must not be computed with floats.</p> <ul><li><strong class=\"k\">Store and compute integers</strong> in the smallest unit (cents for USD). Vietnamese đồng has no minor unit, so whole đồng are already integers.</li><li><strong class=\"k\">Format only for display</strong>, using <code>Intl.NumberFormat</code> with the right locale and currency.</li><li>Round <strong class=\"k\">explicitly</strong> and in one agreed place (for example when applying a percentage discount).</li><li>For very large or fractional amounts, use <code>BigInt</code> or a decimal library.</li><li><strong class=\"k\">The server computes the real price and total.</strong> The client only displays it; an amount sent from the client must never be trusted.</li></ul> <pre><code>0.1 + 0.2;                                  // 0.30000000000000004\n\nconst priceCents = 1999;                    // store integers\nconst total = items.reduce((sum, i) =&gt; sum + i.priceCents * i.qty, 0);\n\nnew Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })\n  .format(150000);                          // \"150.000 ₫\"</code></pre>",
+        "vi": "<p>Số trong JavaScript là <strong class=\"k\">dấu phẩy động</strong>, nên số thập phân không chính xác: <code>0.1 + 0.2</code> ra <code>0.30000000000000004</code>. Không được tính tiền bằng số thực.</p> <ul><li><strong class=\"k\">Lưu và tính bằng số nguyên</strong> theo đơn vị nhỏ nhất (cent với USD). Đồng Việt Nam không có đơn vị nhỏ hơn, nên số đồng đã là số nguyên.</li><li><strong class=\"k\">Chỉ định dạng lúc hiển thị</strong>, dùng <code>Intl.NumberFormat</code> với locale và đơn vị tiền đúng.</li><li>Làm tròn <strong class=\"k\">tường minh</strong> và ở một chỗ thống nhất (ví dụ khi áp dụng giảm giá theo phần trăm).</li><li>Với số rất lớn hoặc có phần thập phân, dùng <code>BigInt</code> hoặc thư viện decimal.</li><li><strong class=\"k\">Server tính giá và tổng thật.</strong> Client chỉ hiển thị; số tiền do client gửi lên không bao giờ được tin.</li></ul> <pre><code>0.1 + 0.2;                                  // 0.30000000000000004\n\nconst priceCents = 1999;                    // lưu số nguyên\nconst total = items.reduce((sum, i) =&gt; sum + i.priceCents * i.qty, 0);\n\nnew Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })\n  .format(150000);                          // \"150.000 ₫\"</code></pre>"
+      },
+      "terms": [
+        "floating point",
+        "integer money",
+        "Intl.NumberFormat",
+        "server-side price"
+      ]
+    },
+    {
+      "id": "q66",
+      "number": 66,
+      "tag": "Bảo mật · XSS",
+      "title": "What is XSS? How do you prevent it on the frontend?",
+      "titleVi": "XSS là gì? Phòng chống ở frontend như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "XSS = kẻ tấn công chạy script trong trang của bạn",
+          "3 loại: stored, reflected, DOM-based",
+          "Escape khi xuất, tránh <code>innerHTML</code>/<code>dangerouslySetInnerHTML</code>",
+          "Sanitize (DOMPurify) khi buộc phải render HTML",
+          "CSP là lớp phòng thủ bổ sung"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Cross-site scripting (XSS)</strong> lets an attacker run their JavaScript in your page, with the victim's session. The script can read any non-<code>HttpOnly</code> data, call your API as the user, or change what the page shows.</p> <ul><li><strong class=\"k\">Stored:</strong> the malicious input is saved (a comment, a profile name) and served to other users.</li><li><strong class=\"k\">Reflected:</strong> the input comes from the URL or a request and is echoed straight back in the response.</li><li><strong class=\"k\">DOM-based:</strong> client code writes untrusted data into the DOM (<code>innerHTML</code>, <code>document.write</code>, <code>eval</code>).</li></ul> <h5>Defenses</h5> <ol><li><strong class=\"k\">Escape on output.</strong> React escapes values in JSX by default, which is why <code>&lt;div&gt;{userInput}&lt;/div&gt;</code> is safe.</li><li><strong class=\"k\">Avoid</strong> <code>innerHTML</code> and <code>dangerouslySetInnerHTML</code>. If you must render user HTML, <strong class=\"k\">sanitize</strong> it first with a library such as DOMPurify.</li><li>Validate URLs from users: a link like <code>javascript:...</code> can run code. Allow only <code>http</code> and <code>https</code>.</li><li><strong class=\"k\">Content-Security-Policy (CSP)</strong> limits where scripts may load from, so injected inline scripts are blocked.</li><li><code>HttpOnly</code> cookies stop scripts from <strong class=\"k\">stealing</strong> the token, but not from <strong class=\"k\">acting as the user</strong>, so prevention still matters.</li></ol> <pre><code>&lt;div&gt;{userInput}&lt;/div&gt;                                          // safe: escaped\n&lt;div dangerouslySetInnerHTML={{ __html: userInput }} /&gt;          // dangerous\n&lt;div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(userInput) }} /&gt;\n\n// Response header\nContent-Security-Policy: default-src 'self'; script-src 'self' 'nonce-RANDOM'; object-src 'none'; base-uri 'self'</code></pre>",
+        "vi": "<p><strong class=\"k\">Cross-site scripting (XSS)</strong> cho phép kẻ tấn công chạy JavaScript của họ trong trang của bạn, với phiên của nạn nhân. Script có thể đọc mọi dữ liệu không phải <code>HttpOnly</code>, gọi API của bạn dưới danh nghĩa người dùng, hoặc đổi nội dung trang.</p> <ul><li><strong class=\"k\">Stored:</strong> dữ liệu độc hại được lưu lại (bình luận, tên hồ sơ) rồi hiển thị cho người dùng khác.</li><li><strong class=\"k\">Reflected:</strong> dữ liệu đến từ URL hoặc request và được phản hồi nguyên văn trong response.</li><li><strong class=\"k\">DOM-based:</strong> code client ghi dữ liệu không tin cậy vào DOM (<code>innerHTML</code>, <code>document.write</code>, <code>eval</code>).</li></ul> <h5>Cách phòng chống</h5> <ol><li><strong class=\"k\">Escape khi xuất.</strong> React mặc định escape giá trị trong JSX, nên <code>&lt;div&gt;{userInput}&lt;/div&gt;</code> an toàn.</li><li><strong class=\"k\">Tránh</strong> <code>innerHTML</code> và <code>dangerouslySetInnerHTML</code>. Nếu buộc phải render HTML của người dùng, hãy <strong class=\"k\">sanitize</strong> trước bằng thư viện như DOMPurify.</li><li>Kiểm tra URL từ người dùng: link dạng <code>javascript:...</code> có thể chạy code. Chỉ cho phép <code>http</code> và <code>https</code>.</li><li><strong class=\"k\">Content-Security-Policy (CSP)</strong> giới hạn nơi script được tải, nên script inline bị chèn vào sẽ bị chặn.</li><li>Cookie <code>HttpOnly</code> ngăn script <strong class=\"k\">đánh cắp</strong> token, nhưng không ngăn nó <strong class=\"k\">hành động như người dùng</strong>, nên phòng ngừa vẫn quan trọng.</li></ol> <pre><code>&lt;div&gt;{userInput}&lt;/div&gt;                                          // an toàn: đã escape\n&lt;div dangerouslySetInnerHTML={{ __html: userInput }} /&gt;          // nguy hiểm\n&lt;div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(userInput) }} /&gt;\n\n// Response header\nContent-Security-Policy: default-src 'self'; script-src 'self' 'nonce-RANDOM'; object-src 'none'; base-uri 'self'</code></pre>"
+      },
+      "terms": [
+        "XSS",
+        "CSP",
+        "DOMPurify",
+        "escaping",
+        "HttpOnly"
+      ]
+    },
+    {
+      "id": "q67",
+      "number": 67,
+      "tag": "Bảo mật · CSRF",
+      "title": "What is CSRF and how do you defend against it?",
+      "titleVi": "CSRF là gì và phòng chống như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Trình duyệt TỰ ĐỘNG gửi cookie kèm request",
+          "Trang của kẻ tấn công kích hoạt request tới site của bạn",
+          "Phòng: SameSite, CSRF token, kiểm tra Origin",
+          "Không đổi trạng thái bằng GET",
+          "Khác XSS ở chỗ nào"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Cross-site request forgery (CSRF)</strong> abuses the fact that the browser <strong class=\"k\">automatically attaches cookies</strong> to requests. A malicious site makes the victim's browser send a request to your site (a hidden form, an image), and your server sees a valid session cookie.</p> <h5>Defenses</h5> <ul><li><strong class=\"k\"><code>SameSite</code> cookies:</strong> <code>Lax</code> (a good default) or <code>Strict</code> stop the browser from sending the cookie on most cross-site requests.</li><li><strong class=\"k\">CSRF token:</strong> a secret value the server issues and expects in a header or form field. A different site cannot read it.</li><li><strong class=\"k\">Check the <code>Origin</code> / <code>Referer</code> header</strong> on state-changing requests.</li><li><strong class=\"k\">Never change state with <code>GET</code></strong>; use <code>POST</code>, <code>PUT</code> or <code>DELETE</code>.</li><li>Requiring a custom header or a JSON content type also helps, because cross-site forms cannot send them without a CORS preflight.</li></ul> <h5>CSRF vs XSS</h5> <p>CSRF <strong class=\"k\">does not need script running on your site</strong>: it only makes the browser send a request the user did not intend. XSS <strong class=\"k\">does</strong> run script on your site. A token sent in an <code>Authorization</code> header is not attached automatically, so it is not exposed to CSRF (but then it must be stored carefully because of XSS).</p>",
+        "vi": "<p><strong class=\"k\">Cross-site request forgery (CSRF)</strong> lợi dụng việc trình duyệt <strong class=\"k\">tự động đính kèm cookie</strong> vào request. Một site độc hại khiến trình duyệt của nạn nhân gửi request tới site của bạn (form ẩn, thẻ ảnh), và server thấy cookie phiên hợp lệ.</p> <h5>Cách phòng chống</h5> <ul><li><strong class=\"k\">Cookie <code>SameSite</code>:</strong> <code>Lax</code> (mặc định tốt) hoặc <code>Strict</code> làm trình duyệt không gửi cookie trên hầu hết request cross-site.</li><li><strong class=\"k\">CSRF token:</strong> một giá trị bí mật server cấp và mong đợi trong header hoặc field của form. Site khác không đọc được nó.</li><li><strong class=\"k\">Kiểm tra header <code>Origin</code> / <code>Referer</code></strong> ở các request thay đổi trạng thái.</li><li><strong class=\"k\">Không đổi trạng thái bằng <code>GET</code></strong>; dùng <code>POST</code>, <code>PUT</code> hoặc <code>DELETE</code>.</li><li>Yêu cầu custom header hoặc content type JSON cũng giúp, vì form cross-site không gửi được chúng nếu không qua CORS preflight.</li></ul> <h5>CSRF và XSS</h5> <p>CSRF <strong class=\"k\">không cần script chạy trên site của bạn</strong>: nó chỉ khiến trình duyệt gửi một request mà người dùng không định gửi. XSS thì <strong class=\"k\">có</strong> chạy script trên site của bạn. Token gửi trong header <code>Authorization</code> không được đính kèm tự động nên không bị CSRF (nhưng khi đó phải lưu cẩn thận vì XSS).</p>"
+      },
+      "terms": [
+        "CSRF",
+        "SameSite",
+        "CSRF token",
+        "Origin header"
+      ]
+    },
+    {
+      "id": "q68",
+      "number": 68,
+      "tag": "Web · CORS",
+      "title": "How does CORS work? What is a preflight request?",
+      "titleVi": "CORS hoạt động thế nào? Preflight request là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Same-origin policy là mặc định của trình duyệt",
+          "CORS = server cho phép origin khác qua header",
+          "Preflight (OPTIONS) với request \"không đơn giản\"",
+          "Cookie cần <code>Allow-Credentials</code> và origin cụ thể",
+          "CORS không bảo vệ server"
+        ]
+      },
+      "answer": {
+        "en": "<p>By default the browser enforces the <strong class=\"k\">same-origin policy</strong>: a page can not read responses from a different origin (scheme + host + port). <strong class=\"k\">CORS</strong> is how a server <strong class=\"k\">opts in</strong> to being read by another origin, using response headers such as <code>Access-Control-Allow-Origin</code>.</p> <ul><li><strong class=\"k\">Simple requests</strong> (basic methods and headers) are sent directly; the browser then checks the response headers.</li><li><strong class=\"k\">Preflight:</strong> for requests with custom headers, a JSON content type, or methods like <code>PUT</code>/<code>DELETE</code>, the browser first sends an <strong class=\"k\"><code>OPTIONS</code></strong> request asking if it is allowed. The server answers with <code>Access-Control-Allow-Methods</code>, <code>-Headers</code>, and optionally <code>Access-Control-Max-Age</code> to cache the answer.</li><li><strong class=\"k\">Credentials (cookies):</strong> the request needs <code>credentials: 'include'</code>, and the server must send <code>Access-Control-Allow-Credentials: true</code> with a <strong class=\"k\">specific origin, not <code>*</code></strong>.</li></ul> <p><strong class=\"k\">Important:</strong> CORS is enforced <strong class=\"k\">by the browser</strong>. It does not stop <code>curl</code> or another server from calling your API, so it is <strong class=\"k\">not a security control for your API</strong>. This is also why a <strong class=\"k\">server-side proxy avoids CORS entirely</strong>: the call is server-to-server (see Câu 02).</p>",
+        "vi": "<p>Mặc định trình duyệt áp dụng <strong class=\"k\">same-origin policy</strong>: một trang không đọc được response từ origin khác (scheme + host + port). <strong class=\"k\">CORS</strong> là cách server <strong class=\"k\">cho phép</strong> origin khác đọc nó, qua các response header như <code>Access-Control-Allow-Origin</code>.</p> <ul><li><strong class=\"k\">Request đơn giản</strong> (method và header cơ bản) được gửi thẳng; trình duyệt sau đó kiểm tra header của response.</li><li><strong class=\"k\">Preflight:</strong> với request có custom header, content type JSON, hoặc method như <code>PUT</code>/<code>DELETE</code>, trình duyệt trước tiên gửi request <strong class=\"k\"><code>OPTIONS</code></strong> hỏi có được phép không. Server trả lời bằng <code>Access-Control-Allow-Methods</code>, <code>-Headers</code>, và tùy chọn <code>Access-Control-Max-Age</code> để cache câu trả lời.</li><li><strong class=\"k\">Credentials (cookie):</strong> request cần <code>credentials: 'include'</code>, và server phải gửi <code>Access-Control-Allow-Credentials: true</code> với <strong class=\"k\">origin cụ thể, không phải <code>*</code></strong>.</li></ul> <p><strong class=\"k\">Quan trọng:</strong> CORS do <strong class=\"k\">trình duyệt</strong> thực thi. Nó không ngăn <code>curl</code> hay server khác gọi API của bạn, nên <strong class=\"k\">không phải biện pháp bảo mật cho API</strong>. Đó cũng là lý do <strong class=\"k\">proxy phía server tránh được CORS hoàn toàn</strong>: cuộc gọi là server-to-server (xem Câu 02).</p>"
+      },
+      "terms": [
+        "CORS",
+        "preflight",
+        "same-origin policy",
+        "Allow-Credentials"
+      ]
+    },
+    {
+      "id": "q69",
+      "number": 69,
+      "tag": "Xác thực · OAuth",
+      "title": "What is PKCE, and why is the implicit flow no longer recommended?",
+      "titleVi": "PKCE là gì, và vì sao implicit flow không còn được khuyến nghị?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Authorization code flow + PKCE cho SPA/mobile",
+          "Tạo <code>code_verifier</code>, gửi <code>code_challenge</code> (hash)",
+          "Đổi code kèm verifier: kẻ chặn code không dùng được",
+          "Implicit flow để token trên URL, dễ rò rỉ"
+        ]
+      },
+      "answer": {
+        "en": "<p>The <strong class=\"k\">implicit flow</strong> returned the access token directly in the URL fragment. Tokens in URLs can leak through browser history, logs, extensions and referrers, and there is no way to bind the token to the app that requested it. It is no longer recommended.</p> <p>The recommended approach is the <strong class=\"k\">authorization code flow with PKCE</strong> (Proof Key for Code Exchange), which protects clients that cannot keep a secret (SPAs, mobile apps):</p> <ol><li>The client generates a random <strong class=\"k\"><code>code_verifier</code></strong> and sends its hash, the <strong class=\"k\"><code>code_challenge</code></strong> (method <code>S256</code>), in the authorization request.</li><li>The user signs in and the provider redirects back with an <strong class=\"k\">authorization code</strong>.</li><li>The client exchanges the code at the token endpoint <strong class=\"k\">together with the original <code>code_verifier</code></strong>.</li><li>The provider checks that the hash of the verifier matches the challenge.</li></ol> <p>If an attacker intercepts the code, it is <strong class=\"k\">useless without the verifier</strong>. Keep using the <strong class=\"k\"><code>state</code></strong> parameter against CSRF (see Câu 10). When the code exchange happens in a <strong class=\"k\">server-side BFF</strong> that holds a client secret, PKCE is still recommended as an extra layer.</p> <pre><code>// Sketch (base64url is a small helper)\nconst verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));\nconst challenge = base64url(\n  await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)),\n);\n// authorize?...&amp;code_challenge=&lt;challenge&gt;&amp;code_challenge_method=S256\n// token endpoint: code=&lt;code&gt;&amp;code_verifier=&lt;verifier&gt;</code></pre>",
+        "vi": "<p><strong class=\"k\">Implicit flow</strong> trả access token thẳng trong URL fragment. Token trên URL có thể rò rỉ qua lịch sử trình duyệt, log, extension và referrer, và không có cách gắn token với ứng dụng đã yêu cầu nó. Nó không còn được khuyến nghị.</p> <p>Cách được khuyến nghị là <strong class=\"k\">authorization code flow kèm PKCE</strong> (Proof Key for Code Exchange), bảo vệ các client không giữ được secret (SPA, ứng dụng mobile):</p> <ol><li>Client tạo một <strong class=\"k\"><code>code_verifier</code></strong> ngẫu nhiên và gửi bản hash của nó, <strong class=\"k\"><code>code_challenge</code></strong> (method <code>S256</code>), trong authorization request.</li><li>Người dùng đăng nhập và provider chuyển hướng về kèm <strong class=\"k\">authorization code</strong>.</li><li>Client đổi code ở token endpoint <strong class=\"k\">cùng với <code>code_verifier</code> ban đầu</strong>.</li><li>Provider kiểm tra hash của verifier khớp với challenge.</li></ol> <p>Nếu kẻ tấn công chặn được code thì nó <strong class=\"k\">vô dụng nếu không có verifier</strong>. Vẫn dùng tham số <strong class=\"k\"><code>state</code></strong> chống CSRF (xem Câu 10). Khi việc đổi code diễn ra ở <strong class=\"k\">BFF phía server</strong> có giữ client secret, PKCE vẫn được khuyến nghị như một lớp bảo vệ thêm.</p> <pre><code>// Bản phác (base64url là hàm tiện ích nhỏ)\nconst verifier = base64url(crypto.getRandomValues(new Uint8Array(32)));\nconst challenge = base64url(\n  await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)),\n);\n// authorize?...&amp;code_challenge=&lt;challenge&gt;&amp;code_challenge_method=S256\n// token endpoint: code=&lt;code&gt;&amp;code_verifier=&lt;verifier&gt;</code></pre>"
+      },
+      "terms": [
+        "PKCE",
+        "code_verifier",
+        "authorization code flow",
+        "implicit flow"
+      ]
+    },
+    {
+      "id": "q70",
+      "number": 70,
+      "tag": "Xác thực · OTP",
+      "title": "How do you make email/SMS OTP sign-in secure?",
+      "titleVi": "Làm sao để đăng nhập bằng OTP qua email/SMS an toàn?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "OTP sinh bằng CSPRNG, ngắn hạn, dùng một lần",
+          "Giới hạn số lần nhập sai và số lần gửi",
+          "Thông báo lỗi chung, không lộ tài khoản có tồn tại",
+          "SMS có điểm yếu (SIM swap)",
+          "Việc của frontend: countdown, <code>autocomplete</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p>Most of the security is on the <strong class=\"k\">server</strong>, but the frontend has a role too.</p> <h5>Server side</h5> <ul><li>Generate the code with a <strong class=\"k\">cryptographically secure random generator</strong>, not <code>Math.random()</code>.</li><li><strong class=\"k\">Short expiry</strong> (a few minutes) and <strong class=\"k\">single use</strong>. Store only a hash of the code.</li><li><strong class=\"k\">Limit wrong attempts</strong> per code (for example 5), then invalidate it. This blocks brute force of a 6-digit code.</li><li><strong class=\"k\">Rate-limit sending</strong> per account, device and IP. Otherwise attackers can spam users or run up SMS costs.</li><li>Return <strong class=\"k\">generic messages</strong> so the system does not reveal whether an account exists.</li><li><strong class=\"k\">Bind the code to its purpose and session</strong> (login vs password reset).</li></ul> <h5>Frontend side</h5> <ul><li>A <strong class=\"k\">resend countdown</strong> and a disabled button while the request is in flight.</li><li><code>autocomplete=\"one-time-code\"</code> and <code>inputmode=\"numeric\"</code> for a better, safer experience.</li><li>Never put the OTP in the URL; handle errors generically; add a CAPTCHA when abuse is detected.</li></ul> <p><strong class=\"k\">Be aware:</strong> SMS can be weakened by SIM-swap and interception. For high-risk actions, an authenticator app or passkey is stronger.</p>",
+        "vi": "<p>Phần lớn bảo mật nằm ở <strong class=\"k\">server</strong>, nhưng frontend cũng có vai trò.</p> <h5>Phía server</h5> <ul><li>Sinh mã bằng <strong class=\"k\">bộ sinh ngẫu nhiên an toàn mật mã</strong>, không dùng <code>Math.random()</code>.</li><li><strong class=\"k\">Hết hạn ngắn</strong> (vài phút) và <strong class=\"k\">dùng một lần</strong>. Chỉ lưu hash của mã.</li><li><strong class=\"k\">Giới hạn số lần nhập sai</strong> cho mỗi mã (ví dụ 5), sau đó vô hiệu hóa. Điều này chặn brute force mã 6 chữ số.</li><li><strong class=\"k\">Giới hạn tần suất gửi</strong> theo tài khoản, thiết bị và IP. Nếu không, kẻ tấn công có thể spam người dùng hoặc làm tăng chi phí SMS.</li><li>Trả <strong class=\"k\">thông báo chung</strong> để hệ thống không lộ tài khoản có tồn tại hay không.</li><li><strong class=\"k\">Gắn mã với mục đích và phiên</strong> (đăng nhập hay đặt lại mật khẩu).</li></ul> <h5>Phía frontend</h5> <ul><li><strong class=\"k\">Đếm ngược gửi lại</strong> và vô hiệu hóa nút khi request đang chạy.</li><li><code>autocomplete=\"one-time-code\"</code> và <code>inputmode=\"numeric\"</code> cho trải nghiệm tốt và an toàn hơn.</li><li>Không bao giờ để OTP trên URL; xử lý lỗi theo thông báo chung; thêm CAPTCHA khi phát hiện lạm dụng.</li></ul> <p><strong class=\"k\">Lưu ý:</strong> SMS có thể bị suy yếu do SIM-swap và nghe lén. Với hành động rủi ro cao, ứng dụng xác thực hoặc passkey mạnh hơn.</p>"
+      },
+      "terms": [
+        "OTP",
+        "rate limit",
+        "brute force",
+        "SIM swap"
+      ]
+    },
+    {
+      "id": "q71",
+      "number": 71,
+      "tag": "Xác thực · Phiên",
+      "title": "JWT or server-side sessions? What are the trade-offs?",
+      "titleVi": "JWT hay session phía server? Đánh đổi thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Session: id ngẫu nhiên trong cookie, trạng thái ở server",
+          "JWT: token ký, tự chứa dữ liệu, xác minh không cần tra cứu",
+          "Thu hồi: session dễ, JWT khó",
+          "Thực tế: JWT ngắn hạn + refresh token, hoặc session cho web first-party"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Server-side session:</strong> an opaque random id in a cookie; the data lives on the server. <strong class=\"k\">Easy to revoke</strong> (delete it), small token, but every request needs a lookup and shared storage when you scale out.</li><li><strong class=\"k\">JWT:</strong> a <strong class=\"k\">signed, self-contained</strong> token with claims. Services can verify it <strong class=\"k\">without a lookup</strong>, which suits multiple services. But it is <strong class=\"k\">hard to revoke before it expires</strong>, and the payload is only <strong class=\"k\">encoded, not encrypted</strong>, so never put secrets in it.</li></ul> <h5>In practice</h5> <ul><li>Use <strong class=\"k\">short-lived access JWTs (minutes)</strong> with a <strong class=\"k\">rotated refresh token</strong> (see Câu 14), so that revocation takes effect quickly.</li><li>For a first-party web app, <strong class=\"k\">plain server sessions are often simpler and safer</strong> than JWTs.</li><li>Validate the signature, expiry, issuer and audience, and <strong class=\"k\">pin the allowed algorithm</strong> (reject <code>none</code>).</li></ul> <p>A good interview answer avoids \"JWT is better\": say it <strong class=\"k\">depends on revocation needs, scale and architecture</strong>.</p>",
+        "vi": "<ul><li><strong class=\"k\">Session phía server:</strong> một id ngẫu nhiên không có nghĩa trong cookie; dữ liệu nằm ở server. <strong class=\"k\">Dễ thu hồi</strong> (xóa nó), token nhỏ, nhưng mỗi request cần tra cứu và cần lưu trữ dùng chung khi scale ngang.</li><li><strong class=\"k\">JWT:</strong> token <strong class=\"k\">được ký và tự chứa</strong> các claim. Các service có thể xác minh nó <strong class=\"k\">mà không cần tra cứu</strong>, phù hợp khi có nhiều service. Nhưng <strong class=\"k\">khó thu hồi trước khi hết hạn</strong>, và payload chỉ được <strong class=\"k\">mã hóa dạng encode, không phải mã hóa bảo mật</strong>, nên không bao giờ để secret trong đó.</li></ul> <h5>Trong thực tế</h5> <ul><li>Dùng <strong class=\"k\">access JWT ngắn hạn (vài phút)</strong> với <strong class=\"k\">refresh token có xoay vòng</strong> (xem Câu 14), để việc thu hồi có hiệu lực nhanh.</li><li>Với web app first-party, <strong class=\"k\">session phía server thường đơn giản và an toàn hơn</strong> JWT.</li><li>Kiểm tra chữ ký, thời hạn, issuer và audience, và <strong class=\"k\">cố định thuật toán được phép</strong> (từ chối <code>none</code>).</li></ul> <p>Câu trả lời tốt tránh nói \"JWT tốt hơn\": hãy nói nó <strong class=\"k\">phụ thuộc vào nhu cầu thu hồi, quy mô và kiến trúc</strong>.</p>"
+      },
+      "terms": [
+        "JWT",
+        "session",
+        "revocation",
+        "refresh token rotation"
+      ]
+    },
+    {
+      "id": "q72",
+      "number": 72,
+      "tag": "Phân quyền · RBAC",
+      "title": "How did you implement RBAC in the CMS frontend? Is hiding a menu enough?",
+      "titleVi": "Bạn triển khai RBAC ở frontend của CMS thế nào? Ẩn menu có đủ không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mô hình: user → role → permission",
+          "Frontend: lọc menu, guard route, ẩn/khóa nút (chỉ là UX)",
+          "Backend PHẢI thực thi quyền ở mỗi API (403)",
+          "Kiểm tra theo permission, không theo tên role"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Model:</strong> a user has one or more <strong class=\"k\">roles</strong>, and each role grants <strong class=\"k\">permissions</strong> such as <code>news:publish</code> or <code>rewards:read</code>.</p> <h5>On the frontend</h5> <ul><li><strong class=\"k\">Filter the menu</strong> and <strong class=\"k\">guard routes</strong> by permission, and hide or disable actions the user can not perform.</li><li>Get the permissions <strong class=\"k\">from the server</strong> (in the session or profile), not from a hard-coded list on the client.</li><li>Check <strong class=\"k\">permissions, not role names</strong> (<code>can('news:publish')</code>, not <code>role === 'editor'</code>), so adding a role does not mean editing every component.</li><li>Centralize the check in one helper, hook or <code>&lt;Can&gt;</code> component, and handle a <code>403</code> from the API gracefully.</li></ul> <pre><code>const { can } = usePermissions();\n\n{can('news:publish') &amp;&amp; &lt;PublishButton /&gt;}\n\n// Route guard\nif (!can('rewards:read')) return &lt;Forbidden /&gt;;</code></pre> <p><strong class=\"k\">Is hiding a menu enough? No.</strong> Frontend checks only improve the <strong class=\"k\">user experience</strong>. A user can call the API directly, so the <strong class=\"k\">backend must enforce authorization on every request</strong> and return <code>403</code>. Say clearly which part you built and which part the backend owns.</p>",
+        "vi": "<p><strong class=\"k\">Mô hình:</strong> một người dùng có một hoặc nhiều <strong class=\"k\">role</strong>, mỗi role cấp các <strong class=\"k\">permission</strong> như <code>news:publish</code> hay <code>rewards:read</code>.</p> <h5>Ở frontend</h5> <ul><li><strong class=\"k\">Lọc menu</strong> và <strong class=\"k\">guard route</strong> theo permission, và ẩn hoặc vô hiệu hóa các hành động người dùng không làm được.</li><li>Lấy permission <strong class=\"k\">từ server</strong> (trong session hoặc profile), không dùng danh sách cứng trong client.</li><li>Kiểm tra <strong class=\"k\">permission, không phải tên role</strong> (<code>can('news:publish')</code>, không phải <code>role === 'editor'</code>), để thêm role không đồng nghĩa với sửa mọi component.</li><li>Tập trung việc kiểm tra vào một helper, hook hoặc component <code>&lt;Can&gt;</code>, và xử lý <code>403</code> từ API một cách mượt mà.</li></ul> <pre><code>const { can } = usePermissions();\n\n{can('news:publish') &amp;&amp; &lt;PublishButton /&gt;}\n\n// Route guard\nif (!can('rewards:read')) return &lt;Forbidden /&gt;;</code></pre> <p><strong class=\"k\">Ẩn menu có đủ không? Không.</strong> Kiểm tra ở frontend chỉ cải thiện <strong class=\"k\">trải nghiệm</strong>. Người dùng có thể gọi API trực tiếp, nên <strong class=\"k\">backend phải thực thi phân quyền ở mọi request</strong> và trả <code>403</code>. Hãy nói rõ phần nào bạn làm và phần nào backend chịu trách nhiệm.</p>"
+      },
+      "terms": [
+        "RBAC",
+        "permission",
+        "403",
+        "authorization"
+      ]
+    }
+  ]
+}

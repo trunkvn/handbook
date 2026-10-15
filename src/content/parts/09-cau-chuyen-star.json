@@ -1,0 +1,87 @@
+{
+  "id": "part-9",
+  "slug": "cau-chuyen-star",
+  "roman": "IX",
+  "title": "Câu chuyện STAR",
+  "description": "Ba câu chuyện từ CV, dựng theo khung Situation · Task · Action · Result. Hãy thay bằng chi tiết thật của bạn.",
+  "questions": [
+    {
+      "id": "q41",
+      "number": 41,
+      "tag": "STAR · Thanh toán",
+      "title": "Tell me about the payment portal you built. (STAR)",
+      "titleVi": "Hãy kể về cổng thanh toán bạn đã xây dựng. (STAR)",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Situation: cổng nạp game, nhiều phương thức thanh toán",
+          "Task: phần bạn chịu trách nhiệm",
+          "Action: SSR + API proxy, 3 cổng, luồng checkout theo game",
+          "Result: +15% giao dịch thành công, và cách đo"
+        ]
+      },
+      "answer": {
+        "en": "<h5>Situation</h5> <p>At OEG we needed a <strong class=\"k\">game top-up portal</strong> that let players pay through several Vietnamese payment methods.</p> <h5>Task</h5> <p>I was responsible for building the frontend and integrating the payment methods, while keeping credentials safe and making the checkout work for different kinds of games.</p> <h5>Action</h5> <ul><li>I built it on <strong class=\"k\">Next.js SSR</strong> with a <strong class=\"k\">server-side API proxy</strong>, so sensitive credentials never reach the client and all backend calls go through one place.</li><li>I integrated <strong class=\"k\">VietQR/BIDV, ZaloPay and VNPay</strong>.</li><li>I implemented <strong class=\"k\">game-specific checkout flows</strong>: guest purchase for Co-Pub titles where it is permitted, and authenticated checkout for restricted Ex-Pub titles.</li></ul> <h5>Result</h5> <p>Successful transactions increased by <strong class=\"k\">15%</strong>. Be ready to explain how it was measured, over what period, and what drove it.</p> <p>Tip: keep it to about two minutes, and replace anything here with your own real details (numbers, names, what went wrong).</p>",
+        "vi": "<h5>Situation</h5> <p>Tại OEG, chúng tôi cần một <strong class=\"k\">cổng nạp game</strong> cho phép người chơi thanh toán qua nhiều phương thức phổ biến ở Việt Nam.</p> <h5>Task</h5> <p>Tôi chịu trách nhiệm xây dựng frontend và tích hợp các phương thức thanh toán, đồng thời giữ credential an toàn và làm cho checkout phù hợp với từng loại game.</p> <h5>Action</h5> <ul><li>Tôi xây trên <strong class=\"k\">Next.js SSR</strong> với <strong class=\"k\">API proxy phía server</strong>, để credential nhạy cảm không bao giờ tới client và mọi lời gọi backend đi qua một chỗ.</li><li>Tôi tích hợp <strong class=\"k\">VietQR/BIDV, ZaloPay và VNPay</strong>.</li><li>Tôi làm <strong class=\"k\">luồng checkout theo từng game</strong>: cho phép mua với tư cách khách ở game Co-Pub khi được phép, và bắt buộc đăng nhập ở game Ex-Pub bị hạn chế.</li></ul> <h5>Result</h5> <p>Giao dịch thành công tăng <strong class=\"k\">15%</strong>. Hãy chuẩn bị giải thích cách đo, trong bao lâu, và yếu tố nào tạo ra mức tăng đó.</p> <p>Mẹo: nói trong khoảng hai phút, và thay bằng chi tiết thật của bạn (số liệu, tên, điều gì đã không suôn sẻ).</p>"
+      },
+      "terms": [
+        "STAR",
+        "Next.js SSR",
+        "API proxy",
+        "+15%"
+      ]
+    },
+    {
+      "id": "q42",
+      "number": 42,
+      "tag": "STAR · Xác thực",
+      "title": "Tell me about the shared authentication layer you built. (STAR)",
+      "titleVi": "Hãy kể về lớp xác thực dùng chung bạn đã xây dựng. (STAR)",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Situation: nhiều sản phẩm cần đăng nhập",
+          "Task: một lớp auth dùng chung",
+          "Action: OAuth 2.0, OTP, route guard, revalidate session",
+          "Result: nhất quán giữa các sản phẩm"
+        ]
+      },
+      "answer": {
+        "en": "<h5>Situation</h5> <p>OEG runs several products, and each one needs users to sign in. The goal was <strong class=\"k\">one consistent sign-in experience</strong> instead of repeating the logic in every product.</p> <h5>Task</h5> <p>I built the shared authentication layer on the frontend: sign-in methods, session handling and access control.</p> <h5>Action</h5> <ul><li>Integrated <strong class=\"k\">Google and Facebook OAuth 2.0</strong>, plus <strong class=\"k\">email and SMS OTP</strong>.</li><li>Added <strong class=\"k\">route-level access control</strong> so private pages are protected.</li><li>Added <strong class=\"k\">session revalidation</strong> on app startup and when a tab regains focus, so a logged-out or expired session is not shown as signed in.</li></ul> <h5>Result</h5> <p>Multiple OEG products now share the same sign-in and session management, so the behavior is consistent and new products can reuse it. Be ready to say how many products use it.</p> <p>Tip: keep it to about two minutes, and replace anything here with your own real details (numbers, names, what went wrong).</p>",
+        "vi": "<h5>Situation</h5> <p>OEG có nhiều sản phẩm và sản phẩm nào cũng cần đăng nhập. Mục tiêu là <strong class=\"k\">một trải nghiệm đăng nhập nhất quán</strong> thay vì lặp lại logic ở từng sản phẩm.</p> <h5>Task</h5> <p>Tôi xây lớp xác thực dùng chung ở frontend: các cách đăng nhập, quản lý phiên và kiểm soát truy cập.</p> <h5>Action</h5> <ul><li>Tích hợp <strong class=\"k\">Google và Facebook OAuth 2.0</strong>, cùng <strong class=\"k\">OTP qua email và SMS</strong>.</li><li>Thêm <strong class=\"k\">kiểm soát truy cập theo route</strong> để các trang riêng tư được bảo vệ.</li><li>Thêm <strong class=\"k\">revalidate session</strong> khi app khởi động và khi tab được focus lại, để phiên đã đăng xuất hoặc hết hạn không bị hiển thị như còn đăng nhập.</li></ul> <h5>Result</h5> <p>Nhiều sản phẩm OEG dùng chung cách đăng nhập và quản lý phiên, nên hành vi nhất quán và sản phẩm mới có thể tái sử dụng. Hãy chuẩn bị nói được bao nhiêu sản phẩm đang dùng.</p> <p>Mẹo: nói trong khoảng hai phút, và thay bằng chi tiết thật của bạn (số liệu, tên, điều gì đã không suôn sẻ).</p>"
+      },
+      "terms": [
+        "STAR",
+        "OAuth 2.0",
+        "OTP",
+        "session revalidation"
+      ]
+    },
+    {
+      "id": "q43",
+      "number": 43,
+      "tag": "STAR · Kiến trúc",
+      "title": "Tell me about the architecture and coding standards you introduced. (STAR)",
+      "titleVi": "Hãy kể về kiến trúc và coding convention bạn đã đưa vào. (STAR)",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Situation: nhiều project Next.js/Nuxt",
+          "Task: chuẩn hóa cấu trúc và cách làm",
+          "Action: kiến trúc tái sử dụng, convention, test",
+          "Result: Lighthouse SEO 98, coverage 80%, nhiều team dùng"
+        ]
+      },
+      "answer": {
+        "en": "<h5>Situation</h5> <p>We were building many <strong class=\"k\">Next.js and Nuxt</strong> applications across teams, and each project benefited from sharing one structure instead of inventing its own.</p> <h5>Task</h5> <p>I took ownership of defining a <strong class=\"k\">reusable project architecture and coding conventions</strong>.</p> <h5>Action</h5> <ul><li>Established a standard project structure and development practices for Next.js and Nuxt apps.</li><li>Introduced automated testing with <strong class=\"k\">Jest and Playwright</strong> to protect quality.</li><li>Focused on SEO and performance for public pages.</li></ul> <h5>Result</h5> <p>The structure is now used across multiple teams, Lighthouse SEO reached <strong class=\"k\">98</strong> and test coverage reached <strong class=\"k\">80%</strong>. Be ready for: \"how did you convince people to adopt it?\" Answer with communication, not just technology.</p> <p>Tip: keep it to about two minutes, and replace anything here with your own real details (numbers, names, what went wrong).</p>",
+        "vi": "<h5>Situation</h5> <p>Chúng tôi xây nhiều ứng dụng <strong class=\"k\">Next.js và Nuxt</strong> ở nhiều team, và mỗi project sẽ có lợi hơn nếu dùng chung một cấu trúc thay vì tự nghĩ ra riêng.</p> <h5>Task</h5> <p>Tôi nhận trách nhiệm định nghĩa <strong class=\"k\">kiến trúc project tái sử dụng và coding convention</strong>.</p> <h5>Action</h5> <ul><li>Thiết lập cấu trúc project và cách phát triển chuẩn cho các ứng dụng Next.js và Nuxt.</li><li>Đưa vào kiểm thử tự động với <strong class=\"k\">Jest và Playwright</strong> để bảo vệ chất lượng.</li><li>Tập trung vào SEO và hiệu năng cho các trang công khai.</li></ul> <h5>Result</h5> <p>Cấu trúc này hiện được nhiều team dùng, Lighthouse SEO đạt <strong class=\"k\">98</strong> và test coverage đạt <strong class=\"k\">80%</strong>. Hãy chuẩn bị cho câu: \"bạn thuyết phục mọi người áp dụng bằng cách nào?\" Trả lời bằng giao tiếp, không chỉ công nghệ.</p> <p>Mẹo: nói trong khoảng hai phút, và thay bằng chi tiết thật của bạn (số liệu, tên, điều gì đã không suôn sẻ).</p>"
+      },
+      "terms": [
+        "STAR",
+        "architecture",
+        "coding standards",
+        "Lighthouse SEO"
+      ]
+    }
+  ]
+}

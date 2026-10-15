@@ -1,0 +1,108 @@
+{
+  "id": "part-15",
+  "slug": "leetcode-ngay-3",
+  "roman": "XV",
+  "title": "LeetCode · Ngày 3",
+  "description": "Stack và binary search: tự giải 15–20 phút trước khi xem đáp án.",
+  "questions": [
+    {
+      "id": "q75",
+      "number": 75,
+      "tag": "LeetCode · Stack · Easy",
+      "title": "LeetCode 20. Valid Parentheses (Easy): is a string of brackets <code>()[]{}</code> valid?",
+      "titleVi": "LeetCode 20. Valid Parentheses (Easy): chuỗi dấu ngoặc <code>()[]{}</code> có hợp lệ không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Gặp ngoặc mở: đẩy vào stack",
+          "Gặp ngoặc đóng: phải khớp với đỉnh stack",
+          "Cuối cùng stack phải rỗng",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> brackets close in the <strong class=\"k\">reverse order</strong> they open, which is exactly what a <strong class=\"k\">stack</strong> does. Push opening brackets; for a closing bracket, the top of the stack must be its matching opener. At the end the stack must be empty.</p> <pre><code>function isValid(s) {\n  const pairs = { ')': '(', ']': '[', '}': '{' };\n  const stack = [];\n  for (const c of s) {\n    if (c in pairs) {\n      if (stack.pop() !== pairs[c]) return false;   // also fails on an empty stack\n    } else {\n      stack.push(c);\n    }\n  }\n  return stack.length === 0;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(n) space. <strong class=\"k\">Edge cases:</strong> an odd length, a string that starts with a closer, and openers left over at the end.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> ngoặc đóng theo <strong class=\"k\">thứ tự ngược</strong> với lúc mở, đúng là hành vi của <strong class=\"k\">stack</strong>. Đẩy ngoặc mở vào; với ngoặc đóng, đỉnh stack phải là ngoặc mở tương ứng. Cuối cùng stack phải rỗng.</p> <pre><code>function isValid(s) {\n  const pairs = { ')': '(', ']': '[', '}': '{' };\n  const stack = [];\n  for (const c of s) {\n    if (c in pairs) {\n      if (stack.pop() !== pairs[c]) return false;   // cũng false khi stack rỗng\n    } else {\n      stack.push(c);\n    }\n  }\n  return stack.length === 0;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(n) bộ nhớ. <strong class=\"k\">Trường hợp biên:</strong> độ dài lẻ, chuỗi bắt đầu bằng ngoặc đóng, và còn ngoặc mở thừa ở cuối.</p>"
+      },
+      "terms": [
+        "stack",
+        "matching brackets",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "q76",
+      "number": 76,
+      "tag": "LeetCode · Stack · Medium",
+      "title": "LeetCode 155. Min Stack (Medium): a stack that supports <code>push</code>, <code>pop</code>, <code>top</code> and <code>getMin</code>, all in O(1).",
+      "titleVi": "LeetCode 155. Min Stack (Medium): stack hỗ trợ <code>push</code>, <code>pop</code>, <code>top</code> và <code>getMin</code>, tất cả O(1).",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi phần tử lưu kèm \"min tính đến đó\"",
+          "Pop thì min tự quay về giá trị trước",
+          "Mọi thao tác O(1)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> with each element, also store <strong class=\"k\">the minimum of the stack up to that point</strong>. Then <code>getMin</code> is just reading the top, and after a <code>pop</code> the previous minimum is automatically restored.</p> <pre><code>class MinStack {\n  constructor() { this.stack = []; }               // each item: [value, minSoFar]\n\n  push(val) {\n    const min = this.stack.length ? Math.min(val, this.getMin()) : val;\n    this.stack.push([val, min]);\n  }\n  pop()    { this.stack.pop(); }\n  top()    { return this.stack[this.stack.length - 1][0]; }\n  getMin() { return this.stack[this.stack.length - 1][1]; }\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(1) per operation, O(n) space. <strong class=\"k\">Alternative:</strong> a second stack that only holds the minimums.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> với mỗi phần tử, lưu kèm <strong class=\"k\">giá trị nhỏ nhất của stack tính đến thời điểm đó</strong>. Khi đó <code>getMin</code> chỉ là đọc đỉnh, và sau <code>pop</code> giá trị nhỏ nhất trước đó tự động được khôi phục.</p> <pre><code>class MinStack {\n  constructor() { this.stack = []; }               // mỗi phần tử: [giá trị, minSoFar]\n\n  push(val) {\n    const min = this.stack.length ? Math.min(val, this.getMin()) : val;\n    this.stack.push([val, min]);\n  }\n  pop()    { this.stack.pop(); }\n  top()    { return this.stack[this.stack.length - 1][0]; }\n  getMin() { return this.stack[this.stack.length - 1][1]; }\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(1) mỗi thao tác, O(n) bộ nhớ. <strong class=\"k\">Cách khác:</strong> dùng stack thứ hai chỉ chứa các giá trị nhỏ nhất.</p>"
+      },
+      "terms": [
+        "stack",
+        "design",
+        "O(1)"
+      ]
+    },
+    {
+      "id": "q77",
+      "number": 77,
+      "tag": "LeetCode · Binary search · Easy",
+      "title": "LeetCode 704. Binary Search (Easy): find the index of <code>target</code> in a sorted array, or return -1.",
+      "titleVi": "LeetCode 704. Binary Search (Easy): tìm chỉ số của <code>target</code> trong mảng đã sắp xếp, hoặc trả về -1.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mảng đã sort → loại một nửa mỗi bước",
+          "Vòng lặp <code>lo &lt;= hi</code>",
+          "Tính <code>mid</code> tránh tràn số",
+          "O(log n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> the array is sorted, so compare with the middle element and <strong class=\"k\">discard half</strong> of the search range each step.</p> <pre><code>function search(nums, target) {\n  let lo = 0, hi = nums.length - 1;\n  while (lo &lt;= hi) {\n    const mid = lo + Math.floor((hi - lo) / 2);   // avoids overflow in other languages\n    if (nums[mid] === target) return mid;\n    if (nums[mid] &lt; target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(log n) time, O(1) space.</p> <p><strong class=\"k\">Where people slip:</strong> the loop condition (<code>lo &lt;= hi</code>), and updating with <code>mid ± 1</code> so the range always shrinks. Getting these wrong causes an infinite loop or a missed element.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> mảng đã sort, nên so sánh với phần tử giữa và <strong class=\"k\">loại bỏ một nửa</strong> phạm vi tìm kiếm mỗi bước.</p> <pre><code>function search(nums, target) {\n  let lo = 0, hi = nums.length - 1;\n  while (lo &lt;= hi) {\n    const mid = lo + Math.floor((hi - lo) / 2);   // tránh tràn số ở các ngôn ngữ khác\n    if (nums[mid] === target) return mid;\n    if (nums[mid] &lt; target) lo = mid + 1;\n    else hi = mid - 1;\n  }\n  return -1;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(log n) thời gian, O(1) bộ nhớ.</p> <p><strong class=\"k\">Chỗ hay sai:</strong> điều kiện vòng lặp (<code>lo &lt;= hi</code>), và cập nhật bằng <code>mid ± 1</code> để phạm vi luôn thu hẹp. Sai chỗ này gây lặp vô hạn hoặc bỏ sót phần tử.</p>"
+      },
+      "terms": [
+        "binary search",
+        "O(log n)",
+        "two pointers"
+      ]
+    },
+    {
+      "id": "q78",
+      "number": 78,
+      "tag": "LeetCode · Binary search · Medium",
+      "title": "LeetCode 33. Search in Rotated Sorted Array (Medium): search a sorted array that was rotated at an unknown pivot, in O(log n).",
+      "titleVi": "LeetCode 33. Search in Rotated Sorted Array (Medium): tìm trong mảng đã sort nhưng bị xoay tại một điểm chưa biết, trong O(log n).",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Ở mỗi bước, MỘT trong hai nửa luôn được sắp xếp",
+          "Xác định nửa nào sorted (<code>nums[lo] &lt;= nums[mid]</code>)",
+          "Kiểm tra target có nằm trong nửa sorted đó không",
+          "Quyết định bỏ nửa nào"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> after rotation, at every step <strong class=\"k\">at least one half is still sorted</strong>. Find which half is sorted, check whether <code>target</code> lies inside that sorted half, and then keep that half or discard it.</p> <pre><code>function search(nums, target) {\n  let lo = 0, hi = nums.length - 1;\n  while (lo &lt;= hi) {\n    const mid = lo + Math.floor((hi - lo) / 2);\n    if (nums[mid] === target) return mid;\n\n    if (nums[lo] &lt;= nums[mid]) {                    // left half is sorted\n      if (nums[lo] &lt;= target &amp;&amp; target &lt; nums[mid]) hi = mid - 1;\n      else lo = mid + 1;\n    } else {                                        // right half is sorted\n      if (nums[mid] &lt; target &amp;&amp; target &lt;= nums[hi]) lo = mid + 1;\n      else hi = mid - 1;\n    }\n  }\n  return -1;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(log n) time, O(1) space.</p> <p><strong class=\"k\">Details:</strong> use <code>&lt;=</code> in <code>nums[lo] &lt;= nums[mid]</code> so a one-element left half counts as sorted. With <strong class=\"k\">duplicates</strong> (LeetCode 81) the sorted-half test can fail and the worst case degrades to O(n).</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> sau khi xoay, ở mỗi bước <strong class=\"k\">ít nhất một nửa vẫn được sắp xếp</strong>. Xác định nửa nào sorted, kiểm tra <code>target</code> có nằm trong nửa sorted đó không, rồi giữ hoặc bỏ nửa đó.</p> <pre><code>function search(nums, target) {\n  let lo = 0, hi = nums.length - 1;\n  while (lo &lt;= hi) {\n    const mid = lo + Math.floor((hi - lo) / 2);\n    if (nums[mid] === target) return mid;\n\n    if (nums[lo] &lt;= nums[mid]) {                    // nửa trái đã sort\n      if (nums[lo] &lt;= target &amp;&amp; target &lt; nums[mid]) hi = mid - 1;\n      else lo = mid + 1;\n    } else {                                        // nửa phải đã sort\n      if (nums[mid] &lt; target &amp;&amp; target &lt;= nums[hi]) lo = mid + 1;\n      else hi = mid - 1;\n    }\n  }\n  return -1;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(log n) thời gian, O(1) bộ nhớ.</p> <p><strong class=\"k\">Chi tiết:</strong> dùng <code>&lt;=</code> trong <code>nums[lo] &lt;= nums[mid]</code> để nửa trái chỉ có một phần tử vẫn được coi là sorted. Với <strong class=\"k\">giá trị trùng</strong> (LeetCode 81), phép thử nửa sorted có thể sai và trường hợp xấu nhất thành O(n).</p>"
+      },
+      "terms": [
+        "binary search",
+        "rotated array",
+        "O(log n)"
+      ]
+    }
+  ]
+}

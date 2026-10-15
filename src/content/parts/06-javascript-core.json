@@ -1,0 +1,308 @@
+{
+  "id": "part-6",
+  "slug": "javascript-core",
+  "roman": "VI",
+  "title": "JavaScript core",
+  "description": "Kiến thức nền mà gần như vòng phỏng vấn nào cũng hỏi: scope, <code>this</code>, event loop, bất đồng bộ.",
+  "questions": [
+    {
+      "id": "q18",
+      "number": 18,
+      "tag": "JS core · Scope",
+      "title": "What is a closure? Give a practical example.",
+      "titleVi": "Closure là gì? Cho ví dụ dùng thực tế.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Định nghĩa: hàm + scope nơi nó được tạo",
+          "Ví dụ: counter",
+          "Dùng thực tế: private state, debounce, memoize",
+          "Lưu ý: giữ tham chiếu, có thể gây memory leak"
+        ]
+      },
+      "answer": {
+        "en": "<p>A <strong class=\"k\">closure</strong> is a function bundled together with a reference to the scope where it was created. So the function can still access variables from that outer scope, even after the outer function has finished running.</p> <pre><code>function counter() {\n  let count = 0;\n  return () =&gt; ++count;   // the arrow function \"remembers\" count\n}\nconst next = counter();\nnext(); // 1\nnext(); // 2</code></pre> <p><strong class=\"k\">Practical uses:</strong> private state, <code>debounce</code>/<code>throttle</code> (they keep the <code>timer</code>), memoization (keeps a cache), and event handlers that retain data.</p> <p>Key point: a closure keeps a <strong class=\"k\">reference</strong> to the variable, not a copy of its value. That is why it can cause a <strong class=\"k\">memory leak</strong> if it holds a large object for too long.</p>",
+        "vi": "<p>Closure là một hàm cùng với tham chiếu đến scope nơi nó được tạo, nên hàm vẫn truy cập được biến ngoài đó, kể cả khi hàm bên ngoài đã chạy xong.</p> <pre><code>function counter() {\n  let count = 0;\n  return () =&gt; ++count;   // arrow function \"nhớ\" count\n}\nconst next = counter();\nnext(); // 1\nnext(); // 2</code></pre> <p><strong class=\"k\">Dùng thực tế:</strong> private state, <code>debounce</code>/<code>throttle</code> (giữ <code>timer</code>), memoize (giữ cache), event handler giữ lại dữ liệu.</p> <p>Ý chính cần nhớ: closure giữ <strong class=\"k\">tham chiếu</strong> đến biến, không phải bản sao giá trị. Vì vậy dễ gây <strong class=\"k\">memory leak</strong> nếu giữ biến lớn quá lâu.</p>"
+      },
+      "terms": [
+        "closure",
+        "scope",
+        "memory leak"
+      ]
+    },
+    {
+      "id": "q19",
+      "number": 19,
+      "tag": "JS core · Scope",
+      "title": "Why does <code>var</code> in a loop behave differently from <code>let</code>?",
+      "titleVi": "Vì sao <code>var</code> trong vòng lặp cho kết quả khác <code>let</code>?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Hai đoạn code và kết quả",
+          "<code>var</code> = function scope, một biến dùng chung",
+          "<code>let</code> = block scope, mỗi vòng một biến",
+          "Liên hệ closure + event loop"
+        ]
+      },
+      "answer": {
+        "en": "<pre><code>for (var i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i), 0); // 3 3 3\nfor (let i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i), 0); // 0 1 2</code></pre> <p><code>var</code> has <strong class=\"k\">function scope</strong>, so there is only one <code>i</code> shared by the whole loop. By the time <code>setTimeout</code> fires, the loop is over and <code>i</code> is <code>3</code>. <code>let</code> has <strong class=\"k\">block scope</strong>: each iteration creates a fresh <code>i</code>, so each callback keeps its own value.</p> <p>Key point: this combines <strong class=\"k\">closures</strong> and the <strong class=\"k\">event loop</strong>. <code>setTimeout</code> always runs after the synchronous code has finished.</p>",
+        "vi": "<pre><code>for (var i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i), 0); // 3 3 3\nfor (let i = 0; i &lt; 3; i++) setTimeout(() =&gt; console.log(i), 0); // 0 1 2</code></pre> <p><code>var</code> có <strong class=\"k\">function scope</strong>, chỉ có một biến <code>i</code> dùng chung cho cả vòng lặp. Khi <code>setTimeout</code> chạy thì vòng lặp đã xong và <code>i = 3</code>. <code>let</code> có <strong class=\"k\">block scope</strong>, mỗi lần lặp tạo một biến <code>i</code> mới nên mỗi callback giữ giá trị riêng.</p> <p>Ý chính cần nhớ: liên hệ <strong class=\"k\">closure</strong> + <strong class=\"k\">event loop</strong>. <code>setTimeout</code> luôn chạy sau khi code đồng bộ xong.</p>"
+      },
+      "terms": [
+        "var / let",
+        "block scope",
+        "closure"
+      ]
+    },
+    {
+      "id": "q20",
+      "number": 20,
+      "tag": "JS core · Biến",
+      "title": "Explain <code>var</code>, <code>let</code>, <code>const</code>, hoisting and the TDZ.",
+      "titleVi": "<code>var</code>, <code>let</code>, <code>const</code>, hoisting và TDZ là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>var</code>: function scope, hoist = undefined",
+          "<code>let</code>/<code>const</code>: block scope, có TDZ",
+          "<code>const</code>: không gán lại, nhưng object vẫn sửa được"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><code>var</code>: function scope. It is hoisted and initialized as <code>undefined</code>.</li><li><code>let</code> / <code>const</code>: block scope. They are also hoisted, but sit in the <strong class=\"k\">Temporal Dead Zone (TDZ)</strong> from the start of the block until the declaration line. Accessing them in the TDZ throws a <code>ReferenceError</code>.</li><li><code>const</code>: you cannot reassign the binding, but the object it points to can still be mutated (<code>const a = []; a.push(1)</code> is valid).</li></ul>",
+        "vi": "<ul><li><code>var</code>: function scope, được hoist và khởi tạo là <code>undefined</code>.</li><li><code>let</code> / <code>const</code>: block scope, cũng được hoist nhưng ở trong <strong class=\"k\">Temporal Dead Zone (TDZ)</strong> từ đầu block đến dòng khai báo. Truy cập trong TDZ ném <code>ReferenceError</code>.</li><li><code>const</code>: không gán lại được biến, nhưng object bên trong vẫn sửa được (<code>const a = []; a.push(1)</code> hợp lệ).</li></ul>"
+      },
+      "terms": [
+        "hoisting",
+        "TDZ",
+        "const"
+      ]
+    },
+    {
+      "id": "q21",
+      "number": 21,
+      "tag": "JS core · this",
+      "title": "How does <code>this</code> work in JavaScript?",
+      "titleVi": "<code>this</code> trong JavaScript hoạt động thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Xác định lúc GỌI hàm",
+          "5 quy tắc theo thứ tự",
+          "Arrow function lấy <code>this</code> từ scope bao quanh",
+          "Lỗi hay gặp: tách method khỏi object"
+        ]
+      },
+      "answer": {
+        "en": "<p>The value of <code>this</code> is decided <strong class=\"k\">when the function is called</strong>, not when it is defined (arrow functions are the exception).</p> <ol><li><code>new Foo()</code>: <code>this</code> is the newly created object.</li><li><code>fn.call/apply/bind(obj)</code>: <code>this</code> is <code>obj</code>.</li><li><code>obj.method()</code>: <code>this</code> is <code>obj</code>.</li><li>Plain call <code>fn()</code>: <code>undefined</code> in strict mode, otherwise <code>globalThis</code>.</li><li><strong class=\"k\">Arrow function</strong>: has no <code>this</code> of its own; it takes <code>this</code> from the enclosing scope where it was defined.</li></ol> <pre><code>const user = { name: 'A', hi() { return this.name; } };\nconst hi = user.hi;\nhi();        // undefined: detaching the method loses this\nuser.hi();   // 'A'</code></pre> <p><strong class=\"k\">In practice:</strong> React class components need <code>bind</code> or arrow functions. In <code>debounce</code> we use <code>fn.apply(this, args)</code> to preserve the right <code>this</code>.</p>",
+        "vi": "<p>Giá trị <code>this</code> được xác định <strong class=\"k\">lúc gọi hàm</strong>, không phải lúc định nghĩa (trừ arrow function).</p> <ol><li><code>new Foo()</code>: <code>this</code> là object mới.</li><li><code>fn.call/apply/bind(obj)</code>: <code>this</code> là <code>obj</code>.</li><li><code>obj.method()</code>: <code>this</code> là <code>obj</code>.</li><li>Gọi thường <code>fn()</code>: <code>undefined</code> (strict mode) hoặc <code>globalThis</code>.</li><li><strong class=\"k\">Arrow function</strong> không có <code>this</code> riêng, nó lấy <code>this</code> từ scope bao quanh lúc định nghĩa.</li></ol> <pre><code>const user = { name: 'A', hi() { return this.name; } };\nconst hi = user.hi;\nhi();        // undefined: tách method ra khỏi object thì mất this\nuser.hi();   // 'A'</code></pre> <p><strong class=\"k\">Dùng thực tế:</strong> trong React class component phải <code>bind</code> hoặc dùng arrow function. Trong <code>debounce</code>, dùng <code>fn.apply(this, args)</code> để giữ đúng <code>this</code>.</p>"
+      },
+      "terms": [
+        "this",
+        "arrow function",
+        "bind"
+      ]
+    },
+    {
+      "id": "q22",
+      "number": 22,
+      "tag": "JS core · Prototype",
+      "title": "What is the prototype chain and how does inheritance work?",
+      "titleVi": "Prototype và kế thừa là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mỗi object có <code>[[Prototype]]</code>",
+          "Tìm thuộc tính đi lên chuỗi đến <code>null</code>",
+          "<code>class</code> chỉ là cú pháp bọc",
+          "Method trên prototype dùng chung"
+        ]
+      },
+      "answer": {
+        "en": "<p>Every object has an internal link called <code>[[Prototype]]</code> (accessible via <code>Object.getPrototypeOf</code>). When you access a property that is not on the object, the engine walks <strong class=\"k\">up the prototype chain</strong> until it finds it or reaches <code>null</code>. <code>class</code> is just friendlier syntax over this same mechanism.</p> <pre><code>function Animal(name) { this.name = name; }\nAnimal.prototype.speak = function () { return this.name + ' makes a sound'; };\nconst a = new Animal('Cat');\na.speak();                                      // found on Animal.prototype\nObject.getPrototypeOf(a) === Animal.prototype;  // true</code></pre> <p>Key point: a method on the prototype is <strong class=\"k\">shared by all instances</strong>, which saves memory compared with defining it inside the constructor.</p>",
+        "vi": "<p>Mỗi object có một liên kết nội bộ <code>[[Prototype]]</code> (truy cập qua <code>Object.getPrototypeOf</code>). Khi truy cập thuộc tính không có trên object, engine đi <strong class=\"k\">lên chuỗi prototype</strong> cho đến <code>null</code>. <code>class</code> chỉ là cú pháp thân thiện hơn cho cơ chế này.</p> <pre><code>function Animal(name) { this.name = name; }\nAnimal.prototype.speak = function () { return this.name + ' makes a sound'; };\nconst a = new Animal('Cat');\na.speak();                                      // tìm thấy trên Animal.prototype\nObject.getPrototypeOf(a) === Animal.prototype;  // true</code></pre> <p>Ý chính cần nhớ: method đặt trên prototype thì <strong class=\"k\">dùng chung cho mọi instance</strong>, tiết kiệm bộ nhớ hơn đặt trong constructor.</p>"
+      },
+      "terms": [
+        "prototype",
+        "inheritance",
+        "class"
+      ]
+    },
+    {
+      "id": "q23",
+      "number": 23,
+      "tag": "JS core · Event loop",
+      "title": "Explain the event loop. What is the output of this snippet?",
+      "titleVi": "Giải thích event loop. Đoạn code này in ra gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Chạy hết code đồng bộ",
+          "Xử lý TOÀN BỘ microtask",
+          "Lấy MỘT macrotask, lặp lại",
+          "Đoán output: 1, 5, 7, 3, 4, 6, 2"
+        ]
+      },
+      "answer": {
+        "en": "<p>JavaScript is single-threaded. The order is: run all <strong class=\"k\">synchronous code</strong> (the call stack) → drain the <strong class=\"k\">entire microtask queue</strong> (<code>Promise.then</code>, <code>queueMicrotask</code>, the code after <code>await</code>) → take <strong class=\"k\">one macrotask</strong> (<code>setTimeout</code>, I/O, UI events) → repeat.</p> <pre><code>console.log('1');\nsetTimeout(() =&gt; console.log('2'), 0);\nPromise.resolve().then(() =&gt; console.log('3'));\nqueueMicrotask(() =&gt; console.log('4'));\n(async () =&gt; {\n  console.log('5');\n  await null;\n  console.log('6');\n})();\nconsole.log('7');</code></pre> <p><strong class=\"k\">Answer: <code>1, 5, 7, 3, 4, 6, 2</code>.</strong></p> <ul><li>Synchronous: log <code>1</code>; <code>setTimeout</code> registers a macrotask; <code>then</code> and <code>queueMicrotask</code> go to the microtask queue; the async function runs synchronously until <code>await</code>, so it logs <code>5</code> and the rest becomes a microtask; log <code>7</code>.</li><li>Microtasks run in queue order: <code>3</code>, <code>4</code>, <code>6</code>.</li><li>Finally the macrotask: <code>2</code>.</li></ul> <p>Key point: why microtasks always run before <code>setTimeout(…, 0)</code>. Follow-up: \"what if microtasks keep scheduling microtasks?\" It <strong class=\"k\">blocks the UI</strong>, because rendering never gets a chance to run.</p>",
+        "vi": "<p>JavaScript chạy đơn luồng. Thứ tự: chạy hết <strong class=\"k\">code đồng bộ</strong> (call stack) → xử lý <strong class=\"k\">toàn bộ</strong> hàng đợi <strong class=\"k\">microtask</strong> (<code>Promise.then</code>, <code>queueMicrotask</code>, phần sau <code>await</code>) → lấy <strong class=\"k\">một macrotask</strong> (<code>setTimeout</code>, I/O, sự kiện UI) → lặp lại.</p> <pre><code>console.log('1');\nsetTimeout(() =&gt; console.log('2'), 0);\nPromise.resolve().then(() =&gt; console.log('3'));\nqueueMicrotask(() =&gt; console.log('4'));\n(async () =&gt; {\n  console.log('5');\n  await null;\n  console.log('6');\n})();\nconsole.log('7');</code></pre> <p><strong class=\"k\">Đáp án: <code>1, 5, 7, 3, 4, 6, 2</code>.</strong></p> <ul><li>Đồng bộ: in <code>1</code>; <code>setTimeout</code> đăng ký macrotask; <code>then</code> và <code>queueMicrotask</code> xếp vào microtask; hàm async chạy đồng bộ đến <code>await</code> nên in <code>5</code>, phần còn lại thành microtask; in <code>7</code>.</li><li>Microtask chạy theo thứ tự xếp hàng: <code>3</code>, <code>4</code>, <code>6</code>.</li><li>Cuối cùng macrotask: <code>2</code>.</li></ul> <p>Ý chính cần nhớ: vì sao microtask luôn trước <code>setTimeout(…, 0)</code>. Hỏi thêm \"vòng lặp vô hạn microtask thì sao?\" → <strong class=\"k\">chặn UI</strong> vì render không có cơ hội chạy.</p>"
+      },
+      "terms": [
+        "event loop",
+        "microtask",
+        "macrotask",
+        "call stack"
+      ]
+    },
+    {
+      "id": "q24",
+      "number": 24,
+      "tag": "JS core · Bất đồng bộ",
+      "title": "Explain Promises, <code>async/await</code> and error handling.",
+      "titleVi": "Promise, <code>async/await</code> và xử lý lỗi?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Trạng thái Promise",
+          "all / allSettled / race / any",
+          "Xử lý lỗi: try/catch, quên await",
+          "Bẫy: await trong vòng lặp = tuần tự"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li>A Promise has three states: pending → fulfilled / rejected. <code>async/await</code> is syntax built on top of Promises.</li><li><code>Promise.all</code>: runs in parallel and <strong class=\"k\">fails fast</strong> (one rejection rejects the whole thing).</li><li><code>Promise.allSettled</code>: waits for everything and returns each result.</li><li><code>Promise.race</code>: the first one to settle. <code>Promise.any</code>: the first one to <strong class=\"k\">succeed</strong>.</li><li>Errors: <code>try/catch</code> around <code>await</code>, or <code>.catch()</code>. <strong class=\"k\">A forgotten <code>await</code> lets the error slip by</strong> (unhandled rejection).</li></ul> <h5>Common trap: <code>await</code> inside a loop is sequential</h5> <pre><code>// Slow: runs one after another\nfor (const id of ids) results.push(await fetchUser(id));\n\n// Fast: runs in parallel\nconst results = await Promise.all(ids.map(fetchUser));</code></pre> <p><strong class=\"k\">Link to your CV:</strong> when integrating several payment gateways or calling several APIs at once, would you choose <code>Promise.all</code> or <code>allSettled</code>, and why? Prepare a real example.</p>",
+        "vi": "<ul><li>Promise có 3 trạng thái: pending → fulfilled/rejected. <code>async/await</code> là cú pháp bọc quanh Promise.</li><li><code>Promise.all</code>: song song, <strong class=\"k\">fail fast</strong> (một cái reject thì cả cụm reject).</li><li><code>Promise.allSettled</code>: đợi tất cả, trả về từng kết quả.</li><li><code>Promise.race</code>: lấy cái xong đầu tiên. <code>Promise.any</code>: lấy cái <strong class=\"k\">thành công</strong> đầu tiên.</li><li>Lỗi: <code>try/catch</code> quanh <code>await</code>, hoặc <code>.catch()</code>. <strong class=\"k\">Quên <code>await</code> thì lỗi bị bỏ qua</strong> (unhandled rejection).</li></ul> <h5>Bẫy hay gặp: <code>await</code> trong vòng lặp thành tuần tự</h5> <pre><code>// Chậm: chạy lần lượt\nfor (const id of ids) results.push(await fetchUser(id));\n\n// Nhanh: chạy song song\nconst results = await Promise.all(ids.map(fetchUser));</code></pre> <p><strong class=\"k\">Liên hệ CV:</strong> khi tích hợp nhiều cổng thanh toán hoặc gọi nhiều API cùng lúc, bạn chọn <code>Promise.all</code> hay <code>allSettled</code>, và vì sao? Hãy chuẩn bị ví dụ thật.</p>"
+      },
+      "terms": [
+        "Promise.all",
+        "allSettled",
+        "async/await",
+        "unhandled rejection"
+      ]
+    },
+    {
+      "id": "q25",
+      "number": 25,
+      "tag": "JS core · So sánh",
+      "title": "What is the difference between <code>==</code> and <code>===</code>? What are truthy and falsy values?",
+      "titleVi": "<code>==</code> và <code>===</code> khác nhau thế nào? Truthy/falsy là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>===</code> không ép kiểu, <code>==</code> có ép kiểu",
+          "Mặc định dùng <code>===</code>",
+          "Danh sách falsy"
+        ]
+      },
+      "answer": {
+        "en": "<p><code>===</code> compares without type coercion; <code>==</code> coerces types first (<code>0 == '0'</code> is <code>true</code>, <code>null == undefined</code> is <code>true</code>). Use <code>===</code> by default. The one reasonable use of <code>==</code> is <code>x == null</code>, to catch both <code>null</code> and <code>undefined</code>.</p> <p><strong class=\"k\">Falsy:</strong> <code>false, 0, -0, 0n, '', null, undefined, NaN</code>. Everything else is truthy, including <code>[]</code> and <code>{}</code>.</p>",
+        "vi": "<p><code>===</code> so sánh không ép kiểu, <code>==</code> ép kiểu trước (<code>0 == '0'</code> → true, <code>null == undefined</code> → true). Nên dùng <code>===</code> mặc định (trường hợp hợp lý của <code>==</code> là <code>x == null</code> để bắt cả null lẫn undefined).</p> <p><strong class=\"k\">Falsy:</strong> <code>false, 0, -0, 0n, '', null, undefined, NaN</code>. Còn lại đều truthy, kể cả <code>[]</code> và <code>{}</code>.</p>"
+      },
+      "terms": [
+        "==",
+        "===",
+        "coercion",
+        "falsy"
+      ]
+    },
+    {
+      "id": "q26",
+      "number": 26,
+      "tag": "JS core · Dữ liệu",
+      "title": "What is the difference between a shallow copy and a deep copy?",
+      "titleVi": "Shallow copy và deep copy khác nhau thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Shallow: chỉ tầng đầu, lồng bên trong vẫn chung tham chiếu",
+          "Deep: <code>structuredClone</code>",
+          "<code>JSON.parse(JSON.stringify())</code> có hạn chế gì"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Shallow:</strong> <code>{...obj}</code>, <code>Object.assign</code>, <code>arr.slice()</code> copy only the first level; nested objects still <strong class=\"k\">share references</strong>.</li><li><strong class=\"k\">Deep:</strong> <code>structuredClone(obj)</code> is built in and handles <code>Date</code>, <code>Map</code>, <code>Set</code> and circular references, but it <strong class=\"k\">cannot clone functions</strong>.</li><li><code>JSON.parse(JSON.stringify(x))</code> loses functions and <code>undefined</code>, turns <code>Date</code> into a string, and throws on circular references.</li></ul>",
+        "vi": "<ul><li><strong class=\"k\">Shallow:</strong> <code>{...obj}</code>, <code>Object.assign</code>, <code>arr.slice()</code>: chỉ sao chép tầng đầu, object lồng bên trong vẫn <strong class=\"k\">chung tham chiếu</strong>.</li><li><strong class=\"k\">Deep:</strong> <code>structuredClone(obj)</code> (có sẵn, xử lý được <code>Date</code>, <code>Map</code>, <code>Set</code>, circular reference nhưng <strong class=\"k\">không</strong> clone được function).</li><li><code>JSON.parse(JSON.stringify(x))</code> mất function, <code>undefined</code>, <code>Date</code> thành string, và lỗi với circular.</li></ul>"
+      },
+      "terms": [
+        "shallow copy",
+        "deep copy",
+        "structuredClone"
+      ]
+    },
+    {
+      "id": "q27",
+      "number": 27,
+      "tag": "JS core · Hàm",
+      "title": "What are <code>call</code>, <code>apply</code> and <code>bind</code>?",
+      "titleVi": "<code>call</code>, <code>apply</code>, <code>bind</code> là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Cả ba đều đặt <code>this</code>",
+          "<code>call</code> = đối số rời, gọi ngay",
+          "<code>apply</code> = mảng, gọi ngay",
+          "<code>bind</code> = trả về hàm mới"
+        ]
+      },
+      "answer": {
+        "en": "<p>All three set <code>this</code>. <code>call(thisArg, a, b)</code> invokes immediately with separate arguments; <code>apply(thisArg, [a, b])</code> invokes immediately with an array; <code>bind(thisArg, a)</code> <strong class=\"k\">returns a new function</strong> and does not call it yet.</p>",
+        "vi": "<p>Cả ba đều đặt <code>this</code>. <code>call(thisArg, a, b)</code> gọi ngay với đối số rời; <code>apply(thisArg, [a, b])</code> gọi ngay với mảng; <code>bind(thisArg, a)</code> <strong class=\"k\">trả về hàm mới</strong>, chưa gọi.</p>"
+      },
+      "terms": [
+        "call",
+        "apply",
+        "bind"
+      ]
+    },
+    {
+      "id": "q28",
+      "number": 28,
+      "tag": "JS core · Mảng",
+      "title": "When do you use <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>forEach</code> and <code>for...of</code>?",
+      "titleVi": "<code>map</code>, <code>filter</code>, <code>reduce</code>, <code>forEach</code>, <code>for...of</code> dùng khi nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "map: biến đổi",
+          "filter: lọc",
+          "reduce: gom thành 1 giá trị",
+          "forEach không break/await được; for...of được"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><code>map</code> transforms each element (returns a new array of the same length).</li><li><code>filter</code> keeps the elements that pass a condition.</li><li><code>reduce</code> folds the array into a single value.</li><li><code>forEach</code> returns nothing, <strong class=\"k\">cannot <code>break</code></strong>, and does not wait for <code>await</code> inside its callback.</li><li><code>for...of</code> supports <code>break</code>, <code>continue</code> and <code>await</code>.</li></ul>",
+        "vi": "<ul><li><code>map</code> biến đổi từng phần tử (trả mảng mới cùng độ dài).</li><li><code>filter</code> giữ phần tử thỏa điều kiện.</li><li><code>reduce</code> gom thành một giá trị.</li><li><code>forEach</code> không trả giá trị và <strong class=\"k\">không <code>break</code> được</strong>, cũng không chờ <code>await</code> bên trong callback.</li><li><code>for...of</code> dùng được <code>break</code>/<code>continue</code>/<code>await</code>.</li></ul>"
+      },
+      "terms": [
+        "map",
+        "filter",
+        "reduce",
+        "forEach"
+      ]
+    },
+    {
+      "id": "q29",
+      "number": 29,
+      "tag": "JS core · Hiệu năng UI",
+      "title": "What is the difference between debounce and throttle, and where do you use each?",
+      "titleVi": "Debounce và throttle khác nhau thế nào, dùng ở đâu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Debounce = đợi ngừng thao tác",
+          "Throttle = tối đa 1 lần / X ms",
+          "Ví dụ cho từng loại"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Debounce:</strong> wait until the user has stopped for X ms, then run (search box, validate-as-you-type, the final <code>resize</code>).</li><li><strong class=\"k\">Throttle:</strong> run at most once every X ms (<code>scroll</code>, <code>mousemove</code>, a button that gets clicked repeatedly).</li></ul>",
+        "vi": "<ul><li><strong class=\"k\">Debounce:</strong> đợi người dùng ngừng thao tác X ms mới chạy (ô tìm kiếm, validate khi gõ, <code>resize</code> cuối cùng).</li><li><strong class=\"k\">Throttle:</strong> chạy tối đa một lần mỗi X ms (<code>scroll</code>, <code>mousemove</code>, nút bấm liên tục).</li></ul>"
+      },
+      "terms": [
+        "debounce",
+        "throttle"
+      ]
+    }
+  ]
+}

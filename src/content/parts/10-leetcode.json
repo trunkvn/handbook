@@ -1,0 +1,131 @@
+{
+  "id": "part-10",
+  "slug": "leetcode",
+  "roman": "X",
+  "title": "LeetCode",
+  "description": "Năm bài hash/mảng của ngày 1: tự giải trước 15–20 phút rồi mới xem đáp án.",
+  "questions": [
+    {
+      "id": "q44",
+      "number": 44,
+      "tag": "LeetCode · Hash · Easy",
+      "title": "LeetCode 217. Contains Duplicate (Easy): return true if any value appears at least twice in the array.",
+      "titleVi": "LeetCode 217. Contains Duplicate (Easy): trả về true nếu có giá trị xuất hiện từ hai lần trở lên trong mảng.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Đưa vào <code>Set</code>",
+          "So sánh kích thước với độ dài mảng",
+          "Độ phức tạp O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> put the numbers in a <code>Set</code>. If the set is smaller than the array, something repeated.</p> <pre><code>const containsDuplicate = nums =&gt; new Set(nums).size !== nums.length;</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(n) space.</p> <p><strong class=\"k\">Alternative:</strong> sort the array and compare neighbors: O(n log n) time but O(1) extra space.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> đưa vào <code>Set</code>; nếu kích thước nhỏ hơn độ dài mảng thì có trùng.</p> <pre><code>const containsDuplicate = nums =&gt; new Set(nums).size !== nums.length;</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(n) bộ nhớ.</p> <p><strong class=\"k\">Cách khác:</strong> sort rồi so sánh phần tử kề nhau, O(n log n) nhưng O(1) bộ nhớ.</p>"
+      },
+      "terms": [
+        "Set",
+        "hash",
+        "O(n)"
+      ]
+    },
+    {
+      "id": "q45",
+      "number": 45,
+      "tag": "LeetCode · Hash · Easy",
+      "title": "LeetCode 1. Two Sum (Easy): return the indices of two numbers that add up to the target.",
+      "titleVi": "LeetCode 1. Two Sum (Easy): trả về chỉ số của hai số có tổng bằng target.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Với mỗi <code>x</code>, cần <code>target - x</code>",
+          "<code>Map</code>: giá trị → chỉ số",
+          "Tra TRƯỚC rồi mới thêm",
+          "O(n)"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> for each number <code>x</code>, we need <code>target - x</code>. Keep a <code>Map</code> of <code>value → index</code>. <strong class=\"k\">Look up first, then insert</strong>, so the same element is not used twice.</p> <pre><code>function twoSum(nums, target) {\n  const seen = new Map();\n  for (let i = 0; i &lt; nums.length; i++) {\n    const need = target - nums[i];\n    if (seen.has(need)) return [seen.get(need), i];\n    seen.set(nums[i], i);\n  }\n  return [];\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(n) space.</p> <p><strong class=\"k\">Follow-up:</strong> if the array is already sorted, use two pointers for O(1) space.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> với mỗi số <code>x</code>, cần tìm <code>target - x</code> đã gặp chưa. Dùng <code>Map</code> lưu <code>giá trị → chỉ số</code>, <strong class=\"k\">tra trước rồi mới thêm</strong> để không dùng một phần tử hai lần.</p> <pre><code>function twoSum(nums, target) {\n  const seen = new Map();\n  for (let i = 0; i &lt; nums.length; i++) {\n    const need = target - nums[i];\n    if (seen.has(need)) return [seen.get(need), i];\n    seen.set(nums[i], i);\n  }\n  return [];\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(n) bộ nhớ.</p> <p><strong class=\"k\">Hỏi thêm:</strong> nếu mảng đã sort thì dùng two pointers, O(1) bộ nhớ.</p>"
+      },
+      "terms": [
+        "Map",
+        "complement",
+        "two pointers"
+      ]
+    },
+    {
+      "id": "q46",
+      "number": 46,
+      "tag": "LeetCode · Hash · Easy",
+      "title": "LeetCode 242. Valid Anagram (Easy): check whether t is an anagram of s.",
+      "titleVi": "LeetCode 242. Valid Anagram (Easy): kiểm tra t có phải anagram của s không.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Khác độ dài → false",
+          "Đếm tần suất ký tự",
+          "Mảng 26 phần tử → O(1) bộ nhớ"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> count character frequencies of both strings and compare. Here we add for <code>s</code> and subtract for <code>t</code> in one pass.</p> <pre><code>function isAnagram(s, t) {\n  if (s.length !== t.length) return false;\n  const count = new Array(26).fill(0);\n  for (let i = 0; i &lt; s.length; i++) {\n    count[s.charCodeAt(i) - 97]++;\n    count[t.charCodeAt(i) - 97]--;\n  }\n  return count.every(c =&gt; c === 0);\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(1) space (a fixed array of 26).</p> <p><strong class=\"k\">Follow-up:</strong> with Unicode characters, replace the array with a <code>Map</code>.</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> đếm tần suất ký tự của hai chuỗi, so sánh. Ở đây cộng cho <code>s</code> và trừ cho <code>t</code> trong một lượt.</p> <pre><code>function isAnagram(s, t) {\n  if (s.length !== t.length) return false;\n  const count = new Array(26).fill(0);\n  for (let i = 0; i &lt; s.length; i++) {\n    count[s.charCodeAt(i) - 97]++;\n    count[t.charCodeAt(i) - 97]--;\n  }\n  return count.every(c =&gt; c === 0);\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n), O(1) bộ nhớ (mảng 26 cố định).</p> <p><strong class=\"k\">Hỏi thêm (follow-up):</strong> nếu có ký tự Unicode thì đổi mảng thành <code>Map</code>.</p>"
+      },
+      "terms": [
+        "frequency count",
+        "anagram",
+        "O(1) space"
+      ]
+    },
+    {
+      "id": "q47",
+      "number": 47,
+      "tag": "LeetCode · Hash · Medium",
+      "title": "LeetCode 49. Group Anagrams (Medium): group the strings that are anagrams of each other.",
+      "titleVi": "LeetCode 49. Group Anagrams (Medium): gom các chuỗi là anagram của nhau.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Anagram có cùng \"chữ ký\"",
+          "Chữ ký = chuỗi đã sort (hoặc mảng đếm)",
+          "Gom vào <code>Map</code> theo chữ ký"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> anagrams share the same \"signature\": the sorted string, or a 26-count array. Group the strings in a <code>Map</code> keyed by that signature.</p> <pre><code>function groupAnagrams(strs) {\n  const groups = new Map();\n  for (const s of strs) {\n    const key = [...s].sort().join('');\n    if (!groups.has(key)) groups.set(key, []);\n    groups.get(key).push(s);\n  }\n  return [...groups.values()];\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n · k log k) for n strings of length at most k. Using the count array as the key brings it to O(n · k).</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> các anagram có cùng \"chữ ký\". Chữ ký là chuỗi sau khi sort, hoặc mảng đếm 26 ký tự. Gom vào <code>Map</code> theo chữ ký.</p> <pre><code>function groupAnagrams(strs) {\n  const groups = new Map();\n  for (const s of strs) {\n    const key = [...s].sort().join('');\n    if (!groups.has(key)) groups.set(key, []);\n    groups.get(key).push(s);\n  }\n  return [...groups.values()];\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n · k log k) với n chuỗi dài tối đa k. Dùng mảng đếm làm khóa thì còn O(n · k).</p>"
+      },
+      "terms": [
+        "Map",
+        "grouping",
+        "signature key"
+      ]
+    },
+    {
+      "id": "q48",
+      "number": 48,
+      "tag": "LeetCode · Prefix/Suffix · Medium",
+      "title": "LeetCode 238. Product of Array Except Self (Medium): return an array where each element is the product of all other elements, without division.",
+      "titleVi": "LeetCode 238. Product of Array Except Self (Medium): trả về mảng mà mỗi phần tử là tích của mọi phần tử còn lại, không dùng phép chia.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Kết quả[i] = tích bên trái × tích bên phải",
+          "Quét trái → phải: tích tiền tố",
+          "Quét phải → trái: nhân thêm tích hậu tố",
+          "O(n), O(1) bộ nhớ phụ"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Idea:</strong> the answer at <code>i</code> = (product of everything left of <code>i</code>) × (product of everything right of <code>i</code>). Sweep left to right storing prefix products in the result array, then sweep right to left multiplying in the suffix product. No division needed.</p> <pre><code>function productExceptSelf(nums) {\n  const n = nums.length;\n  const res = new Array(n).fill(1);\n\n  let prefix = 1;\n  for (let i = 0; i &lt; n; i++) { res[i] = prefix; prefix *= nums[i]; }\n\n  let suffix = 1;\n  for (let i = n - 1; i &gt;= 0; i--) { res[i] *= suffix; suffix *= nums[i]; }\n\n  return res;\n}</code></pre> <p><strong class=\"k\">Complexity:</strong> O(n) time, O(1) extra space (not counting the output array).</p>",
+        "vi": "<p><strong class=\"k\">Ý tưởng:</strong> kết quả tại <code>i</code> = (tích mọi số bên trái <code>i</code>) × (tích mọi số bên phải <code>i</code>). Không dùng phép chia. Quét trái → phải lưu tích tiền tố vào mảng kết quả, rồi quét phải → trái nhân thêm tích hậu tố.</p> <pre><code>function productExceptSelf(nums) {\n  const n = nums.length;\n  const res = new Array(n).fill(1);\n\n  let prefix = 1;\n  for (let i = 0; i &lt; n; i++) { res[i] = prefix; prefix *= nums[i]; }\n\n  let suffix = 1;\n  for (let i = n - 1; i &gt;= 0; i--) { res[i] *= suffix; suffix *= nums[i]; }\n\n  return res;\n}</code></pre> <p><strong class=\"k\">Độ phức tạp:</strong> O(n) thời gian, O(1) bộ nhớ phụ (không tính mảng kết quả).</p>"
+      },
+      "terms": [
+        "prefix product",
+        "suffix product",
+        "O(1) space"
+      ]
+    }
+  ]
+}

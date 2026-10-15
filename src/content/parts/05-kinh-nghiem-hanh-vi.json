@@ -1,0 +1,86 @@
+{
+  "id": "part-5",
+  "slug": "kinh-nghiem-hanh-vi",
+  "roman": "V",
+  "title": "Kinh nghiệm & hành vi",
+  "description": "Các câu behavioral: nêu bối cảnh, hành động, và bài học rút ra.",
+  "questions": [
+    {
+      "id": "q15",
+      "number": 15,
+      "tag": "Behavioral · Tự đánh giá",
+      "title": "What would you do differently in these projects?",
+      "titleVi": "Nếu làm lại các dự án này, bạn sẽ làm khác điều gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Làm sớm: kiến trúc + edge case",
+          "Ví dụ 1: xác thực",
+          "Ví dụ 2: UI library",
+          "Bài học: quyết định sớm giảm rework"
+        ]
+      },
+      "answer": {
+        "en": "<p> If I could do these projects again, I would invest more time in <strong class=\"k\" >defining the architecture and identifying potential edge cases</strong> before implementation. </p> <p> For example, in authentication-related features, I would establish clearer session management and token-handling strategies earlier. For shared UI components, I would define API conventions, accessibility requirements, and testing standards from the beginning. </p> <p> I learned that making these decisions early can <strong class=\"k\">reduce rework</strong> and make the codebase easier to maintain as the project grows. </p>",
+        "vi": "<p> Nếu có cơ hội thực hiện lại những dự án này, tôi sẽ dành nhiều thời gian hơn để xác định kiến trúc và tìm ra các trường hợp ngoại lệ tiềm ẩn trước khi bắt đầu triển khai. </p> <p> Ví dụ, với các tính năng liên quan đến xác thực, tôi sẽ xác định rõ hơn cách quản lý session và xử lý token ngay từ đầu. Đối với thư viện UI component dùng chung, tôi sẽ thiết lập các quy ước về API, yêu cầu accessibility và tiêu chuẩn kiểm thử ngay từ giai đoạn đầu. </p> <p> Tôi nhận ra rằng việc đưa ra những quyết định này sớm có thể giảm thiểu việc phải sửa lại code và giúp codebase dễ bảo trì hơn khi dự án phát triển. </p>"
+      },
+      "terms": [
+        "architecture",
+        "edge cases",
+        "accessibility",
+        "maintainability"
+      ]
+    },
+    {
+      "id": "q16",
+      "number": 16,
+      "tag": "Behavioral · Kỹ thuật",
+      "title": "What was one of the hardest technical problems you've solved?",
+      "titleVi": "Vấn đề kỹ thuật khó nhất bạn từng giải quyết là gì?",
+      "framework": {
+        "title": "Khung trả lời (STAR)",
+        "steps": [
+          "Situation: đặt lịch trùng",
+          "Task / thách thức: race condition",
+          "Action: ràng buộc ở DB (PostgreSQL)",
+          "Result + bài học"
+        ]
+      },
+      "answer": {
+        "en": "<p> One of the hardest technical problems I worked on recently was <strong class=\"k\">preventing overlapping bookings</strong> in a full-stack application. </p> <p> The challenge was that two users could try to book the same time slot almost simultaneously. Checking availability only on the frontend or in the application logic was not enough, because <strong class=\"k\">concurrent requests</strong> could still create a conflict. </p> <p> I addressed this by <strong class=\"k\" >enforcing the booking constraint at the database level</strong> using PostgreSQL, in addition to validating availability in the backend. I also tested concurrent booking scenarios to make sure conflicts were handled correctly. </p> <p> This taught me that important business rules should be enforced at the appropriate system layer, especially when concurrency is involved. </p>",
+        "vi": "<p> Một trong những vấn đề kỹ thuật khó nhất tôi từng xử lý là ngăn chặn tình trạng đặt lịch bị trùng trong một ứng dụng đặt lịch có cả frontend và backend. </p> <p> Khó khăn nằm ở việc hai người dùng có thể gần như đồng thời đặt cùng một khung giờ. Chỉ kiểm tra tính khả dụng ở frontend hoặc trong logic ứng dụng là chưa đủ, vì các request đồng thời vẫn có thể gây ra xung đột. </p> <p> Tôi giải quyết bằng cách áp đặt ràng buộc đặt lịch ở cấp cơ sở dữ liệu bằng PostgreSQL, đồng thời kiểm tra tính khả dụng ở backend. Tôi cũng kiểm thử các tình huống đặt lịch đồng thời để đảm bảo hệ thống xử lý xung đột chính xác. </p> <p> Qua đó, tôi hiểu rằng các quy tắc nghiệp vụ quan trọng cần được đảm bảo ở đúng tầng của hệ thống, đặc biệt khi có vấn đề về xử lý đồng thời. </p>"
+      },
+      "terms": [
+        "race condition",
+        "concurrency",
+        "PostgreSQL",
+        "DB constraint"
+      ]
+    },
+    {
+      "id": "q17",
+      "number": 17,
+      "tag": "Behavioral · Làm việc nhóm",
+      "title": "Tell me about a disagreement and how you handled it.",
+      "titleVi": "Hãy kể về một lần bất đồng quan điểm và cách bạn xử lý.",
+      "framework": {
+        "title": "Khung trả lời (STAR)",
+        "steps": [
+          "Bối cảnh: component dùng chung",
+          "Hai quan điểm",
+          "Hành động: bàn use case, so sánh",
+          "Kết quả + bài học"
+        ]
+      },
+      "answer": {
+        "en": "<p> In one project, I had a disagreement with a teammate about how to implement a shared UI component. I preferred a more reusable solution, while my teammate was concerned that it might add <strong class=\"k\">unnecessary complexity</strong> for a relatively simple requirement. </p> <p> Instead of insisting on my approach, I <strong class=\"k\">discussed the actual use cases</strong> with them and compared both options in terms of maintainability, complexity, and future requirements. We agreed on a simpler implementation that met the current needs while leaving room for future extension. </p> <p> The experience taught me that a good technical decision is not always the most sophisticated one. It should <strong class=\"k\">solve the actual problem</strong>, and the team should understand and agree on the trade-offs. </p>",
+        "vi": "<p> Trong một dự án, tôi từng bất đồng với đồng nghiệp về cách triển khai một UI component dùng chung. Tôi thiên về giải pháp có tính tái sử dụng cao hơn, trong khi đồng nghiệp lo rằng nó sẽ thêm độ phức tạp không cần thiết cho một yêu cầu tương đối đơn giản. </p> <p> Thay vì khăng khăng giữ cách của mình, tôi cùng đồng nghiệp thảo luận các use case thực tế và so sánh hai phương án về khả năng bảo trì, độ phức tạp và các yêu cầu trong tương lai. Chúng tôi thống nhất chọn một cách triển khai đơn giản hơn, đáp ứng nhu cầu hiện tại và vẫn chừa chỗ cho việc mở rộng sau này. </p> <p> Trải nghiệm này dạy tôi rằng một quyết định kỹ thuật tốt không phải lúc nào cũng là giải pháp tinh vi nhất. Nó cần giải quyết đúng vấn đề thực tế, và cả nhóm phải hiểu và đồng thuận về các đánh đổi (trade-offs). </p>"
+      },
+      "terms": [
+        "trade-offs",
+        "collaboration",
+        "reusable component"
+      ]
+    }
+  ]
+}

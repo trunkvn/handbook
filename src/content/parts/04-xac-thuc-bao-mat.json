@@ -1,0 +1,183 @@
+{
+  "id": "part-4",
+  "slug": "xac-thuc-bao-mat",
+  "roman": "IV",
+  "title": "Xác thực & bảo mật",
+  "description": "Token, cookie, OAuth, phiên đăng nhập. Phần dễ bị hỏi sâu nhất, nên nắm chắc lý do đằng sau mỗi lựa chọn.",
+  "questions": [
+    {
+      "id": "q09",
+      "number": 9,
+      "tag": "Xác thực · Cookie",
+      "title": "Where do you store the token, and why?",
+      "titleVi": "Bạn lưu token ở đâu và vì sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "HttpOnly: chống XSS đọc token",
+          "Secure: chỉ qua HTTPS",
+          "Domain .oeg.vn: SSO",
+          "Set bằng server action"
+        ]
+      },
+      "answer": {
+        "en": "<p> My main token is stored in an <strong class=\"k\">HttpOnly, Secure cookie</strong> on the <code>.oeg.vn</code> domain. </p> <ul> <li> <code>HttpOnly</code> means JavaScript can't read it, which limits the damage if there's an XSS. </li> <li> <code>Secure</code> means it's only sent over HTTPS. </li> <li> Setting it on <code>.oeg.vn</code> lets subdomains <strong class=\"k\">share the session</strong>, so signing in on the profile site means the game recognises you too. That's how our SSO works. </li> </ul> <p> The cookie is set from a <strong class=\"k\">server action</strong>, and server-side API calls read the token from the cookie and attach it to the header, so the token never passes through client-side code. </p>",
+        "vi": "<p> Token chính của tôi được lưu trong cookie <code>HttpOnly</code>, <code>Secure</code> trên domain <code>.oeg.vn</code>. </p> <ul> <li> <code>HttpOnly</code> nghĩa là JavaScript không đọc được, giúp hạn chế thiệt hại nếu xảy ra XSS. </li> <li> <code>Secure</code> nghĩa là cookie chỉ được gửi qua HTTPS. </li> <li> Đặt ở <code>.oeg.vn</code> cho phép các subdomain dùng chung phiên, nên đăng nhập ở trang profile thì game cũng nhận ra bạn. Đó là cách SSO của chúng tôi hoạt động. </li> </ul> <p> Cookie được set từ server action; các lệnh gọi API phía server đọc token từ cookie và gắn vào header, nên token không bao giờ đi qua code phía client. </p>"
+      },
+      "terms": [
+        "HttpOnly",
+        "Secure",
+        "XSS",
+        "SSO",
+        "server action"
+      ]
+    },
+    {
+      "id": "q10",
+      "number": 10,
+      "tag": "Xác thực · OAuth",
+      "title": "How does OAuth work and how do you protect it?",
+      "titleVi": "OAuth hoạt động như thế nào và bảo vệ nó ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Popup đăng nhập → access token",
+          "Frontend → server action → backend",
+          "Backend verify với provider",
+          "Trả token của hệ thống (HttpOnly)",
+          "Bảo vệ: SDK, đổi token ở server"
+        ]
+      },
+      "answer": {
+        "en": "<p> I use the <strong class=\"k\">Google Identity Services</strong> popup and the <strong class=\"k\">Facebook JS SDK</strong>. The user signs in in the popup, the SDK returns an access token to the frontend, and the frontend sends it through a server action to the backend. </p> <p> The backend <strong class=\"k\" >verifies the token with the provider</strong>, finds or creates the account, and returns <strong class=\"k\">our own token</strong>, which is set in an HttpOnly cookie. We don't store the Google or Facebook token. </p> <h5>Protection</h5> <p> The official SDK handles <strong class=\"k\">state and CSRF</strong>, the token exchange happens on the server, and the final result is an HttpOnly cookie. </p>",
+        "vi": "<p> Tôi dùng popup Google Identity Services và Facebook JS SDK. Người dùng đăng nhập trong popup, SDK trả về một access token cho frontend, và frontend gửi token đó qua server action đến backend. </p> <p> Backend xác minh token với provider, tìm hoặc tạo tài khoản, rồi trả về token của chính hệ thống chúng tôi và được set trong cookie HttpOnly. Chúng tôi không lưu token của Google hay Facebook. </p> <h5>Bảo vệ</h5> <p> SDK chính thức xử lý state và CSRF, việc trao đổi token diễn ra ở server, và kết quả cuối cùng là cookie HttpOnly. </p>"
+      },
+      "terms": [
+        "OAuth",
+        "access token",
+        "CSRF",
+        "state"
+      ]
+    },
+    {
+      "id": "q11",
+      "number": 11,
+      "tag": "Xác thực · Độ tin cậy",
+      "title": "What if the token expires in the middle of a request?",
+      "titleVi": "Nếu token hết hạn giữa chừng một request thì sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "401 → refresh một lần",
+          "Gộp nhiều refresh thành một",
+          "Retry đúng một lần",
+          "Refresh lỗi → login, giữ URL",
+          "Ngoại lệ: thanh toán"
+        ]
+      },
+      "answer": {
+        "en": "<p> The server returns a <code>401</code>. If there's a refresh token, I call refresh <strong class=\"k\">once</strong>, and when several requests hit 401 at the same time they <strong class=\"k\">share a single refresh</strong>, so we don't fire parallel refreshes. After refreshing, I <strong class=\"k\" >retry the original request exactly once</strong>. </p> <p> If the refresh fails, I clear the signed-in state and redirect to the login page, keeping the URL so the user can return afterwards. </p> <h5>Exception: payments</h5> <p> I don't retry blindly, because a POST that creates a transaction may already have been processed before the error came back. I <strong class=\"k\" >check the order status by <code>order_code</code></strong> before resending, to avoid duplicate orders or charging twice. </p>",
+        "vi": "<p> Server trả về <code>401</code>. Nếu có refresh token, tôi gọi refresh một lần; khi nhiều request cùng gặp 401, chúng dùng chung một lần refresh để không phát sinh nhiều refresh song song. Sau khi refresh, tôi thử lại request ban đầu đúng một lần. </p> <p> Nếu refresh thất bại, tôi xóa trạng thái đăng nhập và chuyển về trang login, đồng thời giữ lại URL để người dùng quay lại sau đó. </p> <h5>Ngoại lệ: thanh toán</h5> <p> Tôi không retry mù quáng, vì một POST tạo giao dịch có thể đã được xử lý xong trước khi lỗi trả về. Tôi kiểm tra trạng thái đơn theo <code>order_code</code> trước khi gửi lại, để tránh tạo trùng đơn hoặc trừ tiền hai lần. </p>"
+      },
+      "terms": [
+        "401",
+        "refresh token",
+        "single-flight",
+        "retry",
+        "order_code"
+      ]
+    },
+    {
+      "id": "q12",
+      "number": 12,
+      "tag": "Xác thực · Phiên đăng nhập",
+      "title": "Besides checking when focus is enabled, are there any other ways to synchronize logouts between tabs?",
+      "titleVi": "Ngoài việc kiểm tra khi tab được focus, còn cách nào khác để đồng bộ đăng xuất giữa các tab?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "BroadcastChannel",
+          "storage event (fallback)",
+          "Server revoke session = lớp quyết định"
+        ]
+      },
+      "answer": {
+        "en": "<p> Besides validating the session when a tab regains focus, I can use the <strong class=\"k\">BroadcastChannel API</strong> to notify other tabs when a user logs out. Each tab listens for a logout event and clears its local authentication state immediately. For broader compatibility, I can use the <strong class=\"k\">storage event</strong> with a shared <code>localStorage</code> key as a fallback. </p> <p> However, I would only broadcast the logout event, not store sensitive tokens in local storage. Since client-side synchronization is <strong class=\"k\">not a security boundary</strong>, each tab must still rely on server-side session validation. If the session is revoked, protected API requests should be rejected even if another tab has not received the logout event yet. </p> <h5>Three mechanisms</h5> <ol> <li> <strong>BroadcastChannel API.</strong> Tab A logs out and sends a logout event. Tabs B and C, open on the same origin, receive it, update the UI and redirect the user to the login page. Advantage: direct communication between tabs, no polling. </li> <li> <strong>Storage event.</strong> Tab A changes a key in <code>localStorage</code>; other tabs on the same origin receive a <code>storage</code> event. Note: the event is not fired in the tab that made the change. Don't store refresh tokens in <code>localStorage</code> just to sync tabs. </li> <li> <strong>Server-side session revocation.</strong> This is the decisive security layer. On logout, the server revokes the session or the corresponding refresh-token family. A tab that hasn't received the event still can't use the revoked session for authenticated requests. </li> </ol>",
+        "vi": "<p> Ngoài việc xác thực phiên khi tab được focus lại, tôi có thể dùng BroadcastChannel API để báo cho các tab khác khi người dùng đăng xuất. Mỗi tab lắng nghe sự kiện logout và xóa ngay trạng thái xác thực cục bộ. Để tương thích rộng hơn, tôi có thể dùng storage event với một khóa <code>localStorage</code> dùng chung làm phương án dự phòng. </p> <p> Tuy nhiên, tôi chỉ phát sự kiện logout, không lưu token nhạy cảm vào local storage. Vì đồng bộ phía client không phải ranh giới bảo mật, mỗi tab vẫn phải dựa vào việc xác thực phiên ở phía server. Nếu phiên bị thu hồi, các request API được bảo vệ phải bị từ chối, kể cả khi một tab khác chưa kịp nhận sự kiện logout. </p> <h5>Ba cơ chế</h5> <ol> <li> <strong>BroadcastChannel API.</strong> Tab A đăng xuất và gửi sự kiện logout. Tab B, C đang mở cùng origin nhận sự kiện, cập nhật UI và chuyển người dùng về trang đăng nhập. Ưu điểm: giao tiếp trực tiếp giữa các tab, không cần polling. </li> <li> <strong>Storage event.</strong> Tab A thay đổi một khóa trong <code>localStorage</code>; các tab khác cùng origin nhận sự kiện <code>storage</code>. Lưu ý: sự kiện này không được phát trên chính tab thực hiện thay đổi. Không nên dùng <code>localStorage</code> để lưu refresh token chỉ vì muốn đồng bộ giữa các tab. </li> <li> <strong>Server-side session revocation.</strong> Đây mới là lớp bảo mật quyết định. Khi đăng xuất, server thu hồi session hoặc refresh-token family tương ứng. Tab nào chưa kịp nhận sự kiện vẫn không thể tiếp tục sử dụng session đã bị thu hồi cho các request cần xác thực. </li> </ol>"
+      },
+      "terms": [
+        "BroadcastChannel",
+        "storage event",
+        "session revocation"
+      ]
+    },
+    {
+      "id": "q13",
+      "number": 13,
+      "tag": "Bảo mật · Cookie · CSRF",
+      "title": "A cookie shared across .oeg.vn: what if one subdomain is hit by XSS or taken over?",
+      "titleVi": "Cookie dùng chung .oeg.vn: một subdomain bị XSS hoặc bị chiếm quyền thì sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Thừa nhận: SSO tiện nhưng tăng bán kính ảnh hưởng",
+          "HttpOnly ≠ chặn gọi request thay user",
+          "Ưu tiên host-only + identity tập trung",
+          "Bắt buộc dùng chung → thu hẹp scope, TTL"
+        ]
+      },
+      "answer": {
+        "en": "<p> A shared cookie across <code>.oeg.vn</code> simplifies SSO, but it <strong class=\"k\" >increases the security impact of a compromised subdomain</strong>. If the cookie is HttpOnly, JavaScript cannot directly read its value. However, <strong class=\"k\" >HttpOnly does not prevent malicious scripts from making authenticated requests</strong> through the user's browser. A compromised subdomain may also receive cookies scoped to the parent domain. </p> <p> To reduce this risk, I would prefer <strong class=\"k\" >host-only, Secure, HttpOnly cookies</strong> for individual applications, with a centralized identity service handling SSO through a secure authorization flow. If a shared-domain cookie is required, I would limit its scope and lifetime, enforce strict server-side authorization, validate requests, and avoid trusting any subdomain simply because it belongs to the same parent domain. </p>",
+        "vi": "<p> Cookie dùng chung trên <code>.oeg.vn</code> giúp SSO đơn giản hơn, nhưng làm tăng mức ảnh hưởng bảo mật khi một subdomain bị xâm phạm. Nếu cookie là HttpOnly, JavaScript không thể đọc trực tiếp giá trị của nó. Tuy nhiên, HttpOnly không ngăn được script độc hại gửi các request đã xác thực thông qua trình duyệt của người dùng. Một subdomain bị chiếm quyền cũng có thể nhận các cookie có phạm vi ở domain cha. </p> <p> Để giảm rủi ro, tôi sẽ ưu tiên cookie host-only, Secure, HttpOnly cho từng ứng dụng, với một dịch vụ định danh tập trung xử lý SSO qua luồng ủy quyền an toàn. Nếu bắt buộc dùng cookie chung domain, tôi sẽ giới hạn phạm vi và thời gian sống, thực thi phân quyền chặt chẽ ở server, kiểm tra request, và không tin một subdomain chỉ vì nó thuộc cùng domain cha. </p>"
+      },
+      "terms": [
+        "host-only cookie",
+        "SameSite",
+        "CSRF",
+        "Origin",
+        "Server Actions"
+      ],
+      "extras": [
+        {
+          "title": "Mở rộng · Chống CSRF khi dùng cookie",
+          "en": "<p> Because browsers automatically attach cookies to matching requests, I'd use <strong class=\"k\" >multiple layers of CSRF protection</strong> instead of relying on a single mechanism. </p> <ol> <li> Configure the session cookie with <code>Secure</code>, <code>HttpOnly</code> and an appropriate <code>SameSite</code> policy, typically <code>Lax</code> if the app's flow allows it. </li> <li> For state-changing requests, <strong class=\"k\" >verify the <code>Origin</code> header</strong> and use a CSRF token where needed. </li> <li>Ensure GET requests never change state or data.</li> </ol> <p> In Next.js, Server Actions provide some useful built-in protections, including <code>Origin</code> and <code>Host</code> checks. However, they are <strong class=\"k\" >no substitute for authentication, authorization, or secure cookie configuration</strong>. So I'd still verify the session and the user's permissions inside each action, and separately review custom API endpoints to make sure they are properly protected. </p>",
+          "vi": "<p> Vì trình duyệt tự động đính kèm cookie vào các request phù hợp, tôi sẽ sử dụng nhiều lớp bảo vệ chống CSRF thay vì chỉ dựa vào một cơ chế duy nhất. </p> <ol> <li> Cấu hình session cookie với các thuộc tính <code>Secure</code>, <code>HttpOnly</code> và chính sách <code>SameSite</code> phù hợp, thường là <code>Lax</code> nếu luồng hoạt động của ứng dụng cho phép. </li> <li> Với các request làm thay đổi dữ liệu, kiểm tra header <code>Origin</code> và sử dụng CSRF token khi cần thiết. </li> <li> Đảm bảo các request GET không thực hiện thao tác làm thay đổi trạng thái hoặc dữ liệu. </li> </ol> <p> Trong Next.js, Server Actions cung cấp một số cơ chế bảo vệ tích hợp hữu ích, bao gồm kiểm tra <code>Origin</code> và <code>Host</code>. Tuy nhiên, chúng không thể thay thế việc xác thực (authentication), kiểm tra quyền truy cập (authorization) hoặc cấu hình cookie an toàn. Vì vậy, tôi vẫn kiểm tra session và quyền hạn của người dùng bên trong từng action, đồng thời đánh giá riêng các API endpoint tùy chỉnh để đảm bảo chúng cũng được bảo vệ phù hợp. </p>"
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "number": 14,
+      "tag": "Xác thực · Token",
+      "title": "Where do you store the refresh token?",
+      "titleVi": "Bạn lưu refresh token ở đâu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "BFF: giữ refresh token ở server",
+          "Browser chỉ giữ session cookie",
+          "Vì sao nhạy cảm",
+          "Rotation + revoke family",
+          "Access token ngắn hạn"
+        ]
+      },
+      "answer": {
+        "en": "<p> For a web application using a backend-for-frontend, I would <strong class=\"k\" >keep refresh tokens on the server side</strong> whenever possible, rather than exposing them to browser JavaScript. The browser would hold a session cookie configured with HttpOnly, Secure and a SameSite policy. The backend would associate that session with the refresh token stored securely on the server, ideally in a protected database or session store. </p> <p> Refresh tokens are particularly sensitive because they can be exchanged for new access tokens, potentially extending an attacker's access beyond the lifetime of a single access token. </p> <p> I would use <strong class=\"k\">refresh-token rotation</strong>, <strong class=\"k\" >revoke the token family when reuse is detected</strong>, and invalidate the session on logout. Access tokens should have a relatively short lifetime, and refresh tokens should have appropriate expiration and revocation policies. </p>",
+        "vi": "<p> Với ứng dụng web dùng kiến trúc Backend-for-Frontend (BFF), tôi sẽ lưu refresh token ở phía máy chủ bất cứ khi nào có thể, thay vì để JavaScript trên trình duyệt truy cập trực tiếp. Trình duyệt giữ một session cookie được cấu hình HttpOnly, Secure và chính sách SameSite phù hợp. Backend liên kết phiên đó với refresh token được lưu an toàn ở phía máy chủ, lý tưởng nhất là trong cơ sở dữ liệu hoặc session store được bảo vệ. </p> <p> Refresh token đặc biệt nhạy cảm vì nó có thể dùng để lấy access token mới, từ đó có khả năng kéo dài thời gian truy cập của kẻ tấn công vượt quá thời hạn của một access token đơn lẻ. </p> <p> Tôi sẽ triển khai refresh-token rotation (luân chuyển refresh token), thu hồi toàn bộ nhóm token liên quan nếu phát hiện token bị dùng lại bất thường, và vô hiệu hóa session khi đăng xuất. Access token nên có thời hạn tương đối ngắn, còn refresh token cần có chính sách hết hạn và thu hồi phù hợp. </p>"
+      },
+      "terms": [
+        "refresh token",
+        "rotation",
+        "token family",
+        "BFF"
+      ],
+      "extras": [
+        {
+          "title": "Nếu bắt buộc lưu ở trình duyệt",
+          "en": "<p> If the architecture requires the browser to store the refresh token directly, I would prefer a <strong class=\"k\" >protected cookie over <code>localStorage</code></strong>, and add measures to handle the associated CSRF (Cross-Site Request Forgery) risks. </p>",
+          "vi": "<p> Nếu kiến trúc bắt buộc trình duyệt phải trực tiếp lưu refresh token, tôi sẽ ưu tiên dùng cookie được bảo vệ thay vì <code>localStorage</code>, đồng thời có biện pháp xử lý các rủi ro liên quan đến CSRF (Cross-Site Request Forgery). </p>"
+        }
+      ]
+    }
+  ]
+}

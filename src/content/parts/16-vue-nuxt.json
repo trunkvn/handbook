@@ -1,0 +1,196 @@
+{
+  "id": "part-16",
+  "slug": "vue-nuxt",
+  "roman": "XVI",
+  "title": "Vue & Nuxt",
+  "description": "Ngày 4: reactivity của Vue 3, Pinia, data fetching và chiến lược render của Nuxt, code an toàn cho SSR.",
+  "questions": [
+    {
+      "id": "q79",
+      "number": 79,
+      "tag": "Vue · Reactivity",
+      "title": "How does Vue 3 reactivity work? What is the difference between <code>ref</code> and <code>reactive</code>, and what is the destructuring pitfall?",
+      "titleVi": "Reactivity của Vue 3 hoạt động thế nào? <code>ref</code> và <code>reactive</code> khác nhau ra sao, và bẫy khi destructure là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Vue 3 dùng Proxy theo dõi truy cập và thay đổi",
+          "<code>ref</code> bọc giá trị (<code>.value</code>), <code>reactive</code> cho object",
+          "Destructure <code>reactive</code> làm mất reactivity",
+          "Giải pháp: <code>toRefs</code> / <code>toRef</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p>Vue 3 wraps your data in a <strong class=\"k\">Proxy</strong>. When a render function or a <code>computed</code> <strong class=\"k\">reads</strong> a property, Vue records the dependency; when the property is <strong class=\"k\">written</strong>, Vue re-runs only the effects that depend on it. This is <strong class=\"k\">fine-grained</strong> tracking, unlike React, which re-renders a component and diffs.</p> <ul><li><strong class=\"k\"><code>ref(value)</code></strong> works with any type. You read and write it through <strong class=\"k\"><code>.value</code></strong> in script (templates unwrap it automatically).</li><li><strong class=\"k\"><code>reactive(obj)</code></strong> makes an object deeply reactive without <code>.value</code>, but it only works for <strong class=\"k\">objects</strong> and has limits.</li></ul> <h5>The pitfall</h5> <p>Destructuring a reactive object copies <strong class=\"k\">plain values</strong>, so the link to the proxy is lost. Replacing the whole variable has a similar problem.</p> <pre><code>const state = reactive({ count: 0 });\n\nconst { count } = state;            // count is a plain number: NOT reactive\nconst { count: c } = toRefs(state); // OK: c is a ref linked to state.count\n\nconst n = ref(0);\nn.value++;                          // needs .value in script</code></pre> <p>Many teams prefer <strong class=\"k\"><code>ref</code> everywhere</strong> for consistency. For large objects that you replace wholesale, <code>shallowRef</code> avoids the cost of deep tracking.</p>",
+        "vi": "<p>Vue 3 bọc dữ liệu của bạn trong <strong class=\"k\">Proxy</strong>. Khi một render function hoặc <code>computed</code> <strong class=\"k\">đọc</strong> một thuộc tính, Vue ghi lại dependency; khi thuộc tính bị <strong class=\"k\">ghi</strong>, Vue chỉ chạy lại các effect phụ thuộc vào nó. Đây là theo dõi <strong class=\"k\">mịn (fine-grained)</strong>, khác với React là re-render cả component rồi diff.</p> <ul><li><strong class=\"k\"><code>ref(value)</code></strong> dùng được cho mọi kiểu. Trong script bạn đọc và ghi qua <strong class=\"k\"><code>.value</code></strong> (template tự unwrap).</li><li><strong class=\"k\"><code>reactive(obj)</code></strong> làm object reactive sâu mà không cần <code>.value</code>, nhưng chỉ dùng cho <strong class=\"k\">object</strong> và có giới hạn.</li></ul> <h5>Cái bẫy</h5> <p>Destructure một reactive object sẽ sao chép <strong class=\"k\">giá trị thường</strong>, nên liên kết với proxy bị mất. Gán lại cả biến cũng có vấn đề tương tự.</p> <pre><code>const state = reactive({ count: 0 });\n\nconst { count } = state;            // count là số thường: KHÔNG reactive\nconst { count: c } = toRefs(state); // OK: c là ref gắn với state.count\n\nconst n = ref(0);\nn.value++;                          // trong script cần .value</code></pre> <p>Nhiều team ưu tiên <strong class=\"k\">dùng <code>ref</code> cho mọi thứ</strong> để nhất quán. Với object lớn mà bạn thay thế nguyên khối, <code>shallowRef</code> tránh được chi phí theo dõi sâu.</p>"
+      },
+      "terms": [
+        "Proxy",
+        "ref",
+        "reactive",
+        "toRefs",
+        "fine-grained"
+      ]
+    },
+    {
+      "id": "q80",
+      "number": 80,
+      "tag": "Vue · Reactivity",
+      "title": "What is the difference between <code>computed</code>, <code>watch</code> and <code>watchEffect</code>?",
+      "titleVi": "<code>computed</code>, <code>watch</code> và <code>watchEffect</code> khác nhau thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>computed</code>: giá trị suy ra, có cache, thuần (không side effect)",
+          "<code>watch</code>: side effect khi nguồn cụ thể đổi",
+          "<code>watchEffect</code>: tự theo dõi dependency, chạy ngay",
+          "Quy tắc: dữ liệu suy ra → computed; side effect → watch"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\"><code>computed</code>:</strong> a <strong class=\"k\">cached, derived</strong> value. It is only recalculated when its dependencies change, and it should be <strong class=\"k\">pure</strong> (no side effects, no async).</li><li><strong class=\"k\"><code>watch</code>:</strong> runs a <strong class=\"k\">side effect</strong> (fetch, write to <code>localStorage</code>, call an API) when a <strong class=\"k\">specific source</strong> changes. It gives you the new and old values, and is lazy by default.</li><li><strong class=\"k\"><code>watchEffect</code>:</strong> runs immediately and <strong class=\"k\">automatically tracks</strong> whatever reactive values it reads. Shorter, but less explicit about what triggers it.</li></ul> <pre><code>const first = ref('Ada'), last = ref('Lovelace');\n\n// Derived data -&gt; computed\nconst fullName = computed(() =&gt; `${first.value} ${last.value}`);\n\n// Side effect -&gt; watch\nwatch(last, (newVal, oldVal) =&gt; {\n  saveDraft({ last: newVal });\n});</code></pre> <p><strong class=\"k\">Rule of thumb:</strong> if you are producing a value, use <code>computed</code>. If you are <strong class=\"k\">doing</strong> something when a value changes, use <code>watch</code>. A common mistake is using <code>watch</code> to set another ref, which should be a <code>computed</code>.</p>",
+        "vi": "<ul><li><strong class=\"k\"><code>computed</code>:</strong> giá trị <strong class=\"k\">suy ra và được cache</strong>. Chỉ tính lại khi dependency đổi, và nên <strong class=\"k\">thuần</strong> (không side effect, không async).</li><li><strong class=\"k\"><code>watch</code>:</strong> chạy một <strong class=\"k\">side effect</strong> (fetch, ghi <code>localStorage</code>, gọi API) khi một <strong class=\"k\">nguồn cụ thể</strong> đổi. Cho bạn giá trị mới và cũ, và mặc định là lazy.</li><li><strong class=\"k\"><code>watchEffect</code>:</strong> chạy ngay và <strong class=\"k\">tự động theo dõi</strong> mọi giá trị reactive nó đọc. Ngắn gọn hơn, nhưng kém tường minh về điều gì kích hoạt nó.</li></ul> <pre><code>const first = ref('Ada'), last = ref('Lovelace');\n\n// Dữ liệu suy ra -&gt; computed\nconst fullName = computed(() =&gt; `${first.value} ${last.value}`);\n\n// Side effect -&gt; watch\nwatch(last, (newVal, oldVal) =&gt; {\n  saveDraft({ last: newVal });\n});</code></pre> <p><strong class=\"k\">Quy tắc ngón tay cái:</strong> nếu bạn đang tạo ra một giá trị, dùng <code>computed</code>. Nếu bạn đang <strong class=\"k\">làm một việc</strong> khi giá trị đổi, dùng <code>watch</code>. Lỗi hay gặp là dùng <code>watch</code> để gán một ref khác, đáng lẽ phải là <code>computed</code>.</p>"
+      },
+      "terms": [
+        "computed",
+        "watch",
+        "watchEffect",
+        "side effect"
+      ]
+    },
+    {
+      "id": "q81",
+      "number": 81,
+      "tag": "Vue · State",
+      "title": "Why Pinia instead of Vuex? How do you use it with Nuxt?",
+      "titleVi": "Vì sao dùng Pinia thay vì Vuex? Dùng với Nuxt thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Bỏ <code>mutations</code>: chỉ có state, getters, actions",
+          "TypeScript và devtools tốt hơn, không có module lồng nhau",
+          "<code>storeToRefs</code> để destructure state/getters",
+          "Nuxt SSR: state được serialize và hydrate; coi chừng state chung giữa các request"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Simpler API:</strong> Pinia has <strong class=\"k\">state, getters and actions</strong> only. Vuex's <strong class=\"k\">mutations</strong> are gone, so there is less boilerplate.</li><li><strong class=\"k\">Better TypeScript</strong> inference and devtools support, and stores are <strong class=\"k\">flat and modular</strong> (no nested modules or namespaces).</li><li>It is the <strong class=\"k\">officially recommended</strong> store for Vue 3.</li></ul> <pre><code>export const useCartStore = defineStore('cart', () =&gt; {   // setup-store style\n  const items = ref([]);\n  const total = computed(() =&gt; items.value.reduce((s, i) =&gt; s + i.price, 0));\n  function add(item) { items.value.push(item); }\n  return { items, total, add };\n});\n\n// In a component: keep reactivity when destructuring\nconst cart = useCartStore();\nconst { items, total } = storeToRefs(cart);   // state and getters\nconst { add } = cart;                          // actions can be destructured directly</code></pre> <h5>With Nuxt SSR</h5> <ul><li>The <code>@pinia/nuxt</code> module <strong class=\"k\">serializes the state on the server</strong> and hydrates it on the client.</li><li>Each request gets <strong class=\"k\">its own store instance</strong>. Never keep user data in a module-level variable outside a store or <code>useState</code>: on the server it would be <strong class=\"k\">shared between different users' requests</strong>.</li></ul>",
+        "vi": "<ul><li><strong class=\"k\">API đơn giản hơn:</strong> Pinia chỉ có <strong class=\"k\">state, getters và actions</strong>. <strong class=\"k\">Mutations</strong> của Vuex đã bỏ, nên ít boilerplate hơn.</li><li><strong class=\"k\">TypeScript</strong> suy luận tốt hơn và devtools hỗ trợ tốt, store <strong class=\"k\">phẳng và theo module</strong> (không có module lồng nhau hay namespace).</li><li>Đây là store <strong class=\"k\">được khuyến nghị chính thức</strong> cho Vue 3.</li></ul> <pre><code>export const useCartStore = defineStore('cart', () =&gt; {   // kiểu setup-store\n  const items = ref([]);\n  const total = computed(() =&gt; items.value.reduce((s, i) =&gt; s + i.price, 0));\n  function add(item) { items.value.push(item); }\n  return { items, total, add };\n});\n\n// Trong component: giữ reactivity khi destructure\nconst cart = useCartStore();\nconst { items, total } = storeToRefs(cart);   // state và getters\nconst { add } = cart;                          // actions destructure trực tiếp được</code></pre> <h5>Với Nuxt SSR</h5> <ul><li>Module <code>@pinia/nuxt</code> <strong class=\"k\">serialize state ở server</strong> rồi hydrate ở client.</li><li>Mỗi request có <strong class=\"k\">instance store riêng</strong>. Không bao giờ giữ dữ liệu người dùng trong biến cấp module nằm ngoài store hoặc <code>useState</code>: ở server nó sẽ bị <strong class=\"k\">dùng chung giữa các request của những người dùng khác nhau</strong>.</li></ul>"
+      },
+      "terms": [
+        "Pinia",
+        "Vuex",
+        "storeToRefs",
+        "SSR state"
+      ]
+    },
+    {
+      "id": "q82",
+      "number": 82,
+      "tag": "Nuxt · Data fetching",
+      "title": "In Nuxt 3, what is the difference between <code>useFetch</code>, <code>useAsyncData</code> and <code>$fetch</code>?",
+      "titleVi": "Trong Nuxt 3, <code>useFetch</code>, <code>useAsyncData</code> và <code>$fetch</code> khác nhau thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>useFetch</code> = <code>useAsyncData</code> + <code>$fetch</code>",
+          "Chạy ở server, kết quả đi theo payload → client không fetch lại",
+          "<code>$fetch</code> dùng cho sự kiện/hành động, không dùng lấy dữ liệu ban đầu",
+          "Tùy chọn: <code>key</code>, <code>watch</code>, <code>lazy</code>, <code>server: false</code>"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\"><code>useFetch(url)</code>:</strong> a convenience wrapper around <code>useAsyncData</code> + <code>$fetch</code>. It runs on the <strong class=\"k\">server during SSR</strong>, and the result is <strong class=\"k\">serialized into the page payload</strong>, so the client <strong class=\"k\">does not repeat the request</strong> when it hydrates.</li><li><strong class=\"k\"><code>useAsyncData(key, handler)</code>:</strong> the same idea for <strong class=\"k\">any async function</strong>, not only an HTTP call. You provide a unique <strong class=\"k\">key</strong> used for caching and de-duplication.</li><li><strong class=\"k\"><code>$fetch</code>:</strong> a plain HTTP client. Use it in <strong class=\"k\">event handlers and actions</strong> (submit a form, click a button). If you use it for initial data in <code>setup</code>, the request runs <strong class=\"k\">twice</strong>: once on the server and again on the client.</li></ul> <pre><code>// Initial page data: SSR-friendly, no double request\nconst { data: posts, status, error, refresh } = await useFetch('/api/posts', {\n  query: { page },          // reactive: refetches when page changes\n  lazy: false,              // true = do not block navigation, show a skeleton instead\n});\n\n// A user action: $fetch\nasync function publish() {\n  await $fetch('/api/posts', { method: 'POST', body: form });\n  await refresh();\n}</code></pre> <p>Useful options: <code>server: false</code> (client only), <code>watch</code> (refetch on change), <code>transform</code>, and <code>default</code>. Handle <code>error</code> and <code>status</code> explicitly so SSR failures do not become blank pages.</p>",
+        "vi": "<ul><li><strong class=\"k\"><code>useFetch(url)</code>:</strong> wrapper tiện lợi quanh <code>useAsyncData</code> + <code>$fetch</code>. Chạy ở <strong class=\"k\">server khi SSR</strong>, và kết quả được <strong class=\"k\">serialize vào payload của trang</strong>, nên client <strong class=\"k\">không gọi lại request</strong> khi hydrate.</li><li><strong class=\"k\"><code>useAsyncData(key, handler)</code>:</strong> cùng ý tưởng cho <strong class=\"k\">mọi hàm async</strong>, không chỉ lời gọi HTTP. Bạn đưa vào một <strong class=\"k\">key</strong> duy nhất dùng cho cache và chống trùng lặp.</li><li><strong class=\"k\"><code>$fetch</code>:</strong> HTTP client thuần. Dùng trong <strong class=\"k\">event handler và action</strong> (gửi form, bấm nút). Nếu dùng cho dữ liệu ban đầu trong <code>setup</code>, request chạy <strong class=\"k\">hai lần</strong>: một lần ở server và lại một lần ở client.</li></ul> <pre><code>// Dữ liệu ban đầu của trang: thân thiện SSR, không gọi đôi\nconst { data: posts, status, error, refresh } = await useFetch('/api/posts', {\n  query: { page },          // reactive: tự fetch lại khi page đổi\n  lazy: false,              // true = không chặn điều hướng, hiện skeleton thay vào\n});\n\n// Hành động của người dùng: $fetch\nasync function publish() {\n  await $fetch('/api/posts', { method: 'POST', body: form });\n  await refresh();\n}</code></pre> <p>Các tùy chọn hữu ích: <code>server: false</code> (chỉ client), <code>watch</code> (fetch lại khi đổi), <code>transform</code>, và <code>default</code>. Xử lý <code>error</code> và <code>status</code> tường minh để lỗi SSR không biến thành trang trắng.</p>"
+      },
+      "terms": [
+        "useFetch",
+        "useAsyncData",
+        "$fetch",
+        "payload",
+        "SSR"
+      ]
+    },
+    {
+      "id": "q83",
+      "number": 83,
+      "tag": "Nuxt · Rendering",
+      "title": "How do you configure SSR, ISR and prerendering per route in Nuxt 3?",
+      "titleVi": "Cấu hình SSR, ISR và prerender theo từng route trong Nuxt 3 thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>routeRules</code> trong <code>nuxt.config</code>",
+          "Mỗi route chọn: prerender, isr/swr, ssr:false",
+          "ISR cần host hỗ trợ (Vercel/Netlify)",
+          "So sánh với Next.js <code>revalidate</code>"
+        ]
+      },
+      "answer": {
+        "en": "<p>Nuxt lets you pick a rendering mode <strong class=\"k\">per route</strong> with <strong class=\"k\"><code>routeRules</code></strong>, so one app can mix strategies:</p> <pre><code>// nuxt.config.ts\nexport default defineNuxtConfig({\n  routeRules: {\n    '/':            { prerender: true },   // built once at build time (SSG)\n    '/news/**':     { isr: 60 },           // regenerated in the background (ISR)\n    '/tournaments': { swr: 300 },          // stale-while-revalidate cache\n    '/account/**':  { ssr: false },        // client-side only (CSR)\n  },\n});</code></pre> <ul><li><code>prerender</code>: static HTML at build time. <code>swr</code> / <code>isr</code>: cache the rendered page and refresh it in the background. <code>ssr: false</code>: skip server rendering for that route.</li><li><strong class=\"k\">ISR depends on the hosting platform</strong> (for example Vercel or Netlify with the matching Nitro preset). On a plain Node server you get SWR-style caching instead, so check what your deployment supports.</li><li>This maps to Next.js: <code>export const revalidate = 60</code> (ISR), <code>generateStaticParams</code> (SSG), and dynamic rendering for per-request SSR.</li></ul> <p><strong class=\"k\">From your CV:</strong> the esports platform and news portals are shared public content (SSR + ISR for SEO), while account pages are per-user and should not be cached or shared.</p>",
+        "vi": "<p>Nuxt cho phép chọn chế độ render <strong class=\"k\">theo từng route</strong> bằng <strong class=\"k\"><code>routeRules</code></strong>, nên một app có thể trộn nhiều chiến lược:</p> <pre><code>// nuxt.config.ts\nexport default defineNuxtConfig({\n  routeRules: {\n    '/':            { prerender: true },   // dựng một lần lúc build (SSG)\n    '/news/**':     { isr: 60 },           // tái tạo ngầm (ISR)\n    '/tournaments': { swr: 300 },          // cache stale-while-revalidate\n    '/account/**':  { ssr: false },        // chỉ ở client (CSR)\n  },\n});</code></pre> <ul><li><code>prerender</code>: HTML tĩnh lúc build. <code>swr</code> / <code>isr</code>: cache trang đã render và làm mới ngầm. <code>ssr: false</code>: bỏ render phía server cho route đó.</li><li><strong class=\"k\">ISR phụ thuộc nền tảng hosting</strong> (ví dụ Vercel hoặc Netlify với Nitro preset phù hợp). Trên server Node thường bạn nhận cache kiểu SWR, nên hãy kiểm tra nền tảng triển khai hỗ trợ gì.</li><li>Tương ứng với Next.js: <code>export const revalidate = 60</code> (ISR), <code>generateStaticParams</code> (SSG), và dynamic rendering cho SSR theo từng request.</li></ul> <p><strong class=\"k\">Từ CV của bạn:</strong> nền tảng esports và cổng tin tức là nội dung công khai dùng chung (SSR + ISR cho SEO), còn trang tài khoản là riêng từng người nên không được cache hay chia sẻ.</p>"
+      },
+      "terms": [
+        "routeRules",
+        "prerender",
+        "ISR",
+        "swr",
+        "Nitro"
+      ]
+    },
+    {
+      "id": "q84",
+      "number": 84,
+      "tag": "Nuxt · SSR an toàn",
+      "title": "How do you write code that is safe for both server and client in Nuxt (hydration and shared state)?",
+      "titleVi": "Viết code an toàn cho cả server và client trong Nuxt (hydration và state dùng chung) như thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "<code>window</code>/<code>document</code> không tồn tại ở server",
+          "Code chỉ chạy ở client: <code>onMounted</code>, <code>&lt;ClientOnly&gt;</code>, <code>import.meta.client</code>",
+          "State dùng chung SSR-safe: <code>useState</code>, không dùng biến module",
+          "Cùng nguyên nhân hydration mismatch như React"
+        ]
+      },
+      "answer": {
+        "en": "<ul><li>The server has <strong class=\"k\">no <code>window</code>, <code>document</code> or <code>localStorage</code></strong>. Touching them at the top level of <code>setup</code> crashes SSR.</li><li><strong class=\"k\">Client-only code:</strong> put it in <code>onMounted</code> (never runs on the server), guard with <code>import.meta.client</code>, or wrap the UI in the <strong class=\"k\"><code>&lt;ClientOnly&gt;</code></strong> component with a fallback.</li><li><strong class=\"k\">Hydration mismatch</strong> has the same causes as in React: <code>Date.now()</code>, <code>Math.random()</code>, locale formatting, or branching on <code>window</code> during render. Render the same thing first, then update after mount.</li></ul> <pre><code>&lt;script setup&gt;\nconst width = ref(0);                      // same value on the server and the first client render\nonMounted(() =&gt; { width.value = window.innerWidth; });   // client only\n&lt;/script&gt;\n\n&lt;template&gt;\n  &lt;ClientOnly&gt;\n    &lt;HeavyChart /&gt;\n    &lt;template #fallback&gt;&lt;Skeleton /&gt;&lt;/template&gt;\n  &lt;/ClientOnly&gt;\n&lt;/template&gt;</code></pre> <h5>Shared state</h5> <p>A <code>ref</code> created at <strong class=\"k\">module level</strong> lives as long as the server process, so it is <strong class=\"k\">shared between all users' requests</strong>, a real data-leak risk. For SSR-safe shared state use <strong class=\"k\"><code>useState('key', () =&gt; initial)</code></strong> or a Pinia store; both are created <strong class=\"k\">per request</strong> and transferred to the client.</p>",
+        "vi": "<ul><li>Server <strong class=\"k\">không có <code>window</code>, <code>document</code> hay <code>localStorage</code></strong>. Đụng tới chúng ở cấp cao nhất của <code>setup</code> sẽ làm SSR crash.</li><li><strong class=\"k\">Code chỉ chạy ở client:</strong> đặt trong <code>onMounted</code> (không bao giờ chạy ở server), bảo vệ bằng <code>import.meta.client</code>, hoặc bọc UI trong component <strong class=\"k\"><code>&lt;ClientOnly&gt;</code></strong> kèm fallback.</li><li><strong class=\"k\">Hydration mismatch</strong> có cùng nguyên nhân như React: <code>Date.now()</code>, <code>Math.random()</code>, định dạng locale, hoặc rẽ nhánh theo <code>window</code> khi render. Render giống nhau trước, rồi cập nhật sau khi mount.</li></ul> <pre><code>&lt;script setup&gt;\nconst width = ref(0);                      // cùng giá trị ở server và lượt render đầu của client\nonMounted(() =&gt; { width.value = window.innerWidth; });   // chỉ ở client\n&lt;/script&gt;\n\n&lt;template&gt;\n  &lt;ClientOnly&gt;\n    &lt;HeavyChart /&gt;\n    &lt;template #fallback&gt;&lt;Skeleton /&gt;&lt;/template&gt;\n  &lt;/ClientOnly&gt;\n&lt;/template&gt;</code></pre> <h5>State dùng chung</h5> <p>Một <code>ref</code> tạo ở <strong class=\"k\">cấp module</strong> sống cùng vòng đời của tiến trình server, nên nó <strong class=\"k\">bị dùng chung giữa các request của mọi người dùng</strong>, một rủi ro rò rỉ dữ liệu thật sự. Để có state dùng chung an toàn với SSR, dùng <strong class=\"k\"><code>useState('key', () =&gt; initial)</code></strong> hoặc Pinia store; cả hai được tạo <strong class=\"k\">theo từng request</strong> và chuyển sang client.</p>"
+      },
+      "terms": [
+        "ClientOnly",
+        "onMounted",
+        "useState",
+        "hydration",
+        "cross-request state"
+      ]
+    },
+    {
+      "id": "q85",
+      "number": 85,
+      "tag": "Vue vs React",
+      "title": "You have used both Vue/Nuxt and React/Next.js. How do they differ and how do you choose?",
+      "titleVi": "Bạn đã dùng cả Vue/Nuxt và React/Next.js. Chúng khác nhau thế nào và bạn chọn ra sao?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Mô hình reactivity: Vue theo dõi dependency, React re-render + diff",
+          "Template/directive vs JSX",
+          "Hệ sinh thái và cấu hình sẵn",
+          "Chọn theo team, hệ sinh thái, tuyển dụng, không theo \"cái nào nhanh hơn\""
+        ]
+      },
+      "answer": {
+        "en": "<ul><li><strong class=\"k\">Reactivity:</strong> Vue tracks dependencies and updates <strong class=\"k\">only what changed</strong>, with mutable-style state. React <strong class=\"k\">re-renders</strong> a component when state changes and <strong class=\"k\">diffs</strong> the result, with immutable updates.</li><li><strong class=\"k\">Authoring:</strong> Vue uses <strong class=\"k\">templates and directives</strong> (<code>v-if</code>, <code>v-for</code>) with single-file components. React uses <strong class=\"k\">JSX</strong>, so you write plain JavaScript for logic in the markup.</li><li><strong class=\"k\">Structure:</strong> Vue ships an <strong class=\"k\">official router and store</strong> (Vue Router, Pinia) with clear conventions. React leaves more choices to the team, with a <strong class=\"k\">larger ecosystem</strong>.</li><li><strong class=\"k\">Meta-frameworks:</strong> Next.js and Nuxt solve the same problems (SSR, routing, data fetching, ISR) with similar ideas.</li></ul> <p><strong class=\"k\">How to choose:</strong> the team's experience, the <strong class=\"k\">ecosystem and libraries needed</strong>, hiring, and the existing codebase. Both are fast enough for the vast majority of products, so avoid claiming one is simply \"faster\".</p> <p><strong class=\"k\">A good closing point:</strong> the fundamentals carry over (components, state, rendering strategy, performance, accessibility), so switching costs are mostly syntax and tooling.</p>",
+        "vi": "<ul><li><strong class=\"k\">Reactivity:</strong> Vue theo dõi dependency và cập nhật <strong class=\"k\">chỉ phần đã thay đổi</strong>, với kiểu state có thể thay đổi trực tiếp. React <strong class=\"k\">re-render</strong> component khi state đổi rồi <strong class=\"k\">diff</strong> kết quả, với cập nhật bất biến.</li><li><strong class=\"k\">Cách viết:</strong> Vue dùng <strong class=\"k\">template và directive</strong> (<code>v-if</code>, <code>v-for</code>) với single-file component. React dùng <strong class=\"k\">JSX</strong>, nên logic viết bằng JavaScript thuần ngay trong markup.</li><li><strong class=\"k\">Cấu trúc:</strong> Vue có sẵn <strong class=\"k\">router và store chính thức</strong> (Vue Router, Pinia) với quy ước rõ ràng. React để team tự chọn nhiều hơn, với <strong class=\"k\">hệ sinh thái lớn hơn</strong>.</li><li><strong class=\"k\">Meta-framework:</strong> Next.js và Nuxt giải quyết cùng các vấn đề (SSR, routing, data fetching, ISR) với ý tưởng tương tự.</li></ul> <p><strong class=\"k\">Cách chọn:</strong> kinh nghiệm của team, <strong class=\"k\">hệ sinh thái và thư viện cần dùng</strong>, tuyển dụng, và codebase hiện có. Cả hai đều đủ nhanh cho đại đa số sản phẩm, nên tránh khẳng định một cái đơn giản là \"nhanh hơn\".</p> <p><strong class=\"k\">Ý kết hay:</strong> nền tảng chuyển được sang nhau (component, state, chiến lược render, hiệu năng, accessibility), nên chi phí chuyển đổi chủ yếu là cú pháp và công cụ.</p>"
+      },
+      "terms": [
+        "Vue",
+        "React",
+        "fine-grained reactivity",
+        "JSX",
+        "ecosystem"
+      ]
+    }
+  ]
+}
