@@ -7,7 +7,7 @@ const layout = [
   {
     id: "gioi-thieu",
     title: "Giới thiệu & hành vi",
-    slugs: ["gioi-thieu-ban-than", "kinh-nghiem-hanh-vi", "cau-chuyen-star"],
+    slugs: ["gioi-thieu-ban-than", "kinh-nghiem-hanh-vi", "cau-chuyen-star", "meo-phong-van"],
   },
   {
     id: "du-an",

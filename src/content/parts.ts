@@ -30,6 +30,7 @@ import part27 from "./parts/27-react-nang-cao.json";
 import part28 from "./parts/28-nextjs-nang-cao.json";
 import part29 from "./parts/29-vue-nang-cao.json";
 import part30 from "./parts/30-nuxt-nang-cao.json";
+import part31 from "./parts/31-meo-phong-van.json";
 
 export const parts: Part[] = [
   part01,
@@ -62,4 +63,5 @@ export const parts: Part[] = [
   part28,
   part29,
   part30,
+  part31,
 ];

@@ -1,0 +1,403 @@
+{
+  "id": "part-31",
+  "slug": "meo-phong-van",
+  "roman": "XXXI",
+  "title": "Mẹo phỏng vấn",
+  "description": "Các câu hỏi và tình huống ngoài kỹ thuật: lý do nghỉ việc, mức lương mong muốn, câu hỏi cho công ty, điểm mạnh yếu, thương lượng offer và mẹo trong buổi phỏng vấn.",
+  "questions": [
+    {
+      "id": "q203",
+      "number": 203,
+      "tag": "Mẹo phỏng vấn · Lý do nghỉ việc",
+      "title": "Why are you leaving your current job?",
+      "titleVi": "Vì sao bạn muốn nghỉ công việc hiện tại?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nêu lý do thật, hướng về phía trước (bạn muốn gì), không phải điều bạn muốn trốn",
+          "Ghi nhận một điều tích cực ở công ty hiện tại",
+          "Nối lý do với những gì vị trí mới mang lại",
+          "Dừng lại, không kể lể, không nói xấu"
+        ]
+      },
+      "answer": {
+        "en": "<p>The interviewer is not looking for a perfect reason. They want to know two things: <strong class=\"k\">will you leave us for the same reason</strong>, and <strong class=\"k\">how do you talk about people you worked with</strong>. So give a <strong class=\"k\">true, forward-looking reason</strong>, thank the current employer briefly, and connect your reason to this role. Never <strong class=\"k\">badmouth</strong> a manager or company; it makes you look like a future problem even when you are right.</p> <p>Good true reasons are about growth: more ownership, a larger product or traffic, a new domain, a different tech stack, a team with stronger mentoring. If the real reason is negative (burnout, conflict, pay), rephrase it into what you are looking for, without lying: \"I want a team with regular code review\" is honest and positive.</p> <h5>Sample answer</h5> <p>\"I have learned a lot in [N years] at [current company], especially [something you really learned]. Now I am looking for [your real reason, for example more ownership of a product, or a bigger technical challenge]. This role offers [a specific thing from the job post], so it feels like the right next step, not just a change.\"</p> <p>Use your own true reason in the brackets. Do not copy an example that is not yours, because follow-up questions will expose it. Keep it under 30 seconds and stop; silence after a calm answer is fine.</p>",
+        "vi": "<p>Nhà tuyển dụng không cần một lý do hoàn hảo. Họ muốn biết hai điều: <strong class=\"k\">bạn có bỏ chúng tôi vì cùng lý do đó không</strong>, và <strong class=\"k\">bạn nói về đồng nghiệp cũ thế nào</strong>. Vì vậy hãy nêu <strong class=\"k\">lý do thật, hướng về phía trước</strong>, cảm ơn ngắn gọn công ty hiện tại và nối lý do với vị trí này. Đừng bao giờ <strong class=\"k\">nói xấu</strong> quản lý hay công ty; dù bạn đúng thì cũng khiến bạn trông như một rủi ro trong tương lai.</p> <p>Các lý do thật tốt thường nói về sự phát triển: nhiều quyền sở hữu hơn, sản phẩm hoặc lưu lượng lớn hơn, lĩnh vực mới, tech stack khác, đội có mentoring tốt hơn. Nếu lý do thật là tiêu cực (kiệt sức, mâu thuẫn, lương), hãy diễn đạt lại thành điều bạn đang tìm, mà không nói dối: “Tôi muốn một đội có code review đều đặn” vừa thật vừa tích cực.</p> <h5>Câu trả lời mẫu</h5> <p>“Tôi đã học được rất nhiều trong [N năm] ở [công ty hiện tại], đặc biệt là [điều bạn thật sự học được]. Bây giờ tôi tìm [lý do thật của bạn, ví dụ nhiều quyền sở hữu sản phẩm hơn, hoặc thử thách kỹ thuật lớn hơn]. Vị trí này có [một điều cụ thể trong job post], nên tôi thấy đây là bước tiếp theo phù hợp, không chỉ là đổi chỗ làm.”</p> <p>Hãy điền lý do thật của chính bạn vào ngoặc. Đừng chép ví dụ không phải của bạn, vì câu hỏi đào sâu sẽ làm lộ ra. Giữ dưới 30 giây rồi dừng; im lặng sau một câu trả lời bình tĩnh là hoàn toàn ổn.</p>"
+      },
+      "terms": [
+        "reason for leaving",
+        "forward-looking",
+        "no badmouthing",
+        "growth",
+        "honesty"
+      ]
+    },
+    {
+      "id": "q204",
+      "number": 204,
+      "tag": "Mẹo phỏng vấn · Lương",
+      "title": "What are your salary expectations? And what is your current salary?",
+      "titleVi": "Mức lương bạn mong muốn là bao nhiêu? Lương hiện tại của bạn là bao nhiêu?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nghiên cứu mặt bằng trước khi vào phỏng vấn",
+          "Làm rõ gross hay net và tổng thu nhập (tháng 13, thưởng)",
+          "Đưa một khoảng hợp lý và nói bạn linh hoạt theo tổng gói",
+          "Với lương hiện tại: trung thực, hoặc lịch sự từ chối rồi quay về mong muốn",
+          "Không bao giờ nói dối con số"
+        ]
+      },
+      "answer": {
+        "en": "<p><strong class=\"k\">Research first.</strong> Ask recruiters and peers, check salary surveys and job posts that show ranges, and compare similar roles by level and city. Numbers change, so do this fresh for every process. Then clarify the terms: <strong class=\"k\">gross or net</strong>, and whether the package includes <strong class=\"k\">13th-month pay and bonus</strong>. Give a <strong class=\"k\">range</strong> you would be happy with at the low end, not a single number, and say you are flexible on the total package. Ask for their budget too; HR usually has one.</p> <p>If asked about your <strong class=\"k\">current salary</strong>, the honest options are to share it truthfully or to politely decline and move to expectations. <strong class=\"k\">Never lie</strong>: offers can be checked through references or paperwork, and a lie costs you the offer.</p> <h5>Sample answer</h5> <p>\"Based on my research for this level in [city] and my experience with [your real strengths], I am looking at [your range] gross per month, flexible depending on the total package. Could you share the budget range for this role?\"</p> <p>If they ask your current pay: \"My current package is [your real figure] gross including [bonus, if any]. I would rather focus on the value I bring here, and my expectation is [your range].\"</p> <p>An early number that is too low is hard to raise later; too wide a range signals you have not researched.</p>",
+        "vi": "<p><strong class=\"k\">Nghiên cứu trước.</strong> Hỏi recruiter và bạn bè cùng nghề, xem khảo sát lương và các job post có ghi khoảng lương, so sánh vị trí tương tự theo cấp độ và thành phố. Con số thay đổi liên tục nên hãy làm mới cho mỗi đợt phỏng vấn. Sau đó làm rõ điều khoản: <strong class=\"k\">gross hay net</strong>, và gói có gồm <strong class=\"k\">lương tháng 13 và thưởng</strong> không. Hãy đưa ra một <strong class=\"k\">khoảng</strong> mà mức thấp nhất bạn vẫn hài lòng, không phải một con số duy nhất, và nói bạn linh hoạt theo tổng gói. Cũng hãy hỏi ngân sách của họ; HR thường có sẵn.</p> <p>Nếu bị hỏi <strong class=\"k\">lương hiện tại</strong>, hai lựa chọn trung thực là nói thật hoặc lịch sự từ chối rồi chuyển sang mong muốn. <strong class=\"k\">Đừng bao giờ nói dối</strong>: offer có thể được kiểm tra qua reference hoặc giấy tờ, và một lời nói dối có thể làm bạn mất offer.</p> <h5>Câu trả lời mẫu</h5> <p>“Dựa trên nghiên cứu của tôi cho cấp độ này ở [thành phố] và kinh nghiệm với [điểm mạnh thật của bạn], tôi mong muốn [khoảng lương của bạn] gross mỗi tháng, linh hoạt theo tổng gói. Anh/chị có thể chia sẻ khoảng ngân sách cho vị trí này không?”</p> <p>Nếu họ hỏi lương hiện tại: “Gói hiện tại của tôi là [con số thật của bạn] gross, gồm [thưởng, nếu có]. Tôi muốn tập trung vào giá trị mình mang lại, và mong muốn của tôi là [khoảng lương của bạn].”</p> <p>Nói sớm một con số quá thấp thì khó nâng lên sau này; khoảng quá rộng lại cho thấy bạn chưa nghiên cứu.</p>"
+      },
+      "terms": [
+        "salary expectation",
+        "gross vs net",
+        "salary range",
+        "13th-month pay",
+        "total compensation",
+        "research"
+      ]
+    },
+    {
+      "id": "q205",
+      "number": 205,
+      "tag": "Mẹo phỏng vấn · Câu hỏi cho công ty",
+      "title": "Do you have any questions for us?",
+      "titleVi": "Bạn có câu hỏi nào dành cho chúng tôi không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Luôn có câu hỏi, trả lời “không” cho thấy thiếu quan tâm",
+          "Chuẩn bị 3-5 câu về team, công việc, cách làm việc, thành công",
+          "Hỏi theo người đối diện (engineer, manager, HR)",
+          "Tránh câu có sẵn trên website hoặc chỉ về nghỉ phép, lương ở vòng đầu",
+          "Ghi chú câu trả lời, nó giúp bạn quyết định"
+        ]
+      },
+      "answer": {
+        "en": "<p>This is a two-way evaluation. Interviewers read your questions as a sign of <strong class=\"k\">how you think and what you care about</strong>, and you also need the answers to decide. Always ask something. Prepare <strong class=\"k\">three to five</strong> and choose by who is in front of you.</p> <h5>Good questions</h5> <ul><li>\"What would the first 90 days look like for this role, and how is success measured?\"</li><li>\"How does the team do code review, testing and releases?\"</li><li>\"What is the hardest technical or product problem the team faces right now?\"</li><li>\"How are technical decisions made, and how are disagreements resolved?\"</li><li>\"How do engineers grow here: mentoring, learning budget, promotion path?\"</li><li>\"Why did this position open?\"</li></ul> <h5>Avoid</h5> <ul><li>Anything answered on the website (\"What does your company do?\").</li><li>Only vacation, overtime or pay in the first round; those are fair for later HR or offer stages.</li><li>Questions that sound like a trap or a complaint.</li></ul> <h5>Sample wording</h5> <p>\"I read that you recently [something real from your research]. How does that change what the frontend team focuses on this year?\" Finish with: \"What are the next steps, and when can I expect to hear back?\"</p>",
+        "vi": "<p>Đây là buổi đánh giá hai chiều. Người phỏng vấn đọc câu hỏi của bạn như dấu hiệu cho thấy <strong class=\"k\">bạn nghĩ thế nào và quan tâm điều gì</strong>, và bạn cũng cần câu trả lời để quyết định. Luôn hỏi ít nhất một điều. Hãy chuẩn bị <strong class=\"k\">ba đến năm</strong> câu và chọn theo người đang ngồi đối diện.</p> <h5>Câu hỏi hay</h5> <ul><li>“90 ngày đầu của vị trí này sẽ như thế nào, và thành công được đo ra sao?”</li><li>“Team làm code review, testing và release như thế nào?”</li><li>“Vấn đề kỹ thuật hoặc sản phẩm khó nhất team đang gặp là gì?”</li><li>“Quyết định kỹ thuật được đưa ra thế nào, và bất đồng được giải quyết ra sao?”</li><li>“Engineer phát triển ở đây thế nào: mentoring, ngân sách học tập, lộ trình thăng tiến?”</li><li>“Vì sao vị trí này đang mở?”</li></ul> <h5>Nên tránh</h5> <ul><li>Bất cứ điều gì có sẵn trên website (“Công ty làm gì?”).</li><li>Chỉ hỏi nghỉ phép, overtime hay lương ở vòng đầu; những chuyện đó hợp lý hơn ở vòng HR hoặc giai đoạn offer.</li><li>Câu hỏi nghe như bẫy hoặc lời phàn nàn.</li></ul> <h5>Câu mẫu</h5> <p>“Tôi đọc được rằng gần đây công ty [điều thật bạn tìm thấy khi nghiên cứu]. Điều đó thay đổi trọng tâm của team frontend trong năm nay như thế nào?” Kết thúc bằng: “Các bước tiếp theo là gì, và khi nào tôi có thể nhận được phản hồi?”</p>"
+      },
+      "terms": [
+        "questions for interviewer",
+        "two-way evaluation",
+        "first 90 days",
+        "team process",
+        "next steps"
+      ]
+    },
+    {
+      "id": "q206",
+      "number": 206,
+      "tag": "Mẹo phỏng vấn · Điểm mạnh yếu",
+      "title": "What are your strengths and weaknesses?",
+      "titleVi": "Điểm mạnh và điểm yếu của bạn là gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Điểm mạnh: chọn 1-2 điểm liên quan tới vị trí, kèm bằng chứng cụ thể",
+          "Điểm yếu: một điểm yếu thật, không phải thế mạnh cốt lõi của vị trí",
+          "Nói bạn đang làm gì để cải thiện",
+          "Kết bằng tiến bộ đo được hoặc quan sát được"
+        ]
+      },
+      "answer": {
+        "en": "<p>Interviewers use this to test <strong class=\"k\">self-awareness</strong> and <strong class=\"k\">honesty</strong>. A strength with no evidence is just a claim, and a fake weakness such as \"I work too hard\" or \"I am a perfectionist\" is a known stock answer that makes you sound evasive.</p> <p>For a <strong class=\"k\">strength</strong>, pick one or two that match the job and back each with a short real example. For a <strong class=\"k\">weakness</strong>, choose a real one that is not critical for the role (for a frontend engineer, \"I cannot write CSS\" is a bad choice), then show <strong class=\"k\">what you are doing about it</strong> and the progress. Growth is the point, not the flaw.</p> <h5>Sample answer</h5> <p>\"One strength is [your real strength, for example breaking a large task into small safe steps]. For example, [one real short example].\"</p> <p>\"A weakness I am working on is [your real weakness, for example I take on too much instead of saying no, or I estimate optimistically]. To improve, I [a concrete action: I now write estimates with a buffer, I flag scope early]. It is better now: [a real sign of progress].\"</p> <p>Pick only what is true for you; the examples are ideas, not scripts. Common honest areas: estimating time, public speaking, delegating, asking for help sooner. Prepare it in advance, because this question rewards a calm, specific answer.</p>",
+        "vi": "<p>Người phỏng vấn dùng câu này để kiểm tra <strong class=\"k\">khả năng tự nhận thức</strong> và <strong class=\"k\">sự trung thực</strong>. Một điểm mạnh không có bằng chứng chỉ là lời tuyên bố, còn điểm yếu giả như “tôi làm việc quá chăm” hay “tôi cầu toàn” là một sáo ngữ ai cũng biết và khiến bạn nghe như đang né tránh.</p> <p>Với <strong class=\"k\">điểm mạnh</strong>, chọn một hoặc hai điểm khớp với công việc và kèm một ví dụ thật ngắn cho mỗi điểm. Với <strong class=\"k\">điểm yếu</strong>, chọn một điểm thật và không cốt lõi với vị trí (với frontend engineer, “tôi không viết được CSS” là lựa chọn tệ), rồi cho thấy <strong class=\"k\">bạn đang làm gì để cải thiện</strong> và tiến bộ ra sao. Trọng tâm là sự phát triển, không phải khuyết điểm.</p> <h5>Câu trả lời mẫu</h5> <p>“Một điểm mạnh của tôi là [điểm mạnh thật của bạn, ví dụ chia một task lớn thành các bước nhỏ và an toàn]. Ví dụ, [một ví dụ thật ngắn].”</p> <p>“Một điểm yếu tôi đang cải thiện là [điểm yếu thật của bạn, ví dụ tôi nhận quá nhiều việc thay vì từ chối, hoặc tôi ước lượng quá lạc quan]. Để cải thiện, tôi [hành động cụ thể: giờ tôi ước lượng có thêm buffer, báo sớm khi scope thay đổi]. Giờ đã tốt hơn: [dấu hiệu tiến bộ thật].”</p> <p>Chỉ chọn điều đúng với bạn; các ví dụ là gợi ý, không phải kịch bản. Một số vùng điểm yếu thành thật phổ biến: ước lượng thời gian, nói trước đám đông, giao việc, nhờ giúp đỡ sớm hơn. Hãy chuẩn bị trước, vì câu hỏi này thưởng cho câu trả lời bình tĩnh và cụ thể.</p>"
+      },
+      "terms": [
+        "strengths",
+        "weaknesses",
+        "self-awareness",
+        "evidence",
+        "improvement plan"
+      ]
+    },
+    {
+      "id": "q207",
+      "number": 207,
+      "tag": "Mẹo phỏng vấn · Động lực",
+      "title": "Why do you want to work here, and why this role?",
+      "titleVi": "Vì sao bạn muốn làm việc ở đây, và vì sao là vị trí này?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nghiên cứu: sản phẩm, người dùng, tech stack, tin tức gần đây",
+          "Nối nhu cầu của họ với kỹ năng và kinh nghiệm của bạn",
+          "Nói bạn muốn học và đóng góp điều gì",
+          "Nêu một chi tiết cụ thể, không nói chung chung"
+        ]
+      },
+      "answer": {
+        "en": "<p>They want to see <strong class=\"k\">genuine interest and fit</strong>, not flattery. Generic answers (\"a big, famous company\", \"good salary\") could be said by anyone, so they tell the interviewer nothing. A specific answer shows you did your homework and that you will probably stay motivated.</p> <p>Prepare in three parts: <strong class=\"k\">(1) What attracts you</strong>, based on real research: the product, who uses it, the tech stack, an engineering blog, a recent launch. <strong class=\"k\">(2) Your fit</strong>: which of your skills and experience match what the job post asks. <strong class=\"k\">(3) What you want to contribute and learn.</strong></p> <p>If remote or hybrid work, team culture or working style matters to you, mention it honestly as a factor and ask how the team works; a mismatch hurts both sides.</p> <h5>Sample answer</h5> <p>\"I am drawn to [company] because [a specific product or technical fact you really found, for example how you handle X for your users]. The role needs [skill from the job post], and I have worked on [your real related experience]. I would like to contribute [what you can offer] and learn [what you want to learn here].\"</p> <p>Read the job post carefully and the company's site, product and public posts the day before. If you cannot find one real reason, treat that as useful information about whether you want the job.</p>",
+        "vi": "<p>Họ muốn thấy <strong class=\"k\">sự quan tâm thật sự và độ phù hợp</strong>, không phải lời tâng bốc. Câu trả lời chung chung (“công ty lớn, nổi tiếng”, “lương tốt”) ai cũng nói được nên không cho người phỏng vấn biết gì. Một câu trả lời cụ thể cho thấy bạn đã làm bài tập về nhà và nhiều khả năng bạn sẽ giữ được động lực.</p> <p>Hãy chuẩn bị ba phần: <strong class=\"k\">(1) Điều thu hút bạn</strong>, dựa trên nghiên cứu thật: sản phẩm, người dùng, tech stack, engineering blog, đợt ra mắt gần đây. <strong class=\"k\">(2) Sự phù hợp</strong>: kỹ năng và kinh nghiệm nào của bạn khớp với yêu cầu trong job post. <strong class=\"k\">(3) Bạn muốn đóng góp và học điều gì.</strong></p> <p>Nếu làm remote hoặc hybrid, văn hóa team hay cách làm việc quan trọng với bạn, hãy nêu trung thực như một yếu tố và hỏi team làm việc ra sao; sự lệch pha gây hại cho cả hai bên.</p> <h5>Câu trả lời mẫu</h5> <p>“Tôi bị thu hút bởi [công ty] vì [một chi tiết cụ thể về sản phẩm hoặc kỹ thuật bạn thật sự tìm thấy, ví dụ cách công ty xử lý X cho người dùng]. Vị trí này cần [kỹ năng trong job post], và tôi đã làm [kinh nghiệm liên quan thật của bạn]. Tôi muốn đóng góp [điều bạn có thể mang lại] và học [điều bạn muốn học ở đây].”</p> <p>Hãy đọc kỹ job post cùng website, sản phẩm và các bài đăng công khai của công ty vào ngày hôm trước. Nếu bạn không tìm được một lý do thật, hãy coi đó là thông tin hữu ích về việc bạn có thật sự muốn công việc này không.</p>"
+      },
+      "terms": [
+        "motivation",
+        "company research",
+        "role fit",
+        "job post",
+        "culture fit",
+        "remote policy"
+      ]
+    },
+    {
+      "id": "q208",
+      "number": 208,
+      "tag": "Mẹo phỏng vấn · Định hướng",
+      "title": "Where do you see yourself in three to five years?",
+      "titleVi": "Bạn thấy mình ở đâu sau ba đến năm năm nữa?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nêu hướng phát triển chung, không hứa chức danh cụ thể",
+          "Gắn với kỹ năng và tác động, không chỉ chức vụ",
+          "Cho thấy công ty có thể hưởng lợi từ sự phát triển đó",
+          "Linh hoạt: mở với cả hướng kỹ thuật lẫn quản lý"
+        ]
+      },
+      "answer": {
+        "en": "<p>The interviewer is checking whether you have <strong class=\"k\">direction and ambition</strong>, whether your goals fit what the company can offer, and whether you plan to <strong class=\"k\">stay and grow</strong> rather than leave in six months. They do not expect a precise plan, and over-specific answers (\"CTO in three years\") sound unrealistic.</p> <p>Structure it as: <strong class=\"k\">(1) the skills and responsibility you want to grow</strong>, for example deeper technical expertise, owning features end to end, mentoring others; <strong class=\"k\">(2) how it connects to this company</strong>; <strong class=\"k\">(3) openness</strong>: you will adjust as you learn what suits you, whether a senior technical path or a lead role.</p> <p>Avoid \"doing your job\", \"starting my own company\", or \"I have not thought about it\". Honest uncertainty is fine if you still show direction.</p> <h5>Sample answer</h5> <p>\"In three to five years I would like to be a strong senior engineer who owns features end to end, makes sound technical decisions, and helps less experienced teammates grow. I am open to either a deeper technical track or a lead role, depending on where I add the most value. I think this role is a good place for that because [a real reason, for example the scale of the product, the code review culture, or the range of problems].\"</p> <p>Choose a direction you actually want; interviewers can tell when it is rehearsed and empty.</p>",
+        "vi": "<p>Người phỏng vấn kiểm tra xem bạn có <strong class=\"k\">định hướng và tham vọng</strong> không, mục tiêu của bạn có khớp với điều công ty có thể cung cấp không, và bạn định <strong class=\"k\">ở lại và phát triển</strong> hay sẽ rời đi sau sáu tháng. Họ không mong đợi một kế hoạch chính xác, và câu trả lời quá cụ thể (“ba năm nữa làm CTO”) nghe thiếu thực tế.</p> <p>Hãy cấu trúc như sau: <strong class=\"k\">(1) kỹ năng và trách nhiệm bạn muốn phát triển</strong>, ví dụ chuyên môn sâu hơn, làm chủ feature từ đầu đến cuối, mentoring người khác; <strong class=\"k\">(2) điều đó liên quan tới công ty này thế nào</strong>; <strong class=\"k\">(3) sự cởi mở</strong>: bạn sẽ điều chỉnh khi hiểu rõ điều gì hợp với mình, dù là hướng kỹ thuật senior hay vai trò lead.</p> <p>Tránh “vào vị trí của anh/chị”, “mở công ty riêng” hay “tôi chưa nghĩ tới”. Sự chưa chắc chắn trung thực vẫn ổn nếu bạn vẫn cho thấy hướng đi.</p> <h5>Câu trả lời mẫu</h5> <p>“Trong ba đến năm năm tới, tôi muốn trở thành một senior engineer vững, làm chủ feature từ đầu đến cuối, đưa ra quyết định kỹ thuật đúng đắn và giúp các bạn ít kinh nghiệm hơn phát triển. Tôi mở với cả hướng chuyên sâu kỹ thuật lẫn vai trò lead, tùy nơi tôi tạo ra nhiều giá trị nhất. Tôi nghĩ vị trí này là nơi tốt cho điều đó vì [lý do thật, ví dụ quy mô sản phẩm, văn hóa code review, hoặc sự đa dạng của bài toán].”</p> <p>Hãy chọn hướng bạn thực sự muốn; người phỏng vấn nhận ra ngay khi câu trả lời học thuộc và rỗng.</p>"
+      },
+      "terms": [
+        "career goals",
+        "growth",
+        "senior engineer",
+        "technical track",
+        "ownership"
+      ]
+    },
+    {
+      "id": "q209",
+      "number": 209,
+      "tag": "Mẹo phỏng vấn · Thời gian và offer khác",
+      "title": "When can you start? What is your notice period, and do you have other offers?",
+      "titleVi": "Khi nào bạn có thể bắt đầu? Thời gian báo trước của bạn là bao lâu, và bạn có offer khác không?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Kiểm tra hợp đồng hiện tại để biết thời gian báo trước thật",
+          "Nêu ngày bắt đầu thực tế và mức linh hoạt (bàn giao)",
+          "Offer khác: trung thực, nêu timeline, không bịa để gây áp lực",
+          "Hỏi lại timeline của họ để hai bên khớp nhau"
+        ]
+      },
+      "answer": {
+        "en": "<p>HR asks this to <strong class=\"k\">plan headcount</strong> and to gauge <strong class=\"k\">urgency and risk</strong> (will you accept, will you be available). Answer plainly and truthfully; nothing here needs a trick.</p> <p><strong class=\"k\">Start date and notice period:</strong> check your contract so you quote the real notice period. Say when you can start and what depends on it: \"I need [N weeks] to hand over properly.\" A clean handover is a plus, because it shows how you will leave them one day. If you might negotiate a shorter notice, discuss it with your current employer first and never promise a date you cannot keep.</p> <p><strong class=\"k\">Other offers and processes:</strong> if you are interviewing elsewhere, say so calmly and give a rough timeline. <strong class=\"k\">Do not invent or exaggerate offers</strong> to create pressure; it is easy to be caught, and it damages trust. If you have none, say you are in a few processes and this role is a priority for you, if that is true.</p> <h5>Sample answer</h5> <p>\"My notice period is [your real period], so I could start around [date]. I would like to hand over my current work properly. I am also in [a number] other process(es) and expect to hear back by [date]. [Company] is a priority for me. What is your timeline for a decision?\"</p> <p>Asking about their timeline lets both sides plan and keeps the conversation honest.</p>",
+        "vi": "<p>HR hỏi để <strong class=\"k\">lên kế hoạch nhân sự</strong> và đánh giá <strong class=\"k\">mức độ khẩn cấp và rủi ro</strong> (bạn có nhận offer không, có sẵn sàng đúng lúc không). Hãy trả lời thẳng thắn và trung thực; ở đây không cần mẹo gì.</p> <p><strong class=\"k\">Ngày bắt đầu và thời gian báo trước:</strong> kiểm tra hợp đồng để nói đúng thời gian báo trước thật. Nêu khi nào bạn có thể bắt đầu và điều gì quyết định: “Tôi cần [N tuần] để bàn giao đúng cách.” Bàn giao tử tế là điểm cộng, vì nó cho thấy bạn sẽ rời họ như thế nào vào một ngày nào đó. Nếu bạn có thể thương lượng rút ngắn thời gian báo trước, hãy trao đổi với công ty hiện tại trước và đừng hứa một ngày mà bạn không giữ được.</p> <p><strong class=\"k\">Offer và quy trình khác:</strong> nếu bạn đang phỏng vấn ở nơi khác, hãy nói bình tĩnh và cho biết timeline đại khái. <strong class=\"k\">Đừng bịa hay phóng đại offer</strong> để tạo áp lực; rất dễ bị phát hiện và làm mất lòng tin. Nếu chưa có, hãy nói bạn đang ở vài quy trình và vị trí này là ưu tiên của bạn, nếu điều đó đúng.</p> <h5>Câu trả lời mẫu</h5> <p>“Thời gian báo trước của tôi là [thời gian thật của bạn], nên tôi có thể bắt đầu vào khoảng [ngày]. Tôi muốn bàn giao công việc hiện tại cho đàng hoàng. Tôi cũng đang ở [số lượng] quy trình khác và dự kiến có phản hồi vào [ngày]. [Công ty] là ưu tiên của tôi. Timeline ra quyết định của anh/chị thế nào ạ?”</p> <p>Hỏi về timeline của họ giúp hai bên lên kế hoạch và giữ cuộc trao đổi trung thực.</p>"
+      },
+      "terms": [
+        "notice period",
+        "start date",
+        "handover",
+        "other offers",
+        "timeline",
+        "honesty"
+      ]
+    },
+    {
+      "id": "q210",
+      "number": 210,
+      "tag": "Mẹo phỏng vấn · Không biết câu trả lời",
+      "title": "What do you do when you are asked something you do not know?",
+      "titleVi": "Bạn làm gì khi bị hỏi một điều mình không biết?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Nói thẳng là bạn chưa biết hoặc chưa dùng, đừng bịa",
+          "Nói phần liên quan mà bạn biết",
+          "Suy luận từ nguyên lý và nói to quá trình nghĩ",
+          "Nêu cách bạn sẽ tìm hiểu",
+          "Hỏi gợi ý nếu cần"
+        ]
+      },
+      "answer": {
+        "en": "<p>Nobody knows everything, and interviewers often <strong class=\"k\">ask beyond your level on purpose</strong> to see how you behave at the edge of your knowledge. What fails the interview is <strong class=\"k\">bluffing</strong>, freezing, or giving up with one sentence.</p> <p>Use this order: <strong class=\"k\">(1) Be honest</strong> that you have not used it or are not sure. <strong class=\"k\">(2) Offer what you do know</strong> that is adjacent. <strong class=\"k\">(3) Reason out loud</strong> from first principles and label guesses as guesses. <strong class=\"k\">(4) Say how you would find out</strong>: documentation, a small prototype, a teammate, the source. <strong class=\"k\">(5) Invite correction</strong> and ask for a hint.</p> <h5>Sample answer</h5> <p>\"I have not used [technology] in production, so I do not want to pretend. What I do know is [related concept], which solves a similar problem. If I had to guess, I would expect [your reasoning], but I would verify it by reading the docs and writing a small prototype. Is that close, or am I missing something?\"</p> <p>A bluff that gets caught makes the interviewer doubt your other answers too. A clear \"I do not know, here is how I would find out\" shows honesty and a learning attitude, which most teams value more than a memorised fact.</p> <p>If you only half remember, say \"I am not certain, but I believe...\" and keep reasoning.</p>",
+        "vi": "<p>Không ai biết hết mọi thứ, và người phỏng vấn thường <strong class=\"k\">cố tình hỏi vượt level</strong> để xem bạn hành xử ra sao ở rìa kiến thức. Điều khiến bạn trượt là <strong class=\"k\">bịa</strong>, đứng hình, hoặc bỏ cuộc chỉ với một câu.</p> <p>Dùng thứ tự này: <strong class=\"k\">(1) Trung thực</strong> là bạn chưa dùng hoặc chưa chắc. <strong class=\"k\">(2) Nêu điều bạn biết</strong> có liên quan. <strong class=\"k\">(3) Suy luận thành tiếng</strong> từ nguyên lý và gọi đúng tên các phần đoán là đoán. <strong class=\"k\">(4) Nói cách bạn sẽ tìm hiểu</strong>: tài liệu, một prototype nhỏ, đồng đội, source code. <strong class=\"k\">(5) Mời sửa</strong> và xin gợi ý.</p> <h5>Câu trả lời mẫu</h5> <p>“Tôi chưa dùng [công nghệ] trong production nên không muốn nói như thể đã dùng. Điều tôi biết là [khái niệm liên quan], giải quyết một vấn đề tương tự. Nếu phải đoán, tôi nghĩ [suy luận của bạn], nhưng tôi sẽ kiểm chứng bằng cách đọc docs và viết một prototype nhỏ. Như vậy có gần đúng không, hay tôi đang thiếu điều gì?”</p> <p>Một lần bịa bị phát hiện khiến người phỏng vấn nghi ngờ cả các câu trả lời khác của bạn. Một câu “tôi không biết, đây là cách tôi sẽ tìm hiểu” rõ ràng cho thấy sự trung thực và tinh thần học hỏi, điều mà đa số các team coi trọng hơn một kiến thức học thuộc.</p> <p>Nếu chỉ nhớ lơ mơ, hãy nói “Tôi không chắc, nhưng tôi tin là...” rồi tiếp tục suy luận.</p>"
+      },
+      "terms": [
+        "honesty",
+        "think aloud",
+        "first principles",
+        "learning attitude",
+        "do not bluff"
+      ]
+    },
+    {
+      "id": "q211",
+      "number": 211,
+      "tag": "Mẹo phỏng vấn · Live coding",
+      "title": "How do you behave in a live coding interview?",
+      "titleVi": "Bạn nên cư xử thế nào trong buổi phỏng vấn live coding?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Làm rõ đề: input, output, edge case, ràng buộc",
+          "Nói hướng giải trước khi viết, bắt đầu với cách đơn giản",
+          "Code từng bước, nói to, đặt tên rõ ràng",
+          "Tự test với ví dụ và edge case, nêu độ phức tạp",
+          "Khi kẹt: nói chỗ kẹt, thu nhỏ bài toán, xin gợi ý"
+        ]
+      },
+      "answer": {
+        "en": "<p>In live coding the interviewer evaluates <strong class=\"k\">communication and problem-solving as much as the final code</strong>. A silent candidate with a perfect solution often scores below a talkative one who reasons well.</p> <ol><li><strong class=\"k\">Clarify</strong> the problem: input types, empty input, duplicates, size, whether you may use built-ins. Repeat it back in your own words.</li><li><strong class=\"k\">Plan aloud:</strong> start with the simple or brute-force idea, state its complexity, then improve it if needed. Get agreement before coding.</li><li><strong class=\"k\">Code in small steps</strong> with clear names and narrate what you are doing. Do not rush to the clever version.</li><li><strong class=\"k\">Test yourself:</strong> walk through a normal example, then edge cases (empty, one item, large). Fix bugs calmly; finding your own bug is a good sign.</li><li><strong class=\"k\">State complexity</strong> (time and space) and possible improvements.</li></ol> <h5>When you are stuck</h5> <p>Say where: \"I am stuck on how to avoid the nested loop.\" Try a smaller example, write the brute force, or ask for a hint: \"Could you nudge me on the data structure?\" Using a hint well is fine and far better than silence.</p> <h5>Sample wording</h5> <p>\"Let me confirm: can the array be empty, and can values repeat? My first idea is two loops, O(n squared). I think a Map can bring it down to O(n), so let me code that.\"</p> <p>See Câu 45 for a worked example of this flow.</p>",
+        "vi": "<p>Trong live coding, người phỏng vấn đánh giá <strong class=\"k\">giao tiếp và cách giải quyết vấn đề không kém code cuối cùng</strong>. Một ứng viên im lặng với lời giải hoàn hảo thường bị điểm thấp hơn một ứng viên nói nhiều và suy luận tốt.</p> <ol><li><strong class=\"k\">Làm rõ</strong> đề bài: kiểu input, input rỗng, trùng lặp, kích thước, có được dùng hàm built-in không. Nhắc lại bằng lời của bạn.</li><li><strong class=\"k\">Lên kế hoạch thành tiếng:</strong> bắt đầu bằng ý tưởng đơn giản hoặc brute force, nêu độ phức tạp, rồi cải thiện nếu cần. Thống nhất với họ trước khi code.</li><li><strong class=\"k\">Code từng bước nhỏ</strong> với tên rõ ràng và nói to bạn đang làm gì. Đừng vội viết bản thông minh.</li><li><strong class=\"k\">Tự test:</strong> chạy thử một ví dụ thường, rồi các edge case (rỗng, một phần tử, lớn). Sửa bug bình tĩnh; tự tìm ra bug của mình là dấu hiệu tốt.</li><li><strong class=\"k\">Nêu độ phức tạp</strong> (thời gian và bộ nhớ) và các cải tiến có thể.</li></ol> <h5>Khi bị kẹt</h5> <p>Nói rõ chỗ kẹt: “Tôi đang kẹt ở chỗ làm sao tránh vòng lặp lồng nhau.” Thử một ví dụ nhỏ hơn, viết brute force, hoặc xin gợi ý: “Anh/chị có thể gợi ý giúp tôi về cấu trúc dữ liệu không?” Biết dùng gợi ý là ổn và tốt hơn nhiều so với im lặng.</p> <h5>Câu mẫu</h5> <p>“Cho tôi xác nhận: mảng có thể rỗng không, và giá trị có thể trùng không? Ý tưởng đầu tiên là hai vòng lặp, O(n bình phương). Tôi nghĩ dùng Map có thể giảm xuống O(n), nên tôi sẽ code theo hướng đó.”</p> <p>Xem Câu 45 để thấy một ví dụ minh họa quy trình này.</p>"
+      },
+      "terms": [
+        "live coding",
+        "clarifying questions",
+        "think aloud",
+        "edge cases",
+        "complexity",
+        "asking for hints"
+      ]
+    },
+    {
+      "id": "q212",
+      "number": 212,
+      "tag": "Mẹo phỏng vấn · Bài tập về nhà",
+      "title": "How do you approach a take-home assignment? What do reviewers look at?",
+      "titleVi": "Bạn làm bài tập về nhà như thế nào? Người chấm thường nhìn vào điều gì?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Làm rõ scope và thời gian được kỳ vọng, hỏi nếu mơ hồ",
+          "Time-box và ưu tiên yêu cầu cốt lõi trước",
+          "Giữ code sạch, có test, xử lý loading, lỗi, accessibility",
+          "README: cách chạy, quyết định, đánh đổi, nếu có thêm thời gian",
+          "Nộp đúng hạn, trung thực về cách làm, kể cả công cụ AI"
+        ]
+      },
+      "answer": {
+        "en": "<p>A take-home is judged on <strong class=\"k\">judgment</strong>, not on how much you build. Reviewers read many submissions; the ones that stand out are small, correct, easy to run and well explained.</p> <ol><li><strong class=\"k\">Clarify scope and time:</strong> \"How many hours do you expect this to take? Are AI tools allowed?\" Follow the stated budget; spending a whole weekend on a two-hour task does not impress.</li><li><strong class=\"k\">Time-box and prioritise:</strong> finish the core requirement first, then polish. A working simple version beats an unfinished ambitious one.</li><li><strong class=\"k\">Quality signals:</strong> clear structure, meaningful names, a few useful tests, <strong class=\"k\">loading, empty and error states</strong>, basic accessibility, small readable commits.</li><li><strong class=\"k\">Write a README:</strong> how to run and test, key decisions and <strong class=\"k\">trade-offs</strong>, what you skipped, and what you would do with more time.</li><li><strong class=\"k\">Be honest</strong> about how you worked, including any AI assistance, and be ready to explain every line in the follow-up interview.</li></ol> <h5>Sample README wording</h5> <p>\"I spent about [N] hours. I prioritised [the core feature]. I chose [approach] over [alternative] because [reason]. With more time I would add [real items: tests for X, better error handling].\"</p> <p>Do not over-engineer or add unrequested frameworks, and do not copy another solution; follow-up questions expose it quickly.</p>",
+        "vi": "<p>Bài tập về nhà được đánh giá bằng <strong class=\"k\">khả năng phán đoán</strong>, không phải bằng lượng bạn xây dựng. Người chấm đọc rất nhiều bài; những bài nổi bật là bài nhỏ, đúng, dễ chạy và được giải thích tốt.</p> <ol><li><strong class=\"k\">Làm rõ scope và thời gian:</strong> “Anh/chị kỳ vọng bài này mất bao nhiêu giờ? Có được dùng công cụ AI không?” Hãy theo ngân sách thời gian đã nêu; bỏ cả cuối tuần cho bài hai giờ không gây ấn tượng.</li><li><strong class=\"k\">Time-box và ưu tiên:</strong> hoàn thành yêu cầu cốt lõi trước, rồi mới trau chuốt. Một bản đơn giản chạy được tốt hơn một bản tham vọng dang dở.</li><li><strong class=\"k\">Dấu hiệu chất lượng:</strong> cấu trúc rõ ràng, đặt tên có nghĩa, vài test hữu ích, <strong class=\"k\">trạng thái loading, rỗng và lỗi</strong>, accessibility cơ bản, commit nhỏ dễ đọc.</li><li><strong class=\"k\">Viết README:</strong> cách chạy và test, các quyết định chính và <strong class=\"k\">đánh đổi</strong>, điều bạn bỏ qua, và điều bạn sẽ làm nếu có thêm thời gian.</li><li><strong class=\"k\">Trung thực</strong> về cách bạn làm, kể cả việc dùng AI, và sẵn sàng giải thích từng dòng ở buổi phỏng vấn tiếp theo.</li></ol> <h5>Câu mẫu cho README</h5> <p>“Tôi đã dành khoảng [N] giờ. Tôi ưu tiên [tính năng cốt lõi]. Tôi chọn [cách tiếp cận] thay vì [phương án khác] vì [lý do]. Nếu có thêm thời gian tôi sẽ thêm [mục thật: test cho X, xử lý lỗi tốt hơn].”</p> <p>Đừng over-engineer hay thêm framework không được yêu cầu, và đừng chép lời giải của người khác; câu hỏi tiếp theo sẽ lộ ra rất nhanh.</p>"
+      },
+      "terms": [
+        "take-home",
+        "time-boxing",
+        "README",
+        "trade-offs",
+        "scope",
+        "code quality"
+      ]
+    },
+    {
+      "id": "q213",
+      "number": 213,
+      "tag": "Mẹo phỏng vấn · Hồ sơ đặc biệt",
+      "title": "How do you explain a short stay, a career gap or a career change?",
+      "titleVi": "Bạn giải thích thế nào về một công việc ngắn hạn, một khoảng nghỉ hoặc việc chuyển ngành?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Thừa nhận ngắn gọn và trung thực, không biện hộ dài dòng",
+          "Nêu điều bạn học được hoặc đã làm trong thời gian đó",
+          "Giải thích vì sao bước tiếp theo hợp lý và bền vững",
+          "Với chuyển ngành: nhấn các kỹ năng chuyển giao được",
+          "Riêng tư là quyền, bạn không phải kể chi tiết cá nhân"
+        ]
+      },
+      "answer": {
+        "en": "<p>Interviewers worry about a <strong class=\"k\">pattern</strong>: will you leave quickly again? Your job is to give a <strong class=\"k\">short, honest, calm explanation</strong> and move on to the future. Long defences sound defensive; blaming sounds like a risk.</p> <p>Use three beats: <strong class=\"k\">(1) the fact</strong>, briefly; <strong class=\"k\">(2) what you learned or did</strong>; <strong class=\"k\">(3) why now is different</strong> and the new role fits.</p> <ul><li><strong class=\"k\">Short stay:</strong> be honest that it was not the right fit, and say what you learned about what you need. Never badmouth the employer.</li><li><strong class=\"k\">Gap:</strong> say what you did (study, projects, family, health, travel). You may keep personal details private with \"for personal reasons\", then pivot to what you built or learned and that you are ready to commit.</li><li><strong class=\"k\">Career change:</strong> point to <strong class=\"k\">transferable skills</strong> and concrete evidence such as projects, courses or shipped work.</li></ul> <h5>Sample answer</h5> <p>\"That role was only [N months]. I joined expecting [what you expected], but it turned out to be [honest neutral description], so I learned that I do best when [what you learned]. Since then I [real thing you did]. I looked for a role where [what fits], and this is exactly that.\"</p> <p>Use only your real facts. If something is private, a short, polite boundary is enough.</p>",
+        "vi": "<p>Người phỏng vấn lo về một <strong class=\"k\">mô thức</strong>: bạn có lại rời đi nhanh không? Việc của bạn là đưa ra <strong class=\"k\">một lời giải thích ngắn, trung thực, bình tĩnh</strong> rồi chuyển sang tương lai. Biện hộ dài nghe như phòng thủ; đổ lỗi nghe như rủi ro.</p> <p>Dùng ba nhịp: <strong class=\"k\">(1) sự việc</strong>, nói ngắn; <strong class=\"k\">(2) điều bạn học được hoặc đã làm</strong>; <strong class=\"k\">(3) vì sao lần này khác</strong> và vị trí mới phù hợp.</p> <ul><li><strong class=\"k\">Công việc ngắn hạn:</strong> thành thật rằng nó không hợp, và nói bạn học được gì về điều mình cần. Không bao giờ nói xấu công ty cũ.</li><li><strong class=\"k\">Khoảng nghỉ:</strong> nói điều bạn đã làm (học, dự án, gia đình, sức khỏe, đi du lịch). Bạn có thể giữ riêng tư chi tiết cá nhân bằng “vì lý do cá nhân”, rồi chuyển sang điều bạn đã xây dựng hoặc học và việc bạn sẵn sàng gắn bó.</li><li><strong class=\"k\">Chuyển ngành:</strong> chỉ ra <strong class=\"k\">kỹ năng chuyển giao được</strong> và bằng chứng cụ thể như dự án, khóa học hoặc sản phẩm đã ship.</li></ul> <h5>Câu trả lời mẫu</h5> <p>“Vị trí đó chỉ kéo dài [N tháng]. Tôi vào với kỳ vọng [điều bạn kỳ vọng], nhưng thực tế là [mô tả trung lập, trung thực], nên tôi học được rằng mình làm tốt nhất khi [điều bạn học được]. Từ đó tôi đã [việc thật bạn đã làm]. Tôi tìm một vị trí [điều phù hợp], và đây đúng là như vậy.”</p> <p>Chỉ dùng sự thật của bạn. Nếu có điều riêng tư, một ranh giới ngắn và lịch sự là đủ.</p>"
+      },
+      "terms": [
+        "short stay",
+        "career gap",
+        "career change",
+        "transferable skills",
+        "honest explanation"
+      ]
+    },
+    {
+      "id": "q214",
+      "number": 214,
+      "tag": "Mẹo phỏng vấn · Sai lầm và áp lực",
+      "title": "Tell me about a mistake or failure. How do you handle pressure and tight deadlines?",
+      "titleVi": "Hãy kể về một sai lầm hoặc thất bại. Bạn xử lý áp lực và deadline gấp thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Chọn sai lầm thật, mức vừa phải, có bài học",
+          "Situation và phần việc của riêng bạn, không đổ lỗi",
+          "Hành động khắc phục ngay và thông báo sớm",
+          "Thay đổi lâu dài: test, checklist, quy trình",
+          "Với deadline: ưu tiên, giao tiếp sớm, cắt scope chứ không cắt chất lượng chỗ quan trọng"
+        ]
+      },
+      "answer": {
+        "en": "<p>This is a <strong class=\"k\">behavioural question</strong>: they hear how you take <strong class=\"k\">ownership</strong> and whether you <strong class=\"k\">learn</strong>. Answer with the STAR shape (see Câu 41 to Câu 43 and Câu 16): Situation, Task, Action, Result, but spend most time on <strong class=\"k\">what you did after the mistake and what you changed</strong>.</p> <p>Pick a <strong class=\"k\">real mistake</strong> of moderate size. \"I never made one\" sounds untrue, and a disaster you cannot recover from is too risky. Say \"I\" for your part and do not blame others. Show that you <strong class=\"k\">fixed it fast, told people early</strong>, and then added a <strong class=\"k\">permanent safeguard</strong> such as a test, a checklist or a review step.</p> <h5>Sample answer</h5> <p>\"In [a real project], I [your real mistake, for example shipped a change without testing an edge case]. It caused [real impact]. I told [team or manager] straight away, fixed it within [time], and wrote a post-mortem. Since then I [real change: add a regression test, use a checklist, ask for review on risky changes]. It has not happened again.\"</p> <h5>Pressure and deadlines</h5> <p>Same ownership mindset: <strong class=\"k\">clarify priorities</strong> with the stakeholder, <strong class=\"k\">communicate risk early</strong> rather than at the deadline, and <strong class=\"k\">cut scope, not quality</strong> on critical paths. Give one real example, and say how you stay calm, for example by breaking work into small deliverables.</p>",
+        "vi": "<p>Đây là <strong class=\"k\">câu hỏi hành vi</strong>: họ nghe cách bạn nhận <strong class=\"k\">trách nhiệm</strong> và xem bạn có <strong class=\"k\">học được</strong> không. Hãy trả lời theo khuôn STAR (xem Câu 41 đến Câu 43 và Câu 16): Situation, Task, Action, Result, nhưng dành phần lớn thời gian cho <strong class=\"k\">việc bạn làm sau sai lầm và điều bạn đã thay đổi</strong>.</p> <p>Chọn một <strong class=\"k\">sai lầm thật</strong> ở mức vừa phải. “Tôi chưa từng mắc lỗi” nghe không thật, còn một thảm họa không thể khắc phục thì quá rủi ro. Dùng “tôi” cho phần của mình và đừng đổ lỗi cho người khác. Cho thấy bạn <strong class=\"k\">sửa nhanh, báo sớm</strong>, rồi thêm một <strong class=\"k\">biện pháp bảo vệ lâu dài</strong> như test, checklist hoặc bước review.</p> <h5>Câu trả lời mẫu</h5> <p>“Trong [một dự án thật], tôi [sai lầm thật của bạn, ví dụ ship một thay đổi mà không test một edge case]. Nó gây ra [tác động thật]. Tôi báo ngay cho [team hoặc quản lý], sửa trong [thời gian], và viết một bản post-mortem. Từ đó tôi [thay đổi thật: thêm regression test, dùng checklist, nhờ review với các thay đổi rủi ro]. Việc đó chưa lặp lại.”</p> <h5>Áp lực và deadline</h5> <p>Cùng tinh thần chịu trách nhiệm: <strong class=\"k\">làm rõ ưu tiên</strong> với stakeholder, <strong class=\"k\">báo rủi ro sớm</strong> thay vì đến sát deadline, và <strong class=\"k\">cắt scope chứ không cắt chất lượng</strong> ở những đường đi quan trọng. Đưa một ví dụ thật, và nói bạn giữ bình tĩnh thế nào, ví dụ chia việc thành các phần giao nhỏ.</p>"
+      },
+      "terms": [
+        "mistake",
+        "failure",
+        "ownership",
+        "STAR",
+        "post-mortem",
+        "deadline pressure"
+      ]
+    },
+    {
+      "id": "q215",
+      "number": 215,
+      "tag": "Mẹo phỏng vấn · Offer",
+      "title": "You have an offer. How do you negotiate and compare offers?",
+      "titleVi": "Bạn nhận được offer. Bạn thương lượng và so sánh các offer thế nào?",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Yêu cầu offer bằng văn bản và cảm ơn",
+          "So sánh tổng thu nhập, không chỉ lương cơ bản",
+          "Cân nhắc yếu tố ngoài tiền: team, stack, tăng trưởng, remote",
+          "Phản hồi một lần, lịch sự, có lý do, không đe dọa",
+          "Chốt mọi thứ bằng văn bản trước khi nghỉ việc cũ"
+        ]
+      },
+      "answer": {
+        "en": "<p>Negotiating is normal and expected; a polite, reasoned request rarely loses an offer. <strong class=\"k\">Say thanks, ask for the offer in writing</strong>, and take a day or two to decide. Never accept or refuse under pressure on the phone.</p> <h5>Compare total compensation</h5> <ul><li><strong class=\"k\">Base salary</strong>, and whether it is gross or net.</li><li><strong class=\"k\">13th-month pay and bonus:</strong> is it guaranteed or discretionary, and how was it paid in the past?</li><li><strong class=\"k\">Insurance and benefits:</strong> health cover, allowances, leave; ask which salary figure insurance contributions are based on.</li><li><strong class=\"k\">Equity or ESOP</strong>, if offered: what it is worth only if the company succeeds.</li><li><strong class=\"k\">Probation terms</strong>, remote or hybrid policy, equipment, learning budget.</li></ul> <p>Then weigh the <strong class=\"k\">non-money factors</strong>: the team and manager, tech stack, growth, product stability, commute and working style. Money matters, but a good team compounds.</p> <h5>Sample counter</h5> <p>\"Thank you, I am very excited about the role. Based on my research and my experience with [your real strengths], I was hoping for [your number or range]. Is there flexibility on the base, or on [bonus, review date, learning budget]?\"</p> <p>If you have another offer, state it honestly and do not bluff. Once you agree, get <strong class=\"k\">every term in writing</strong> before you resign.</p>",
+        "vi": "<p>Thương lượng là bình thường và được mong đợi; một yêu cầu lịch sự, có lý do hiếm khi làm mất offer. <strong class=\"k\">Cảm ơn, xin offer bằng văn bản</strong>, và dành một hai ngày để quyết định. Đừng bao giờ nhận hay từ chối dưới áp lực qua điện thoại.</p> <h5>So sánh tổng thu nhập</h5> <ul><li><strong class=\"k\">Lương cơ bản</strong>, và là gross hay net.</li><li><strong class=\"k\">Lương tháng 13 và thưởng:</strong> được đảm bảo hay tùy ý, và những năm trước trả ra sao?</li><li><strong class=\"k\">Bảo hiểm và phúc lợi:</strong> bảo hiểm sức khỏe, phụ cấp, ngày phép; hỏi mức lương nào được dùng để tính đóng bảo hiểm.</li><li><strong class=\"k\">Equity hoặc ESOP</strong>, nếu có: chỉ có giá trị khi công ty thành công.</li><li><strong class=\"k\">Điều khoản thử việc</strong>, chính sách remote hoặc hybrid, thiết bị, ngân sách học tập.</li></ul> <p>Sau đó cân nhắc <strong class=\"k\">các yếu tố ngoài tiền</strong>: team và quản lý, tech stack, sự phát triển, độ ổn định của sản phẩm, quãng đường đi làm và cách làm việc. Tiền quan trọng, nhưng một team tốt sinh lời kép.</p> <h5>Câu phản hồi mẫu</h5> <p>“Cảm ơn anh/chị, tôi rất hào hứng với vị trí này. Dựa trên nghiên cứu và kinh nghiệm của tôi với [điểm mạnh thật của bạn], tôi mong đợi [con số hoặc khoảng của bạn]. Có thể linh hoạt ở lương cơ bản, hoặc ở [thưởng, thời điểm review, ngân sách học tập] không ạ?”</p> <p>Nếu bạn có offer khác, hãy nói trung thực và đừng bluff. Khi đã đồng ý, hãy chốt <strong class=\"k\">mọi điều khoản bằng văn bản</strong> trước khi nộp đơn nghỉ việc.</p>"
+      },
+      "terms": [
+        "offer negotiation",
+        "total compensation",
+        "13th-month pay",
+        "equity",
+        "written offer",
+        "growth"
+      ]
+    },
+    {
+      "id": "q216",
+      "number": 216,
+      "tag": "Mẹo phỏng vấn · Chuẩn bị",
+      "title": "How do you prepare for an interview, especially an online one? Give me a before, during and after checklist.",
+      "titleVi": "Bạn chuẩn bị cho buổi phỏng vấn, đặc biệt là phỏng vấn online, như thế nào? Cho tôi một checklist trước, trong và sau.",
+      "framework": {
+        "title": "Khung trả lời",
+        "steps": [
+          "Trước: nghiên cứu công ty, chuẩn bị câu chuyện STAR, kiểm tra thiết bị",
+          "Trong: nói ngắn gọn, nhìn camera, nói to khi suy nghĩ, ghi chú",
+          "Sau: tin nhắn cảm ơn trong 24 giờ, ghi lại câu hỏi để học",
+          "Có phương án dự phòng cho mạng và thiết bị"
+        ]
+      },
+      "answer": {
+        "en": "<p>Preparation is mostly <strong class=\"k\">removing avoidable risk</strong> so your skill is what gets judged.</p> <h5>Before</h5> <ol><li><strong class=\"k\">Research</strong> the company, product, team and interviewers; reread the job post.</li><li><strong class=\"k\">Prepare 3 STAR stories</strong> (see Câu 41 to Câu 43) and a 1-2 minute self-introduction (Câu 01).</li><li><strong class=\"k\">Draft answers</strong> to the common questions in this part, using your own true facts.</li><li><strong class=\"k\">Test technology</strong> the day before: camera, microphone, internet, the meeting app and your editor or screen sharing. Have a <strong class=\"k\">backup</strong> (phone hotspot), a quiet room, a plain background, charged laptop, water.</li></ol> <h5>During</h5> <p>Answer in 1-2 minutes, look at the camera, think aloud on technical questions, ask to clarify, and keep a notepad for questions and names. If the connection drops, say so calmly and reconnect.</p> <h5>After</h5> <p>Within 24 hours send a short, specific thank-you message, then write down the questions you were asked and where you struggled, so the next interview is easier.</p> <h5>Sample follow-up</h5> <p>\"Hi [name], thank you for the conversation today. I enjoyed discussing [a specific topic]. It strengthened my interest in the role, especially [a real reason]. Please let me know if I can provide anything else.\"</p>",
+        "vi": "<p>Chuẩn bị chủ yếu là <strong class=\"k\">loại bỏ những rủi ro có thể tránh</strong> để thứ được đánh giá là năng lực của bạn.</p> <h5>Trước buổi phỏng vấn</h5> <ol><li><strong class=\"k\">Nghiên cứu</strong> công ty, sản phẩm, team và người phỏng vấn; đọc lại job post.</li><li><strong class=\"k\">Chuẩn bị 3 câu chuyện STAR</strong> (xem Câu 41 đến Câu 43) và phần giới thiệu bản thân 1-2 phút (Câu 01).</li><li><strong class=\"k\">Soạn nháp câu trả lời</strong> cho các câu hỏi phổ biến trong phần này, dùng sự thật của chính bạn.</li><li><strong class=\"k\">Kiểm tra thiết bị</strong> từ hôm trước: camera, micro, internet, ứng dụng họp và editor hoặc chia sẻ màn hình. Có <strong class=\"k\">phương án dự phòng</strong> (hotspot điện thoại), phòng yên tĩnh, nền đơn giản, laptop đã sạc pin, nước uống.</li></ol> <h5>Trong buổi phỏng vấn</h5> <p>Trả lời trong 1-2 phút, nhìn vào camera, nói to khi suy nghĩ ở câu kỹ thuật, hỏi lại để làm rõ, và giữ sổ ghi chú cho câu hỏi và tên. Nếu mất kết nối, hãy báo bình tĩnh rồi kết nối lại.</p> <h5>Sau buổi phỏng vấn</h5> <p>Trong vòng 24 giờ gửi một tin nhắn cảm ơn ngắn và cụ thể, rồi ghi lại các câu bạn được hỏi và chỗ bạn lúng túng, để lần sau dễ hơn.</p> <h5>Tin nhắn cảm ơn mẫu</h5> <p>“Chào [tên], cảm ơn anh/chị về buổi trao đổi hôm nay. Tôi rất thích phần thảo luận về [một chủ đề cụ thể]. Nó làm tôi càng quan tâm hơn tới vị trí này, đặc biệt là [lý do thật]. Nếu cần thêm thông tin gì, anh/chị cứ báo tôi nhé.”</p>"
+      },
+      "terms": [
+        "interview preparation",
+        "STAR stories",
+        "online interview setup",
+        "checklist",
+        "thank-you message",
+        "company research"
+      ]
+    }
+  ]
+}
