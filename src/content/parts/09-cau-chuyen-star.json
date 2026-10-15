@@ -3,84 +3,88 @@
   "slug": "cau-chuyen-star",
   "roman": "IX",
   "title": "Câu chuyện STAR",
-  "description": "Ba câu chuyện từ CV, dựng theo khung Situation · Task · Action · Result. Hãy thay bằng chi tiết thật của bạn.",
+  "description": "Ba câu chuyện từ CV, dựng theo khung Situation · Task · Action · Result.",
   "questions": [
     {
       "id": "q41",
       "number": 41,
-      "tag": "STAR · Thanh toán",
-      "title": "Tell me about the payment portal you built. (STAR)",
-      "titleVi": "Hãy kể về cổng thanh toán bạn đã xây dựng. (STAR)",
+      "tag": "STAR · CMS nội bộ",
+      "title": "Tell me about a time you built something that helped other people work more effectively. (STAR)",
+      "titleVi": "Kể về một lần bạn xây dựng thứ gì đó giúp người khác làm việc hiệu quả hơn. (STAR)",
       "framework": {
         "title": "Khung trả lời",
         "steps": [
-          "Situation: cổng nạp game, nhiều phương thức thanh toán",
-          "Task: phần bạn chịu trách nhiệm",
-          "Action: SSR + API proxy, 3 cổng, luồng checkout theo game",
-          "Result: +15% giao dịch thành công, và cách đo"
+          "Situation: team sản phẩm phải nhờ engineer cập nhật nội dung, chờ 1 đến 2 ngày",
+          "Task: phụ trách frontend của CMS nội bộ để các team tự quản lý",
+          "Action: quan sát người dùng thật, form dễ hiểu có xem trước, component dùng chung, thu phản hồi",
+          "Result: yêu cầu cho dev giảm hơn một nửa, cập nhật chỉ mất vài phút"
         ]
       },
       "answer": {
-        "en": "<h5>Situation</h5> <p>At OEG we needed a <strong class=\"k\">game top-up portal</strong> that let players pay through several Vietnamese payment methods.</p> <h5>Task</h5> <p>I was responsible for building the frontend and integrating the payment methods, while keeping credentials safe and making the checkout work for different kinds of games.</p> <h5>Action</h5> <ul><li>I built it on <strong class=\"k\">Next.js SSR</strong> with a <strong class=\"k\">server-side API proxy</strong>, so sensitive credentials never reach the client and all backend calls go through one place.</li><li>I integrated <strong class=\"k\">VietQR/BIDV, ZaloPay and VNPay</strong>.</li><li>I implemented <strong class=\"k\">game-specific checkout flows</strong>: guest purchase for Co-Pub titles where it is permitted, and authenticated checkout for restricted Ex-Pub titles.</li></ul> <h5>Result</h5> <p>Successful transactions increased by <strong class=\"k\">15%</strong>. Be ready to explain how it was measured, over what period, and what drove it.</p> <p>Tip: keep it to about two minutes, and replace anything here with your own real details (numbers, names, what went wrong).</p>",
-        "vi": "<h5>Situation</h5> <p>Tại OEG, chúng tôi cần một <strong class=\"k\">cổng nạp game</strong> cho phép người chơi thanh toán qua nhiều phương thức phổ biến ở Việt Nam.</p> <h5>Task</h5> <p>Tôi chịu trách nhiệm xây dựng frontend và tích hợp các phương thức thanh toán, đồng thời giữ credential an toàn và làm cho checkout phù hợp với từng loại game.</p> <h5>Action</h5> <ul><li>Tôi xây trên <strong class=\"k\">Next.js SSR</strong> với <strong class=\"k\">API proxy phía server</strong>, để credential nhạy cảm không bao giờ tới client và mọi lời gọi backend đi qua một chỗ.</li><li>Tôi tích hợp <strong class=\"k\">VietQR/BIDV, ZaloPay và VNPay</strong>.</li><li>Tôi làm <strong class=\"k\">luồng checkout theo từng game</strong>: cho phép mua với tư cách khách ở game Co-Pub khi được phép, và bắt buộc đăng nhập ở game Ex-Pub bị hạn chế.</li></ul> <h5>Result</h5> <p>Giao dịch thành công tăng <strong class=\"k\">15%</strong>. Hãy chuẩn bị giải thích cách đo, trong bao lâu, và yếu tố nào tạo ra mức tăng đó.</p> <p>Mẹo: nói trong khoảng hai phút, và thay bằng chi tiết thật của bạn (số liệu, tên, điều gì đã không suôn sẻ).</p>"
+        "en": "<h5>Situation</h5> <p>At OEG, the product teams constantly had to update tournaments, rewards, news and in-game item packages, and every time they had to ask an engineer to step in. On average there were about <strong class=\"k\">15 to 20 requests a week</strong>, and each one took <strong class=\"k\">1 to 2 days</strong> to finish. Product work slowed down, and developers were interrupted all the time.</p> <h5>Task</h5> <p>I was responsible for the frontend of an <strong class=\"k\">internal CMS</strong>, so that teams could manage content themselves without an engineer.</p> <h5>Action</h5> <ul><li>Before writing code, I sat with 2 or 3 people from product and operations and watched what they do every day, so I knew which tasks were repeated most and where they most often made input mistakes.</li><li>I designed forms with clear validation, error messages written in plain language for non-technical people, and a <strong class=\"k\">preview step</strong> before publishing, to keep display errors from reaching production.</li><li>I built <strong class=\"k\">shared components</strong> for each content type (tournaments, rewards, news, item packages), so adding a new module took about <strong class=\"k\">1 to 2 days</strong> instead of starting from scratch.</li><li>After the first release, I collected feedback and reworked the flows where users got stuck.</li></ul> <h5>Result</h5> <p>Product teams could run tournaments, rewards, news and in-game packages on their own without engineers. The number of requests sent to developers dropped by <strong class=\"k\">more than half</strong>, and a content update went from waiting a whole day to taking <strong class=\"k\">a few minutes</strong>. Developers gained time for larger features.</p> <p><strong class=\"k\">What to emphasise:</strong> you treat internal users as real users, and you measure impact by the time saved across the whole organisation.</p>",
+        "vi": "<h5>Situation</h5> <p>Ở OEG, các team sản phẩm thường xuyên phải cập nhật giải đấu, phần thưởng, tin tức và gói vật phẩm trong game. Mỗi lần như vậy họ đều phải nhờ engineer can thiệp. Trung bình mỗi tuần có khoảng <strong class=\"k\">15 đến 20 yêu cầu</strong>, và mỗi yêu cầu phải chờ <strong class=\"k\">1 đến 2 ngày</strong> mới xong. Team sản phẩm bị chậm tiến độ, còn dev thì bị ngắt quãng liên tục.</p> <h5>Task</h5> <p>Mình phụ trách phần frontend của một hệ thống <strong class=\"k\">CMS nội bộ</strong>, để các team tự quản lý nội dung mà không cần engineer.</p> <h5>Action</h5> <ul><li>Trước khi code, mình ngồi với 2 đến 3 bạn bên product và vận hành để xem họ thao tác hằng ngày, từ đó biết đâu là việc lặp lại nhiều nhất và đâu là chỗ họ hay nhập sai.</li><li>Mình thiết kế các form có validate rõ ràng, thông báo lỗi dễ hiểu bằng ngôn ngữ của người không rành kỹ thuật, và có <strong class=\"k\">bước xem trước</strong> trước khi đăng để tránh lỗi hiển thị lên production.</li><li>Mình xây các <strong class=\"k\">component dùng chung</strong> cho từng loại nội dung (giải đấu, phần thưởng, tin tức, gói vật phẩm), nên thêm một module mới chỉ mất khoảng <strong class=\"k\">1 đến 2 ngày</strong> thay vì làm lại từ đầu.</li><li>Sau khi ra bản đầu, mình thu thập phản hồi và chỉnh lại luồng thao tác ở những chỗ người dùng bị vướng.</li></ul> <h5>Result</h5> <p>Các team sản phẩm tự vận hành được tournament, reward, news và in-game package mà không cần engineer. Số yêu cầu gửi cho dev giảm <strong class=\"k\">hơn một nửa</strong>, và việc cập nhật nội dung từ chỗ chờ cả ngày giờ có thể làm xong trong <strong class=\"k\">vài phút</strong>. Dev có thêm thời gian cho các tính năng lớn hơn.</p> <p><strong class=\"k\">Nhấn mạnh:</strong> bạn coi người dùng nội bộ cũng là người dùng thật, và bạn đo hiệu quả bằng thời gian tiết kiệm cho cả tổ chức.</p>"
       },
       "terms": [
         "STAR",
-        "Next.js SSR",
-        "API proxy",
-        "+15%"
+        "internal CMS",
+        "shared components",
+        "user research",
+        "preview before publish"
       ]
     },
     {
       "id": "q42",
       "number": 42,
-      "tag": "STAR · Xác thực",
-      "title": "Tell me about the shared authentication layer you built. (STAR)",
-      "titleVi": "Hãy kể về lớp xác thực dùng chung bạn đã xây dựng. (STAR)",
+      "tag": "STAR · Cổng nạp & bảo mật",
+      "title": "Tell me about a hard technical problem you solved, or how you handle security on the frontend. (STAR)",
+      "titleVi": "Kể về một vấn đề kỹ thuật khó bạn đã giải quyết, hoặc bạn xử lý bảo mật ở frontend như thế nào. (STAR)",
       "framework": {
         "title": "Khung trả lời",
         "steps": [
-          "Situation: nhiều sản phẩm cần đăng nhập",
-          "Task: một lớp auth dùng chung",
-          "Action: OAuth 2.0, OTP, route guard, revalidate session",
-          "Result: nhất quán giữa các sản phẩm"
+          "Situation: cổng nạp game liên quan trực tiếp đến tiền, API không được lộ, trang tin vẫn cần SEO",
+          "Task: luồng nạp và tài khoản an toàn, nhanh, thân thiện với công cụ tìm kiếm",
+          "Action: SSR làm proxy, token ở cookie httpOnly, xử lý lỗi giao dịch, giữ proxy mỏng",
+          "Result: vận hành ổn định, không sự cố bảo mật nghiêm trọng, trang tin vẫn lên hạng"
         ]
       },
       "answer": {
-        "en": "<h5>Situation</h5> <p>OEG runs several products, and each one needs users to sign in. The goal was <strong class=\"k\">one consistent sign-in experience</strong> instead of repeating the logic in every product.</p> <h5>Task</h5> <p>I built the shared authentication layer on the frontend: sign-in methods, session handling and access control.</p> <h5>Action</h5> <ul><li>Integrated <strong class=\"k\">Google and Facebook OAuth 2.0</strong>, plus <strong class=\"k\">email and SMS OTP</strong>.</li><li>Added <strong class=\"k\">route-level access control</strong> so private pages are protected.</li><li>Added <strong class=\"k\">session revalidation</strong> on app startup and when a tab regains focus, so a logged-out or expired session is not shown as signed in.</li></ul> <h5>Result</h5> <p>Multiple OEG products now share the same sign-in and session management, so the behavior is consistent and new products can reuse it. Be ready to say how many products use it.</p> <p>Tip: keep it to about two minutes, and replace anything here with your own real details (numbers, names, what went wrong).</p>",
-        "vi": "<h5>Situation</h5> <p>OEG có nhiều sản phẩm và sản phẩm nào cũng cần đăng nhập. Mục tiêu là <strong class=\"k\">một trải nghiệm đăng nhập nhất quán</strong> thay vì lặp lại logic ở từng sản phẩm.</p> <h5>Task</h5> <p>Tôi xây lớp xác thực dùng chung ở frontend: các cách đăng nhập, quản lý phiên và kiểm soát truy cập.</p> <h5>Action</h5> <ul><li>Tích hợp <strong class=\"k\">Google và Facebook OAuth 2.0</strong>, cùng <strong class=\"k\">OTP qua email và SMS</strong>.</li><li>Thêm <strong class=\"k\">kiểm soát truy cập theo route</strong> để các trang riêng tư được bảo vệ.</li><li>Thêm <strong class=\"k\">revalidate session</strong> khi app khởi động và khi tab được focus lại, để phiên đã đăng xuất hoặc hết hạn không bị hiển thị như còn đăng nhập.</li></ul> <h5>Result</h5> <p>Nhiều sản phẩm OEG dùng chung cách đăng nhập và quản lý phiên, nên hành vi nhất quán và sản phẩm mới có thể tái sử dụng. Hãy chuẩn bị nói được bao nhiêu sản phẩm đang dùng.</p> <p>Mẹo: nói trong khoảng hai phút, và thay bằng chi tiết thật của bạn (số liệu, tên, điều gì đã không suôn sẻ).</p>"
+        "en": "<h5>Situation</h5> <p>I built a game top-up portal for players with Next.js: top-up, account management and news. Because it deals directly with users' money, security was the top priority. If the browser called the backend API directly, the endpoints and the way authentication works would show up in the Network tab, easy to probe or abuse. At the same time, the news pages still needed good SEO.</p> <h5>Task</h5> <p>I needed to design the top-up and account flows to be secure, keep the experience fast, and keep the content pages friendly to search engines.</p> <h5>Action</h5> <ul><li>I used Next.js SSR with the server acting as a <strong class=\"k\">proxy</strong> for API requests, so the client only talks to the portal's server and never calls the backend directly.</li><li>Tokens and sensitive data stay on the server side (an <strong class=\"k\">httpOnly cookie</strong>), not in localStorage, to reduce the risk of theft through XSS.</li><li>I handled transaction failure cases such as timeouts, duplicate requests and error responses from the payment gateway, so users always see a clear status and are never charged twice.</li><li>I knew an extra hop can add latency, so I kept the proxy logic <strong class=\"k\">thin</strong>: only forwarding, attaching authentication and normalising errors. I also agreed with the backend team on a common response format and error codes.</li></ul> <h5>Result</h5> <p>The portal ran stably and the APIs were not exposed directly to the client. It served the daily player base without any serious security incident, and the news pages still ranked well thanks to SSR.</p> <p><strong class=\"k\">What to emphasise:</strong> you understand the client/server boundary and weigh security, performance and SEO against each other. Be ready for: \"Why not call the API directly? Does the proxy add latency? If you did it again, what would you change?\" (see Câu 02 and Câu 04).</p>",
+        "vi": "<h5>Situation</h5> <p>Mình xây cổng nạp game cho người chơi bằng Next.js, gồm nạp tiền, quản lý tài khoản và tin tức. Vì liên quan trực tiếp đến tiền của người dùng, bảo mật là ưu tiên số một. Nếu để trình duyệt gọi thẳng API backend, endpoint và cách xác thực sẽ lộ ra trong tab Network, dễ bị dò hoặc lạm dụng. Trong khi đó trang tin tức vẫn cần SEO tốt.</p> <h5>Task</h5> <p>Mình cần thiết kế để luồng nạp và tài khoản an toàn, trải nghiệm vẫn nhanh, và các trang nội dung vẫn thân thiện với công cụ tìm kiếm.</p> <h5>Action</h5> <ul><li>Mình dùng Next.js SSR và cho server đóng vai <strong class=\"k\">proxy</strong> cho các request API, nên client chỉ nói chuyện với server của portal chứ không gọi trực tiếp backend.</li><li>Token và thông tin nhạy cảm được giữ ở phía server (<strong class=\"k\">cookie httpOnly</strong>), không lưu ở localStorage, để giảm rủi ro bị đánh cắp qua XSS.</li><li>Mình xử lý các tình huống lỗi của giao dịch như timeout, request trùng và phản hồi lỗi từ cổng thanh toán, để người dùng luôn thấy trạng thái rõ ràng và không bị trừ tiền hai lần.</li><li>Mình cân nhắc việc proxy thêm một chặng có thể tăng độ trễ, nên đã giữ logic proxy <strong class=\"k\">mỏng</strong> và chỉ làm những việc cần thiết như chuyển tiếp, gắn xác thực và chuẩn hóa lỗi. Mình cũng trao đổi với backend để thống nhất định dạng response và mã lỗi.</li></ul> <h5>Result</h5> <p>Cổng vận hành ổn định và các API không bị lộ trực tiếp ra phía client. Hệ thống phục vụ lượng người chơi hằng ngày mà không phát sinh sự cố bảo mật nghiêm trọng nào, và các trang tin vẫn lên hạng tốt nhờ SSR.</p> <p><strong class=\"k\">Nhấn mạnh:</strong> bạn hiểu ranh giới client/server và biết cân nhắc giữa bảo mật, hiệu năng và SEO. Hãy chuẩn bị trả lời: “Vì sao không gọi API trực tiếp? Proxy có làm tăng độ trễ không? Nếu làm lại bạn đổi gì?” (xem Câu 02 và Câu 04).</p>"
       },
       "terms": [
         "STAR",
-        "OAuth 2.0",
-        "OTP",
-        "session revalidation"
+        "SSR proxy",
+        "httpOnly cookie",
+        "XSS",
+        "idempotency"
       ]
     },
     {
       "id": "q43",
       "number": 43,
-      "tag": "STAR · Kiến trúc",
-      "title": "Tell me about the architecture and coding standards you introduced. (STAR)",
-      "titleVi": "Hãy kể về kiến trúc và coding convention bạn đã đưa vào. (STAR)",
+      "tag": "STAR · SEO & kiểm thử",
+      "title": "Tell me about a time you improved product quality, or how do you make sure your code quality is good? (STAR)",
+      "titleVi": "Kể về lần bạn cải thiện chất lượng sản phẩm, hoặc bạn đảm bảo chất lượng code như thế nào. (STAR)",
       "framework": {
         "title": "Khung trả lời",
         "steps": [
-          "Situation: nhiều project Next.js/Nuxt",
-          "Task: chuẩn hóa cấu trúc và cách làm",
-          "Action: kiến trúc tái sử dụng, convention, test",
-          "Result: Lighthouse SEO 98, coverage 80%, nhiều team dùng"
+          "Situation: SEO chỉ 70 đến 75, coverage 20 đến 30%, từng có lỗi hồi quy lên production",
+          "Task: tự nhận việc đưa SEO trên 95 và coverage khoảng 80%",
+          "Action: SEO (metadata, SSR, ảnh, heading, alt), test (Jest, Playwright, ưu tiên luồng sống còn), CI",
+          "Result: SEO 98, coverage 80%, ít lỗi hồi quy hơn, team tự tin hơn"
         ]
       },
       "answer": {
-        "en": "<h5>Situation</h5> <p>We were building many <strong class=\"k\">Next.js and Nuxt</strong> applications across teams, and each project benefited from sharing one structure instead of inventing its own.</p> <h5>Task</h5> <p>I took ownership of defining a <strong class=\"k\">reusable project architecture and coding conventions</strong>.</p> <h5>Action</h5> <ul><li>Established a standard project structure and development practices for Next.js and Nuxt apps.</li><li>Introduced automated testing with <strong class=\"k\">Jest and Playwright</strong> to protect quality.</li><li>Focused on SEO and performance for public pages.</li></ul> <h5>Result</h5> <p>The structure is now used across multiple teams, Lighthouse SEO reached <strong class=\"k\">98</strong> and test coverage reached <strong class=\"k\">80%</strong>. Be ready for: \"how did you convince people to adopt it?\" Answer with communication, not just technology.</p> <p>Tip: keep it to about two minutes, and replace anything here with your own real details (numbers, names, what went wrong).</p>",
-        "vi": "<h5>Situation</h5> <p>Chúng tôi xây nhiều ứng dụng <strong class=\"k\">Next.js và Nuxt</strong> ở nhiều team, và mỗi project sẽ có lợi hơn nếu dùng chung một cấu trúc thay vì tự nghĩ ra riêng.</p> <h5>Task</h5> <p>Tôi nhận trách nhiệm định nghĩa <strong class=\"k\">kiến trúc project tái sử dụng và coding convention</strong>.</p> <h5>Action</h5> <ul><li>Thiết lập cấu trúc project và cách phát triển chuẩn cho các ứng dụng Next.js và Nuxt.</li><li>Đưa vào kiểm thử tự động với <strong class=\"k\">Jest và Playwright</strong> để bảo vệ chất lượng.</li><li>Tập trung vào SEO và hiệu năng cho các trang công khai.</li></ul> <h5>Result</h5> <p>Cấu trúc này hiện được nhiều team dùng, Lighthouse SEO đạt <strong class=\"k\">98</strong> và test coverage đạt <strong class=\"k\">80%</strong>. Hãy chuẩn bị cho câu: \"bạn thuyết phục mọi người áp dụng bằng cách nào?\" Trả lời bằng giao tiếp, không chỉ công nghệ.</p> <p>Mẹo: nói trong khoảng hai phút, và thay bằng chi tiết thật của bạn (số liệu, tên, điều gì đã không suôn sẻ).</p>"
+        "en": "<h5>Situation</h5> <p>OEG's news and game portal pages live on search traffic, but the initial Lighthouse SEO score was only about <strong class=\"k\">70 to 75</strong> because of missing metadata, heavy images and a page structure that was not clean. At the same time testing was thin (coverage of about <strong class=\"k\">20 to 30%</strong>), so the team was nervous about regressions on every release. Once, a small change in one component broke another flow, and we only found out after it reached production.</p> <h5>Task</h5> <p>I took on raising the SEO score and building the foundation for automated frontend testing myself, with the goals of SEO above 95 and coverage around 80%.</p> <h5>Action</h5> <ul><li><strong class=\"k\">SEO:</strong> I added full metadata and Open Graph tags for every page, used SSR so the content is already rendered for bots, optimised images (right size, modern formats, lazy loading), and fixed the heading structure and the <code>alt</code> attributes.</li><li><strong class=\"k\">Testing:</strong> I wrote unit tests with Jest for important logic and components, and E2E tests with Playwright for critical flows such as tournament registration and game top-up. I prioritised the flows where a failure would hurt money or users the most, instead of chasing the coverage number.</li><li>I proposed putting the tests into the CI pipeline so every pull request is checked automatically, and I shared how to write tests with the team so it would be maintained over time.</li></ul> <h5>Result</h5> <p>The Lighthouse SEO score reached <strong class=\"k\">98</strong> and test coverage reached <strong class=\"k\">80%</strong>. The number of regression bugs after each release dropped clearly, the team felt more confident changing code, and the content pages showed up better in search results.</p> <p><strong class=\"k\">What to emphasise:</strong> you raise quality on your own initiative, you measure it with concrete numbers, and you treat quality as a shared responsibility, not one person's job (see Câu 53 and Câu 106).</p>",
+        "vi": "<h5>Situation</h5> <p>Các trang tin tức và game portal của OEG sống nhờ lượng truy cập từ tìm kiếm, nhưng điểm Lighthouse SEO ban đầu chỉ khoảng <strong class=\"k\">70 đến 75</strong> do thiếu metadata, ảnh nặng và cấu trúc trang chưa chuẩn. Song song đó, phần test còn mỏng (coverage khoảng <strong class=\"k\">20 đến 30%</strong>), nên mỗi lần release team khá lo bị lỗi hồi quy. Từng có một lần sửa nhỏ ở một component lại làm hỏng luồng khác và chỉ phát hiện sau khi lên production.</p> <h5>Task</h5> <p>Mình tự nhận việc nâng điểm SEO và xây nền tảng test tự động cho frontend, với mục tiêu SEO trên 95 và coverage khoảng 80%.</p> <h5>Action</h5> <ul><li><strong class=\"k\">SEO:</strong> mình bổ sung metadata và Open Graph đầy đủ cho từng trang, dùng SSR để nội dung được render sẵn cho bot, tối ưu ảnh (đúng kích thước, định dạng hiện đại, lazy load) và sửa cấu trúc heading cũng như thuộc tính <code>alt</code>.</li><li><strong class=\"k\">Test:</strong> mình viết unit test bằng Jest cho logic và component quan trọng, và E2E bằng Playwright cho các luồng sống còn như đăng ký giải đấu và nạp game. Mình ưu tiên luồng nào mà nếu lỗi sẽ ảnh hưởng tiền hoặc người dùng nhiều nhất trước, thay vì chạy theo con số coverage.</li><li>Mình đề xuất đưa test vào quy trình CI để mỗi pull request đều được kiểm tra tự động, và chia sẻ cách viết test cho các bạn trong team để việc này được duy trì lâu dài.</li></ul> <h5>Result</h5> <p>Điểm Lighthouse SEO đạt <strong class=\"k\">98</strong> và test coverage đạt <strong class=\"k\">80%</strong>. Số bug hồi quy sau mỗi lần release giảm rõ rệt, team tự tin hơn khi sửa code, và các trang nội dung hiển thị tốt hơn trên kết quả tìm kiếm.</p> <p><strong class=\"k\">Nhấn mạnh:</strong> bạn tự chủ động nâng chất lượng, đo bằng số cụ thể, và coi chất lượng là trách nhiệm chung chứ không phải việc của riêng ai (xem Câu 53 và Câu 106).</p>"
       },
       "terms": [
         "STAR",
-        "architecture",
-        "coding standards",
-        "Lighthouse SEO"
+        "Lighthouse SEO",
+        "test coverage",
+        "Jest",
+        "Playwright",
+        "CI"
       ]
     }
   ]
